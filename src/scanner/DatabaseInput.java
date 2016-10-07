@@ -1,5 +1,6 @@
+package scanner;
+
 import javax.swing.*;
-import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
@@ -43,7 +44,7 @@ public class DatabaseInput {
 
 
                 //phrase storing
-                phrase = phrasesTextField.getText().toString();
+                phrase = phrasesTextField.getText();
 
                 //split each phrase into its own index in an array
                 phrases = phrase.split(",");
@@ -74,7 +75,7 @@ public class DatabaseInput {
     public static void main(String[] args) {
         JFrame frame = new JFrame("DatabaseInput");
         frame.setContentPane(new DatabaseInput().container);
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         frame.pack();
         frame.setVisible(true);
     }
