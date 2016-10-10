@@ -3,6 +3,8 @@ package scanner;
 import javax.swing.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.sql.Connection;
+import java.sql.DriverManager;
 
 /**
  * Created by cdeck_000 on 10/5/2016.
@@ -84,5 +86,22 @@ public class DatabaseInput {
         frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         frame.pack();
         frame.setVisible(true);
+        try {
+            getConnection();
+        } catch (Exception e) {
+            System.out.println(e);
+        }
+    }
+
+    public static Connection getConnection() throws Exception {
+        String driver = "com.mysql.jdbc.Driver";
+        String url = "jdbc:mysql://localhost:3306/test?autoReconnect=true&useSSL=false";
+        String username = "admin";
+        String password = "Sw3ng3agl3s!";
+        Class.forName(driver);
+        Connection conn = DriverManager.getConnection(url, username, password);
+        System.out.println("Connected");
+        return conn;
     }
 }
+
