@@ -71,6 +71,9 @@ public class DatabaseInput {
                     word = word.replaceAll("\\s+", "");
                     System.out.println(word);
                 }
+
+                //have lucene run through the inputs to take out filler words before going into the database
+                //word with number is more confidential
             }
         });
     }
