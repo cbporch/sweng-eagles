@@ -48,8 +48,9 @@ public class Driver {
             ts.close();
         }
 
-        String hashed1 = BCrypt.hashpw("pass", BCrypt.gensalt(11));
-        System.out.println(hashed1 + "\n" + BCrypt.checkpw("password", "$2a$11$GHUCFlb6.D/pNu8nFBNAsOEjgqadbkht.0FgtsrfHNpRuY7Pyli86"));
+        String hashed1 = BCrypt.hashpw("pass", BCrypt.gensalt(10));
+        System.out.println(hashed1 + "\n" + BCrypt.checkpw("pass", hashed1) + "\n" + BCrypt.checkpw("ps", hashed1)+ "\n" + BCrypt.checkpw("ss", hashed1)
+                +"\n" + BCrypt.checkpw("password", hashed1));
 
 
     }
