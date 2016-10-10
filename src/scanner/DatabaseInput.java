@@ -1,10 +1,12 @@
+package scanner;
+
 import javax.swing.*;
-import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
 /**
  * Created by cdeck_000 on 10/5/2016.
+ * Edited by cbporch on 10.9.16
  */
 public class DatabaseInput {
 
@@ -29,21 +31,23 @@ public class DatabaseInput {
             @Override
             public void mouseClicked(MouseEvent e) {
                 //word storing and cutting off white space
-                word = wordsTextField.getText().toString();
-                word.replaceAll("\\s+","");
+                word = wordsTextField.getText();
+                word = word.replaceAll("\\s+", "");
 
-                //seperate the words into its own index in an array
+                // separate the words into its own index in an array
                 words = word.split(",");
 
-                //print out original word and the now separated words
+
+                // print out original word and the now separated words
                 System.out.println(word);
-                for(String word: words){
+                for (String word : words) {
+                    word = word.replaceAll(" ", "");   // remove spaces
                     System.out.println(word);
                 }
 
 
                 //phrase storing
-                phrase = phrasesTextField.getText().toString();
+                phrase = phrasesTextField.getText();
 
                 //split each phrase into its own index in an array
                 phrases = phrase.split(",");
@@ -55,16 +59,16 @@ public class DatabaseInput {
                 System.out.println(phrase);
 
                 //print out all the phrases one by one
-                System.out.println(phrases.toString());
-                for(String word: phrases){
-                    word.replaceAll("\\s+","");
-                    System.out.println(word);
+                // System.out.println(phrases.toString());              -> this was printing a toString of an array
+                for (String word : phrases) {
+                    word = word.replaceAll("\\A\\s+\\b", "");       // remove all spaces before the first word boundary
+                    System.out.println(word);                       // before, it was removing all spaces between words
                 }
 
                 //print out all the words in the phrases, one by one
-                System.out.println(phraseToWords.toString());
-                for(String word: phraseToWords){
-                    word.replaceAll("\\s+","");
+                // System.out.println(phraseToWords.toString());        -> this was printing a toString of an array
+                for (String word : phraseToWords) {
+                    word = word.replaceAll("\\s+", "");
                     System.out.println(word);
                 }
 
@@ -77,7 +81,7 @@ public class DatabaseInput {
     public static void main(String[] args) {
         JFrame frame = new JFrame("DatabaseInput");
         frame.setContentPane(new DatabaseInput().container);
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         frame.pack();
         frame.setVisible(true);
     }
