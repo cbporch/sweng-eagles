@@ -105,9 +105,9 @@ public class DatabaseInput {
         String username = "admin";
         String password = "Sw3ng3agl3s!";
         Class.forName(driver);
-        Connection conn = DriverManager.getConnection(url, username, password);
+        //Connection conn = DriverManager.getConnection(url, username, password);
         System.out.println("Connected");
-        return conn;
+        return null;
     }
 }
 

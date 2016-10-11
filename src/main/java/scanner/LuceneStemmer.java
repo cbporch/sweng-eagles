@@ -11,13 +11,13 @@ import java.util.ArrayList;
  * Created by Chris on 10/10/2016.
  */
 public class LuceneStemmer {
-    StemAnalyzer analyzer;
+    private static StemAnalyzer analyzer;
 
     public LuceneStemmer() {
         StemAnalyzer analyzer = new StemAnalyzer();
     }
 
-    public ArrayList<String> stem(String[] input) throws IOException {
+    public static ArrayList<String> stem(String[] input) throws IOException {
     ArrayList<String> output = new ArrayList<String>(input.length);
         for(String word : input){
             TokenStream ts = analyzer.tokenStream("field",
@@ -36,7 +36,7 @@ public class LuceneStemmer {
        return output;
     }
 
-    public ArrayList<String> stem(String input) throws IOException{
+    public static ArrayList<String> stem(String input) throws IOException{
         ArrayList<String> output = new ArrayList<String>();
         TokenStream ts = analyzer.tokenStream("field",
                 new StringReader(input));

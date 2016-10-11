@@ -23,30 +23,24 @@ import org.mindrot.jbcrypt.BCrypt;
 import java.io.IOException;
 import java.io.StringReader;
 
+import scanner.dbEntry.DatabaseInput;
+
 /**
  * Created by cbporch on 10/3/2016.
  * Edited by Dan Smith on 10/3/2016 because git is fun
- * Just a placeholder.
+ * Controller for database entry
  */
 public class Driver {
 
     public static void main(String args[]) throws IOException {
-        System.out.println("Not Broken");
 
+        //create an instance of DatabaseInput
+        DatabaseInput window = new DatabaseInput();
+        window.main(null);
 
-        StemAnalyzer analyzer = new StemAnalyzer();
-        TokenStream ts = analyzer.tokenStream("field",
-                new StringReader("this is a test string, to display the features of Lucene after running"));
-        CharTermAttribute termAtt = ts.addAttribute(CharTermAttribute.class);
-        try {
-            ts.reset();
-            while (ts.incrementToken()) {
-                System.out.println(termAtt.toString());
-            }
-            ts.end();
-        } finally {
-            ts.close();
-        }
+        /* TODO: wait for output from window,  instantiate LuceneStemmer and Encrypter and pass output to them
+         * TODO: loop through String array, hash each, and check each against database
+         */
 
         String hashed1 = BCrypt.hashpw("pass", BCrypt.gensalt(10));
         System.out.println(hashed1 + "\n" + BCrypt.checkpw("pass", hashed1) + "\n" + BCrypt.checkpw("ps", hashed1)+ "\n" + BCrypt.checkpw("ss", hashed1)
