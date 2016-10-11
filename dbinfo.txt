@@ -1,0 +1,4 @@
+Host: asrcemail.cfz28h3zsskv.us-east-1.rds.amazonaws.com
+Port: 3306
+Username: asrc
+Password: rOwan!Sw3ng?
