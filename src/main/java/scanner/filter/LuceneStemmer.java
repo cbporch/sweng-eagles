@@ -40,7 +40,7 @@ public class LuceneStemmer {
     /*
      * Method reduces each String in an array to its root word
      */
-    public static ArrayList<String> stem(String[] input) throws IOException {
+    public static ArrayList<String> stemWords(String[] input) throws IOException {
     ArrayList<String> output = new ArrayList<String>(input.length);
         for(String word : input){
             TokenStream ts = analyzer.tokenStream("field",
@@ -61,17 +61,21 @@ public class LuceneStemmer {
 
     /*
      * Method reduces the words in a String to its root word, splitting by whitespace
-     * if there are more than one word
+     * if there are more than one word, then re-concatenates them, preserving phrases
      */
-    public static ArrayList<String> stem(String input) throws IOException{
-        ArrayList<String> output = new ArrayList<String>();
+    public static String stemPhrase(String input) throws IOException{
+        String output = "";
         TokenStream ts = analyzer.tokenStream("field",
                 new StringReader(input));
         CharTermAttribute termAtt = ts.addAttribute(CharTermAttribute.class);
         try {
             ts.reset();
             while (ts.incrementToken()) {
-                output.add(termAtt.toString());
+                if(output.equals("")) {
+                    output = termAtt.toString();
+                }else{
+                    output = output + " " + termAtt.toString();
+                }
             }
             ts.end();
         } finally {
