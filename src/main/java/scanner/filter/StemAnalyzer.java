@@ -1,4 +1,4 @@
-package scanner;
+package scanner.filter;
 
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.analysis.CharArraySet;
@@ -17,6 +17,8 @@ import java.util.List;
  * <p>
  * This class extends the Standard Analyzer from the Lucene analysis library
  * and adds in stemming functionality
+ *
+ *  * The copyright block below is required by Apache
  */
 
 /*
