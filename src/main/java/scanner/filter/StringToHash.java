@@ -21,7 +21,7 @@ import java.util.ArrayList;
  * Created by Chris on 10/11/2016.
  * Uses Lucene Stemmer and Hasher classes to filter input into an array of hashes
  *
- *  * The copyright block above is required by Apache
+ * The copyright block above is required by Apache
  */
 public class StringToHash {
 
@@ -31,12 +31,18 @@ public class StringToHash {
      * Takes in a String array, stems it using LuceneStemmer, hashes each word
      * and returns the hashed words, re-concatenating phrases to preserve them
      */
-    public ArrayList<String> getHashes(String[] input) throws IOException {
+    public ArrayList<String> getHashes(String[] input, boolean phrases) throws IOException {
         ArrayList<String> output = new ArrayList<String>();
 
-        output = LuceneStemmer.stem(input);
+        if(phrases){
+            for (String phrase : input){
+                output.add(LuceneStemmer.stemPhrase(phrase)); // stem each phrase individually
+            }
+        } else{
+            output = LuceneStemmer.stemWords(input); // stem list of individual words only
+        }
 
-        //TODO : add Hasher.hash(), preserve phrases
+        //TODO : add Hasher.hash()
 
         return output;
     }
