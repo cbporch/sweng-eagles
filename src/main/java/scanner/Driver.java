@@ -44,9 +44,9 @@ public class Driver {
          * TODO: loop through String array, hash each, and check each against database
          */
 
-        String hashed1 = BCrypt.hashpw("pass", BCrypt.gensalt(10));
-        System.out.println(hashed1 + "\n" + BCrypt.checkpw("pass", hashed1) + "\n" + BCrypt.checkpw("ps", hashed1)+ "\n" + BCrypt.checkpw("ss", hashed1)
-                +"\n" + BCrypt.checkpw("password", hashed1));
+//        String hashed1 = BCrypt.hashpw("pass", BCrypt.gensalt(10));
+//        System.out.println(hashed1 + "\n" + BCrypt.checkpw("pass", hashed1) + "\n" + BCrypt.checkpw("ps", hashed1)+ "\n" + BCrypt.checkpw("ss", hashed1)
+//                +"\n" + BCrypt.checkpw("password", hashed1));
 
 
     }
