@@ -16,21 +16,16 @@ package scanner;
  * limitations under the License.
  */
 
-import org.apache.lucene.analysis.TokenStream;
-import org.apache.lucene.analysis.tokenattributes.CharTermAttribute;
-import org.mindrot.jbcrypt.BCrypt;
+import scanner.dbEntry.DatabaseInput;
 
 import java.io.IOException;
-import java.io.StringReader;
-
-import scanner.dbEntry.DatabaseInput;
 
 /**
  * Created by cbporch on 10/3/2016.
  * Edited by Dan Smith on 10/3/2016 because git is fun
  * Controller for database entry
- *
- *  * The copyright block above is required by Apache
+ * <p>
+ * * The copyright block above is required by Apache
  */
 public class Driver {
 
