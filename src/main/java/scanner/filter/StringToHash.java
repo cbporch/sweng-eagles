@@ -30,6 +30,7 @@ public class StringToHash {
     /*
      * Takes in a String array, stems it using LuceneStemmer, hashes each word
      * and returns the hashed words, re-concatenating phrases to preserve them
+     * if phrases is set as true
      */
     public ArrayList<String> getHashes(String[] input, boolean phrases) throws IOException {
         ArrayList<String> output = new ArrayList<String>();
