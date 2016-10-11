@@ -86,16 +86,22 @@ public class DatabaseInput {
         frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         frame.pack();
         frame.setVisible(true);
+
+        /**Commented out until new SQL database has been made
+
         try {
             getConnection();
         } catch (Exception e) {
             System.out.println(e);
         }
+         */
     }
 
     public static Connection getConnection() throws Exception {
         String driver = "com.mysql.jdbc.Driver";
-        String url = "jdbc:mysql://localhost:3306/test?autoReconnect=true&useSSL=false";
+
+        //url needs to be changed to SQL database
+        //String url = "jdbc:mysql://localhost:3306/test?autoReconnect=true&useSSL=false";
         String username = "admin";
         String password = "Sw3ng3agl3s!";
         Class.forName(driver);
