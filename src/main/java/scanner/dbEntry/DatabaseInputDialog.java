@@ -1,4 +1,4 @@
-package scanner;
+package scanner.dbEntry;
 
 public class DatabaseInputDialog extends javax.swing.JDialog {
     private javax.swing.JPanel contentPane;

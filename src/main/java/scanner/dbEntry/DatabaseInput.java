@@ -1,4 +1,4 @@
-package scanner;
+package scanner.dbEntry;
 
 import javax.swing.*;
 import java.awt.event.MouseAdapter;
