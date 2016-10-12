@@ -22,7 +22,7 @@ import java.io.IOException;
 
 /**
  * Created by cbporch on 10/3/2016.
- * Edited by Dan Smith on 10/3/2016 because git is fun
+ * Edited by cbporch on 10/12/16
  * Controller for database entry
  * <p>
  * * The copyright block above is required by Apache
@@ -35,14 +35,8 @@ public class Driver {
         DatabaseInput window = new DatabaseInput();
         window.main(null);
 
-        /* TODO: wait for output from window,  instantiate StringToHash and pass output to it
-         * TODO: loop through String array, hash each, and check each against database
-         */
-
-//        String hashed1 = BCrypt.hashpw("pass", BCrypt.gensalt(10));
-//        System.out.println(hashed1 + "\n" + BCrypt.checkpw("pass", hashed1) + "\n" + BCrypt.checkpw("ps", hashed1)+ "\n" + BCrypt.checkpw("ss", hashed1)
-//                +"\n" + BCrypt.checkpw("password", hashed1));
-
+         //TODO: wait for output from window, and pass output to StringToHash
+         //TODO: loop through String array, hash each, and check each against database
 
     }
 }
