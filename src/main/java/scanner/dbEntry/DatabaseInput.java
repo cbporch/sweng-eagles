@@ -87,25 +87,18 @@ public class DatabaseInput {
         frame.pack();
         frame.setVisible(true);
 
-        /**Commented out until new SQL database has been made
-
         try {
             getConnection();
         } catch (Exception e) {
             System.out.println(e);
         }
-         */
     }
 
     public static Connection getConnection() throws Exception {
-        String driver = "com.mysql.jdbc.Driver";
-
-        //url needs to be changed to SQL database
-        //String url = "jdbc:mysql://localhost:3306/test?autoReconnect=true&useSSL=false";
-        String username = "admin";
-        String password = "Sw3ng3agl3s!";
-        Class.forName(driver);
-        //Connection conn = DriverManager.getConnection(url, username, password);
+        String url = "jdbc:mysql://asrcemail.cfz28h3zsskv.us-east-1.rds.amazonaws.com";
+        String username = "asrc";
+        String password = "rOwan!Sw3ng?";
+        Connection conn = DriverManager.getConnection(url, username, password);
         System.out.println("Connected");
         return null;
     }
