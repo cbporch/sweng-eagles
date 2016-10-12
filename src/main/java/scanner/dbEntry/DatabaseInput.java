@@ -76,6 +76,7 @@ public class DatabaseInput {
 
                 //have lucene run through the inputs to take out filler words before going into the database
                 //word with number is more confidential
+                processWords(words, phrases);
             }
         });
     }
@@ -108,6 +109,11 @@ public class DatabaseInput {
         //Connection conn = DriverManager.getConnection(url, username, password);
         System.out.println("Connected");
         return null;
+    }
+
+    public void processWords(String[] words, String[] phrases){
+        //TODO: pass output to StringToHash
+        //TODO: loop through String array, hash each, and check each against database
     }
 }
 
