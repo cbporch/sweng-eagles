@@ -123,9 +123,11 @@ public class DatabaseInput {
                     insertWords(word, RARITY);
                 }
             }
+
+            // count words in phrases
             int[] counts = new int[phrases.length];
             for (int i = 0; i < counts.length; i++){
-                counts[i] = (phrases[i].length() - phrases[i].replaceAll(" ","").length()) + 1;
+                counts[i] = phrases[i].split("\\s+").length;
             }
 
             if(phrases.length != 0) {
