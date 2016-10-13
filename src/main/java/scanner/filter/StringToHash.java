@@ -45,7 +45,6 @@ public class StringToHash {
             wordlist = LuceneStemmer.stemWords(input); // stem list of individual words only
         }
 
-        //TODO : add Hasher.hash()
         wordlist = Hasher.hashArrayList(wordlist);
 
         return wordlist;

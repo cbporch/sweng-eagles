@@ -1,12 +1,16 @@
 package scanner.dbEntry;
 
+
+import scanner.filter.StringToHash;
+
 import javax.swing.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.io.IOException;
 import java.sql.Connection;
 import java.sql.DriverManager;
-import java.sql.PreparedStatement;
 import java.sql.Statement;
+import java.util.ArrayList;
 
 /**
  * Created by cdeck_000 on 10/5/2016.
@@ -79,7 +83,7 @@ public class DatabaseInput {
 
                 //have lucene run through the inputs to take out filler words before going into the database
                 //word with number is more confidential
-                processWords(words, phrases);
+                processInput(words, phrases);
             }
         });
     }
@@ -134,9 +138,17 @@ public class DatabaseInput {
         }
     }
 
-    public void processWords(String[] words, String[] phrases){
-        //TODO: pass output to StringToHash
-        //TODO: loop through String array, hash each, and check each against database
+    public void processInput(String[] words, String[] phrases) {
+        //TODO: loop through input String array, and check each against database
+        StringToHash sth = new StringToHash();
+        ArrayList<String> stemmedWords, stemmedPhrases;
+        try {
+            stemmedWords   = sth.getHashes(words, false);
+            stemmedPhrases = sth.getHashes(phrases, true);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
     }
 }
 
