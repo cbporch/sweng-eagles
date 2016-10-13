@@ -17,6 +17,8 @@ package scanner.filter;
 import java.io.IOException;
 import java.util.ArrayList;
 
+import static scanner.filter.Hasher.*;
+
 /**
  * Created by Chris on 10/11/2016.
  * Uses Lucene Stemmer and Hasher classes to filter input into an array of hashes
@@ -30,21 +32,22 @@ public class StringToHash {
     /*
      * Takes in a String array, stems it using LuceneStemmer, hashes each word
      * and returns the hashed words, re-concatenating phrases to preserve them
+     * if phrases is set as true
      */
-    public ArrayList<String> getHashes(String[] input, boolean phrases) throws IOException {
-        ArrayList<String> output = new ArrayList<String>();
+    public static ArrayList<String> getHashes(String[] input, boolean phrases) throws IOException {
+        ArrayList<String> wordlist = new ArrayList<String>();
 
         if(phrases){
             for (String phrase : input){
-                output.add(LuceneStemmer.stemPhrase(phrase)); // stem each phrase individually
+                wordlist.add(LuceneStemmer.stemPhrase(phrase)); // stem each phrase individually
             }
         } else{
-            output = LuceneStemmer.stemWords(input); // stem list of individual words only
+            wordlist = LuceneStemmer.stemWords(input); // stem list of individual words only
         }
 
-        //TODO : add Hasher.hash()
+        wordlist = Hasher.hashArrayList(wordlist);
 
-        return output;
+        return wordlist;
     }
 
 }

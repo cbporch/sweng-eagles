@@ -31,11 +31,9 @@ import java.util.ArrayList;
  */
 
 public class LuceneStemmer {
-    private static StemAnalyzer analyzer;
+    private static StemAnalyzer analyzer = new StemAnalyzer();
 
-    public LuceneStemmer() {
-        StemAnalyzer analyzer = new StemAnalyzer();
-    }
+    public LuceneStemmer() {}
 
     /*
      * Method reduces each String in an array to its root word
@@ -43,8 +41,7 @@ public class LuceneStemmer {
     public static ArrayList<String> stemWords(String[] input) throws IOException {
     ArrayList<String> output = new ArrayList<String>(input.length);
         for(String word : input){
-            TokenStream ts = analyzer.tokenStream("field",
-                    new StringReader(word));
+            TokenStream ts = analyzer.tokenStream("myfield", new StringReader(word));
             CharTermAttribute termAtt = ts.addAttribute(CharTermAttribute.class);
             try {
                 ts.reset();
@@ -74,7 +71,7 @@ public class LuceneStemmer {
                 if(output.equals("")) {
                     output = termAtt.toString();
                 }else{
-                    output = output + " " + termAtt.toString();
+                    output = output + termAtt.toString();
                 }
             }
             ts.end();
