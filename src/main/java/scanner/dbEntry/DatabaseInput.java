@@ -5,6 +5,8 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.Statement;
 
 /**
  * Created by cdeck_000 on 10/5/2016.
@@ -40,11 +42,11 @@ public class DatabaseInput {
                 words = word.split(",");
 
                 // print out original word and the now separated words
-                System.out.println(word);
-                for (String word : words) {
-                    word = word.replaceAll(" ", "");   // remove spaces
-                    System.out.println(word);
-                }
+                //System.out.println(word);
+                //for (String word : words) {
+                //    word = word.replaceAll(" ", "");   // remove spaces
+                //    System.out.println(word);
+                //}
 
                 //phrase storing
                 phrase = phrasesTextField.getText();
@@ -53,13 +55,26 @@ public class DatabaseInput {
                 phrases = phrase.split(",");
 
                 //print out the original phrases unchanged
-                System.out.println(phrase);
+                //System.out.println(phrase);
 
                 //print out all the phrases one by one
                 // System.out.println(phrases.toString());              -> this was printing a toString of an array
-                for (String word : phrases) {
-                    word = word.replaceAll("\\A\\s+\\b", "");       // remove all spaces before the first word boundary
-                    System.out.println(word);                       // before, it was removing all spaces between words
+                //for (String word : phrases) {
+                //    word = word.replaceAll("\\A\\s+\\b", "");       // remove all spaces before the first word boundary
+                //    System.out.println(word);                       // before, it was removing all spaces between words
+                //}
+
+                try {
+                    for(String word: words) {
+                        insertWords(word, 1);
+                    }
+                    for(String phrase: phrases) {
+                        if(phrase.substring(0,1).equals(" "))
+                            phrase = phrase.substring(1,phrase.length());
+                        insertPhrases(phrase, 1);
+                    }
+                } catch (Exception exc) {
+                    System.out.println(exc);
                 }
 
                 //have lucene run through the inputs to take out filler words before going into the database
@@ -75,21 +90,48 @@ public class DatabaseInput {
         frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         frame.pack();
         frame.setVisible(true);
+    }
 
-        try {
-            getConnection();
+    public static Connection getConnection() throws Exception {
+        String url = "jdbc:mysql://asrcemail.cfz28h3zsskv.us-east-1.rds.amazonaws.com/asrcemail";
+        String username = "asrc";
+        String password = "rOwan!Sw3ng?";
+        Connection conn = DriverManager.getConnection(url, username, password);
+        System.out.println("Connected");
+        return conn;
+    }
+
+    public static void insertWords(String wordIn, int rarityIn) throws Exception {
+        final String word = wordIn;
+        final int rarity = rarityIn;
+
+        try{
+            Connection conn = getConnection();              //get connection
+            Statement statement = conn.createStatement();   //create statement
+            String sql = String.format("insert into Words (word, rarity) Values ('%s', %2d);", word, rarity);
+            System.out.println(sql);
+            statement.executeUpdate(sql);                   //execute the update
+            System.out.println("insert completed");
         } catch (Exception e) {
             System.out.println(e);
         }
     }
 
-    public static Connection getConnection() throws Exception {
-        String url = "jdbc:mysql://asrcemail.cfz28h3zsskv.us-east-1.rds.amazonaws.com";
-        String username = "asrc";
-        String password = "rOwan!Sw3ng?";
-        Connection conn = DriverManager.getConnection(url, username, password);
-        System.out.println("Connected");
-        return null;
+    public static void insertPhrases(String phraseIn, int rarityIn) throws Exception {
+        final String phrase = phraseIn;
+        final int rarity = rarityIn;
+        final int count = phraseIn.split("\\s+").length;
+
+        try{
+            Connection conn = getConnection();              //get connection
+            Statement statement = conn.createStatement();   //create statement
+            String sql = String.format("insert into Phrases (phrase, rarity, count) Values ('%s', %2d, %2d);", phrase, rarity, count);
+            System.out.println(sql);
+            statement.executeUpdate(sql);                   //execute the update
+            System.out.println("insert completed");
+        } catch (Exception e) {
+            System.out.println(e);
+        }
     }
 
     public void processWords(String[] words, String[] phrases){
