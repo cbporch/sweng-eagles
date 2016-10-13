@@ -68,6 +68,11 @@ public class DatabaseInput {
                     for(String word: words) {
                         insertWords(word, 1);
                     }
+                    for(String phrase: phrases) {
+                        if(phrase.substring(0,1).equals(" "))
+                            phrase = phrase.substring(1,phrase.length());
+                        insertPhrases(phrase, 1);
+                    }
                 } catch (Exception exc) {
                     System.out.println(exc);
                 }
@@ -103,6 +108,23 @@ public class DatabaseInput {
             Connection conn = getConnection();              //get connection
             Statement statement = conn.createStatement();   //create statement
             String sql = String.format("insert into Words (word, rarity) Values ('%s', %2d);", word, rarity);
+            System.out.println(sql);
+            statement.executeUpdate(sql);                   //execute the update
+            System.out.println("insert completed");
+        } catch (Exception e) {
+            System.out.println(e);
+        }
+    }
+
+    public static void insertPhrases(String phraseIn, int rarityIn) throws Exception {
+        final String phrase = phraseIn;
+        final int rarity = rarityIn;
+        final int count = phraseIn.split("\\s+").length;
+
+        try{
+            Connection conn = getConnection();              //get connection
+            Statement statement = conn.createStatement();   //create statement
+            String sql = String.format("insert into Phrases (phrase, rarity, count) Values ('%s', %2d, %2d);", phrase, rarity, count);
             System.out.println(sql);
             statement.executeUpdate(sql);                   //execute the update
             System.out.println("insert completed");
