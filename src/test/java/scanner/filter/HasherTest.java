@@ -18,11 +18,14 @@ public class HasherTest {
         inputList.add("The");
         inputList.add("dog");
         inputList.add("barked");
-        Hasher hasher = new Hasher();
-        ArrayList<String> outputList = hasher.hash(inputList);
-        assertEquals("Hashed the", outputList.get(0));
-        assertEquals("Hashed dog", outputList.get(1));
-        assertEquals("Hashed barked", outputList.get(2));
+
+        ArrayList<String> outputList = Hasher.hashArrayList(inputList);
+        assertTrue(Hasher.checkHash("The", outputList.get(0)));
+        assertTrue(Hasher.checkHash("dog", outputList.get(1)));
+        assertTrue(Hasher.checkHash("barked", outputList.get(2)));
+        assertFalse(Hasher.checkHash("the", outputList.get(0)));
+        assertFalse(Hasher.checkHash("", outputList.get(1)));
+        assertFalse(Hasher.checkHash("bark", outputList.get(2)));
     }
 
 }

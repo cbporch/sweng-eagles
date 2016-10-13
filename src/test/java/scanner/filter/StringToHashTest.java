@@ -14,11 +14,10 @@ public class StringToHashTest {
      */
     @Test
     public void testGetHashesSingle() throws Exception {
-        String[] input = {"dog"};
+        String[] input = {"the", "dogs"};
         boolean phrases = false;
-        StringToHash sth = new StringToHash();
-        ArrayList<String> output = sth.getHashes(input,phrases);
-        assertEquals("Hashed dog", output.get(0));
+        ArrayList<String> output = StringToHash.getHashes(input, false);
+        assertTrue(Hasher.checkHash("dog", output.get(0)));
     }
 
     /**
@@ -26,12 +25,11 @@ public class StringToHashTest {
      */
     @Test
     public void testGetHashesPhrases() throws Exception {
-        String[] input = {"the", "dog", "barked"};
+        String[] input = {"the dog barked", "He runs home quickly"};
         boolean phrases = true;
         StringToHash sth = new StringToHash();
         ArrayList<String> output = sth.getHashes(input, phrases);
-        assertEquals("Hashed the", output.get(0));
-        assertEquals("Hashed dog", output.get(1));
-        assertEquals("Hashed barked", output.get(2));
+        assertTrue(Hasher.checkHash("dogbarked", output.get(0)));
+        assertTrue(Hasher.checkHash("herunhomequickly", output.get(1)));
     }
 }
