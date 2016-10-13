@@ -113,22 +113,37 @@ public class DatabaseInput {
         }
     }
 
+    public static void getWords() throws Exception {
+        ArrayList<String> words = new ArrayList<String>();
+
+        try {
+            Connection conn = getConnection();              //get connection
+            Statement statement = conn.createStatement();   //create statement
+            String sql = String.format("select phrases from Words");
+            System.out.println(sql);
+            statement.executeQuery(sql);                   //execute the update
+            System.out.println("select completed");
+        } catch (Exception e) {
+            System.out.println(e);
+        }
+    }
+
     public void processInput(String[] words, String[] phrases) throws Exception {
         //TODO: loop through input String array, and check each against database before adding
         ArrayList<String> stemmedWords, stemmedPhrases;
         try {
             if(words.length != 0) {
-                stemmedWords = StringToHash.getHashes(words, false);
+                stemmedWords = StringToHash.getHashes(words, false);    //stems and hashes each word
 
                 for (String word : stemmedWords) {
-                    insertWords(word, RARITY);
+                    insertWords(word, RARITY);                          //inserts the hashed word into the database
                 }
             }
             if(phrases.length != 0) {
-                stemmedPhrases = StringToHash.getHashes(phrases, true);
+                stemmedPhrases = StringToHash.getHashes(phrases, true); //stems and hashes each phrase
 
                 for (String hashedPhrase : stemmedPhrases) {
-                    insertPhrases(hashedPhrase, RARITY);
+                    insertPhrases(hashedPhrase, RARITY);                //inserts the hashed phrase into the database
                 }
             }
 
