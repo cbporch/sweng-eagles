@@ -69,18 +69,18 @@ public class DatabaseInput {
                 //    System.out.println(word);                       // before, it was removing all spaces between words
                 //}
 
-                try {
-                    for(String word: words) {
-                        insertWords(word, 1);
-                    }
-                    for(String phrase: phrases) {
-                        if(phrase.substring(0,1).equals(" "))
-                            phrase = phrase.substring(1,phrase.length());
-                        insertPhrases(phrase, 1);
-                    }
-                } catch (Exception exc) {
-                    System.out.println(exc);
-                }
+//                try {
+//                    for(String word: words) {
+//                        insertWords(word, 1);
+//                    }
+//                    for(String phrase: phrases) {
+//                        if(phrase.substring(0,1).equals(" "))
+//                            phrase = phrase.substring(1,phrase.length());
+//                        insertPhrases(phrase, 1);
+//                    }
+//                } catch (Exception exc) {
+//                    System.out.println(exc);
+//                }
 
                 //have lucene run through the inputs to take out filler words before going into the database
                 //word with number is more confidential
