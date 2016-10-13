@@ -14,7 +14,7 @@ import java.util.ArrayList;
 
 /**
  * Created by cdeck_000 on 10/5/2016.
- * Edited by cbporch on 10.9.16
+ * Edited by cbporch on 10.13.16
  */
 public class DatabaseInput {
 
@@ -46,41 +46,11 @@ public class DatabaseInput {
                 // separate the words into its own index in an array
                 words = word.split(",");
 
-                // print out original word and the now separated words
-                //System.out.println(word);
-                //for (String word : words) {
-                //    word = word.replaceAll(" ", "");   // remove spaces
-                //    System.out.println(word);
-                //}
-
                 //phrase storing
                 phrase = phrasesTextField.getText();
 
                 //split each phrase into its own index in an array
                 phrases = phrase.split(",");
-
-                //print out the original phrases unchanged
-                //System.out.println(phrase);
-
-                //print out all the phrases one by one
-                // System.out.println(phrases.toString());              -> this was printing a toString of an array
-                //for (String word : phrases) {
-                //    word = word.replaceAll("\\A\\s+\\b", "");       // remove all spaces before the first word boundary
-                //    System.out.println(word);                       // before, it was removing all spaces between words
-                //}
-
-//                try {
-//                    for(String word: words) {
-//                        insertWords(word, 1);
-//                    }
-//                    for(String phrase: phrases) {
-//                        if(phrase.substring(0,1).equals(" "))
-//                            phrase = phrase.substring(1,phrase.length());
-//                        insertPhrases(phrase, 1);
-//                    }
-//                } catch (Exception exc) {
-//                    System.out.println(exc);
-//                }
 
                 //have lucene run through the inputs to take out filler words before going into the database
                 //word with number is more confidential
@@ -114,7 +84,7 @@ public class DatabaseInput {
         final String word = wordIn;
         final int rarity = rarityIn;
 
-        try{
+        try {
             Connection conn = getConnection();              //get connection
             Statement statement = conn.createStatement();   //create statement
             String sql = String.format("insert into Words (word, rarity) Values ('%s', %2d);", word, rarity);
@@ -131,7 +101,7 @@ public class DatabaseInput {
         final int rarity = rarityIn;
         final int count = phraseIn.split("\\s+").length;
 
-        try{
+        try {
             Connection conn = getConnection();              //get connection
             Statement statement = conn.createStatement();   //create statement
             String sql = String.format("insert into Phrases (phrase, rarity, count) Values ('%s', %2d, %2d);", phrase, rarity, count);
@@ -144,23 +114,22 @@ public class DatabaseInput {
     }
 
     public void processInput(String[] words, String[] phrases) throws Exception {
-        //TODO: loop through input String array, and check each against database
+        //TODO: loop through input String array, and check each against database before adding
         ArrayList<String> stemmedWords, stemmedPhrases;
         try {
-            stemmedWords   = StringToHash.getHashes(words, false);
+            stemmedWords = StringToHash.getHashes(words, false);
             stemmedPhrases = StringToHash.getHashes(phrases, true);
 
-            for(String word: stemmedWords){
+            for (String word : stemmedWords) {
                 insertWords(word, RARITY);
             }
 
-            for(String hashedPhrase: stemmedPhrases){
+            for (String hashedPhrase : stemmedPhrases) {
                 insertPhrases(hashedPhrase, RARITY);
             }
         } catch (IOException e) {
             e.printStackTrace();
         }
-
     }
 }
 
