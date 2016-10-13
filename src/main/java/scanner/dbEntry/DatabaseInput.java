@@ -1,6 +1,7 @@
 package scanner.dbEntry;
 
 
+import scanner.filter.Hasher;
 import scanner.filter.StringToHash;
 
 import javax.swing.*;
@@ -113,23 +114,53 @@ public class DatabaseInput {
         }
     }
 
+    /*
+     * Takes arrays of input words and phrases, checks database to see if they exist already,
+     * if they don't, they are hashed and entered into the database
+     */
     public void processInput(String[] words, String[] phrases) throws Exception {
         //TODO: loop through input String array, and check each against database before adding
-        ArrayList<String> stemmedWords, stemmedPhrases;
+        ArrayList<String> stemmedWords, stemmedPhrases, DBWords, DBPhrases;
+        String[] unique_words = new String[words.length],
+                 unique_phrases = new String[phrases.length];
         try {
             if(words.length != 0) {
-                stemmedWords = StringToHash.getHashes(words, false);
+                boolean duplicate = false;
+                int i = 0;
+                for (String inputWord : words) {
+                    for(String hash: DBWords) {
+                        if (Hasher.checkHash(inputWord, hash)) {
+                            // do nothing, word is in database
+                        } else {
+                            unique_words[i++] = inputWord;
+                        }
+                    }
+                }
 
-                for (String word : stemmedWords) {
-                    insertWords(word, RARITY);
+                stemmedWords = StringToHash.getHashes(unique_words, false);
+                for(String hashedWord : stemmedWords){
+                    insertWords(hashedWord, RARITY);
                 }
             }
-            if(phrases.length != 0) {
-                stemmedPhrases = StringToHash.getHashes(phrases, true);
 
-                for (String hashedPhrase : stemmedPhrases) {
+            if(phrases.length != 0) {
+                boolean duplicate = false;
+                int i = 0;
+                for (String phrase : phrases) {
+                    for(String hash : DBPhrases) {
+                        if (Hasher.checkHash(phrase, hash)){
+                            // do nothing, duplicate phrase
+                        }else{
+                            unique_phrases[i++] = phrase;
+                        }
+                    }
+                }
+
+                stemmedPhrases = StringToHash.getHashes(unique_phrases, true);
+                for(String hashedPhrase : stemmedPhrases){
                     insertPhrases(hashedPhrase, RARITY);
                 }
+
             }
 
         } catch (IOException e) {
