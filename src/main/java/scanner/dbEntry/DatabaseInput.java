@@ -31,6 +31,7 @@ public class DatabaseInput {
     private String phrase;
     private String[] phraseToWords;
     private String[] phrases;
+    private final int RARITY = 10;
 
 
     public DatabaseInput() {
@@ -83,7 +84,11 @@ public class DatabaseInput {
 
                 //have lucene run through the inputs to take out filler words before going into the database
                 //word with number is more confidential
-                processInput(words, phrases);
+                try {
+                    processInput(words, phrases);
+                } catch (Exception e1) {
+                    e1.printStackTrace();
+                }
             }
         });
     }
@@ -138,13 +143,20 @@ public class DatabaseInput {
         }
     }
 
-    public void processInput(String[] words, String[] phrases) {
+    public void processInput(String[] words, String[] phrases) throws Exception {
         //TODO: loop through input String array, and check each against database
-        StringToHash sth = new StringToHash();
         ArrayList<String> stemmedWords, stemmedPhrases;
         try {
-            stemmedWords   = sth.getHashes(words, false);
-            stemmedPhrases = sth.getHashes(phrases, true);
+            stemmedWords   = StringToHash.getHashes(words, false);
+            stemmedPhrases = StringToHash.getHashes(phrases, true);
+
+            for(String word: stemmedWords){
+                insertWords(word, RARITY);
+            }
+
+            for(String hashedPhrase: stemmedPhrases){
+                insertPhrases(hashedPhrase, RARITY);
+            }
         } catch (IOException e) {
             e.printStackTrace();
         }
