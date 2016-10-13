@@ -31,11 +31,9 @@ import java.util.ArrayList;
  */
 
 public class LuceneStemmer {
-    private static StemAnalyzer analyzer;
+    private static StemAnalyzer analyzer = new StemAnalyzer();
 
-    public LuceneStemmer() {
-        analyzer = new StemAnalyzer();
-    }
+    public LuceneStemmer() {}
 
     /*
      * Method reduces each String in an array to its root word
