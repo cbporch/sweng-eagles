@@ -96,10 +96,9 @@ public class DatabaseInput {
         }
     }
 
-    public static void insertPhrases(String phraseIn, int rarityIn) throws Exception {
+    public static void insertPhrases(String phraseIn, int rarityIn, int count) throws Exception {
         final String phrase = phraseIn;
         final int rarity = rarityIn;
-        final int count = phraseIn.split("\\s+").length;
 
         try {
             Connection conn = getConnection();              //get connection
@@ -124,11 +123,16 @@ public class DatabaseInput {
                     insertWords(word, RARITY);
                 }
             }
+            int[] counts = new int[phrases.length];
+            for (int i = 0; i < counts.length; i++){
+                counts[i] = (phrases[i].length() - phrases[i].replaceAll(" ","").length()) + 1;
+            }
+
             if(phrases.length != 0) {
                 stemmedPhrases = StringToHash.getHashes(phrases, true);
 
-                for (String hashedPhrase : stemmedPhrases) {
-                    insertPhrases(hashedPhrase, RARITY);
+                for (int i = 0; i < stemmedPhrases.size(); i++) {
+                    insertPhrases(stemmedPhrases.get(i), RARITY, counts[i]);
                 }
             }
 

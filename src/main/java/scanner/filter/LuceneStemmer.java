@@ -61,14 +61,14 @@ public class LuceneStemmer {
      * if there are more than one word, then re-concatenates them, preserving phrases
      */
     public static String stemPhrase(String input) throws IOException{
-        String output = null;
+        String output = "";
         TokenStream ts = analyzer.tokenStream("field",
                 new StringReader(input));
         CharTermAttribute termAtt = ts.addAttribute(CharTermAttribute.class);
         try {
             ts.reset();
             while (ts.incrementToken()) {
-                if(output.equals(null)) {
+                if(output.equals("")) {
                     output = termAtt.toString();
                 }else{
                     output = output + termAtt.toString();
@@ -78,6 +78,9 @@ public class LuceneStemmer {
         } finally {
             ts.close();
         }
-        return output;
+        if (!output.equals("")){
+            return output;
+        }
+        return null;
     }
 }
