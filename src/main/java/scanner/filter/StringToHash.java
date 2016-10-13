@@ -39,7 +39,9 @@ public class StringToHash {
 
         if(phrases){
             for (String phrase : input){
-                wordlist.add(LuceneStemmer.stemPhrase(phrase)); // stem each phrase individually
+                if(phrase != "") {
+                    wordlist.add(LuceneStemmer.stemPhrase(phrase)); // stem each phrase individually
+                }
             }
         } else{
             wordlist = LuceneStemmer.stemWords(input); // stem list of individual words only
