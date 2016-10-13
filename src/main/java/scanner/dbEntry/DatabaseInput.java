@@ -9,6 +9,7 @@ import java.awt.event.MouseEvent;
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.ResultSet;
 import java.sql.Statement;
 import java.util.ArrayList;
 
@@ -55,6 +56,8 @@ public class DatabaseInput {
                 //have lucene run through the inputs to take out filler words before going into the database
                 //word with number is more confidential
                 try {
+                    getWords();
+                    getPhrases();
                     processInput(words, phrases);
                 } catch (Exception e1) {
                     e1.printStackTrace();
@@ -119,14 +122,38 @@ public class DatabaseInput {
         try {
             Connection conn = getConnection();              //get connection
             Statement statement = conn.createStatement();   //create statement
-            String sql = String.format("select phrases from Words");
+            String sql = String.format("select word from Words");
             System.out.println(sql);
-            statement.executeQuery(sql);                   //execute the update
-            System.out.println("select completed");
+            ResultSet rs = statement.executeQuery(sql);     //execute the select query
+            while (rs.next()) {
+                words.add(rs.getString(1));
+            }
+            System.out.println(words);
+            System.out.println("select words completed");
         } catch (Exception e) {
             System.out.println(e);
         }
     }
+
+    public static void getPhrases() throws Exception {
+        ArrayList<String> phrases = new ArrayList<String>();
+
+        try {
+            Connection conn = getConnection();              //get connection
+            Statement statement = conn.createStatement();   //create statement
+            String sql = String.format("select phrase from Phrases");
+            System.out.println(sql);
+            ResultSet rs = statement.executeQuery(sql);     //execute the select query
+            while (rs.next()) {
+                phrases.add(rs.getString(1));
+            }
+            System.out.println(phrases);
+            System.out.println("select phrases completed");
+        } catch (Exception e) {
+            System.out.println(e);
+        }
+    }
+
 
     public void processInput(String[] words, String[] phrases) throws Exception {
         //TODO: loop through input String array, and check each against database before adding
