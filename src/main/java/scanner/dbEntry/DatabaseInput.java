@@ -117,16 +117,21 @@ public class DatabaseInput {
         //TODO: loop through input String array, and check each against database before adding
         ArrayList<String> stemmedWords, stemmedPhrases;
         try {
-            stemmedWords = StringToHash.getHashes(words, false);
-            stemmedPhrases = StringToHash.getHashes(phrases, true);
+            if(words.length != 0) {
+                stemmedWords = StringToHash.getHashes(words, false);
 
-            for (String word : stemmedWords) {
-                insertWords(word, RARITY);
+                for (String word : stemmedWords) {
+                    insertWords(word, RARITY);
+                }
+            }
+            if(phrases.length != 0) {
+                stemmedPhrases = StringToHash.getHashes(phrases, true);
+
+                for (String hashedPhrase : stemmedPhrases) {
+                    insertPhrases(hashedPhrase, RARITY);
+                }
             }
 
-            for (String hashedPhrase : stemmedPhrases) {
-                insertPhrases(hashedPhrase, RARITY);
-            }
         } catch (IOException e) {
             e.printStackTrace();
         }
