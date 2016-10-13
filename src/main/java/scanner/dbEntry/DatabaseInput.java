@@ -1,12 +1,16 @@
 package scanner.dbEntry;
 
+
+import scanner.filter.StringToHash;
+
 import javax.swing.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.io.IOException;
 import java.sql.Connection;
 import java.sql.DriverManager;
-import java.sql.PreparedStatement;
 import java.sql.Statement;
+import java.util.ArrayList;
 
 /**
  * Created by cdeck_000 on 10/5/2016.
@@ -27,6 +31,7 @@ public class DatabaseInput {
     private String phrase;
     private String[] phraseToWords;
     private String[] phrases;
+    private final int RARITY = 10;
 
 
     public DatabaseInput() {
@@ -79,7 +84,11 @@ public class DatabaseInput {
 
                 //have lucene run through the inputs to take out filler words before going into the database
                 //word with number is more confidential
-                processWords(words, phrases);
+                try {
+                    processInput(words, phrases);
+                } catch (Exception e1) {
+                    e1.printStackTrace();
+                }
             }
         });
     }
@@ -134,9 +143,24 @@ public class DatabaseInput {
         }
     }
 
-    public void processWords(String[] words, String[] phrases){
-        //TODO: pass output to StringToHash
-        //TODO: loop through String array, hash each, and check each against database
+    public void processInput(String[] words, String[] phrases) throws Exception {
+        //TODO: loop through input String array, and check each against database
+        ArrayList<String> stemmedWords, stemmedPhrases;
+        try {
+            stemmedWords   = StringToHash.getHashes(words, false);
+            stemmedPhrases = StringToHash.getHashes(phrases, true);
+
+            for(String word: stemmedWords){
+                insertWords(word, RARITY);
+            }
+
+            for(String hashedPhrase: stemmedPhrases){
+                insertPhrases(hashedPhrase, RARITY);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
     }
 }
 

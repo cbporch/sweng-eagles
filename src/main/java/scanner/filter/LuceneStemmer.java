@@ -73,7 +73,7 @@ public class LuceneStemmer {
                 if(output.equals("")) {
                     output = termAtt.toString();
                 }else{
-                    output = output + " " + termAtt.toString();
+                    output = output + termAtt.toString();
                 }
             }
             ts.end();

@@ -24,6 +24,6 @@ public class LuceneStemmerTest {
         String input = "The dog runs";
         LuceneStemmer stemmer = new LuceneStemmer();
         String output = stemmer.stemPhrase(input);
-        assertEquals("dog run", output);
+        assertEquals("dogrun", output);
     }
 }
