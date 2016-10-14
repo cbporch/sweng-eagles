@@ -17,7 +17,7 @@ public class Hasher {
         ArrayList<String> hashedList = new ArrayList();
         for(String word: list){
             if(word != "" && word != null) {
-                hashedList.add(BCrypt.hashpw(word, BCrypt.gensalt()));
+                hashedList.add(BCrypt.hashpw(word, BCrypt.gensalt(10)));
             }
         }
         return hashedList;

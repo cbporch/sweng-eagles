@@ -3,6 +3,7 @@ package scanner.dbEntry;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import org.mindrot.jbcrypt.BCrypt;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -29,13 +30,13 @@ public class DatabaseInputTest {
 
     @Test
     public void insertWords() throws Exception {
-        DatabaseInput.insertWords("hello", 10);
+        DatabaseInput.insertWords(BCrypt.hashpw("test", BCrypt.gensalt(10)), 10);
         assertTrue(outputStream.toString().equals("insert completed\r\n"));
     }
 
     @Test
     public void insertPhrases() throws Exception {
-        DatabaseInput.insertPhrases("test phrase", 10, 2);
+        DatabaseInput.insertPhrases(BCrypt.hashpw("testphrase", BCrypt.gensalt(10)), 10, 2);
         assertTrue(outputStream.toString().equals("insert completed\r\n"));
     }
 
