@@ -1,6 +1,7 @@
 package scanner.dbEntry;
 
 
+import scanner.filter.Hasher;
 import scanner.filter.StringToHash;
 
 import javax.swing.*;
@@ -56,9 +57,7 @@ public class DatabaseInput {
                 //have lucene run through the inputs to take out filler words before going into the database
                 //word with number is more confidential
                 try {
-                    getWords();
-                    getPhrases();
-                    processInput(words, phrases);
+                        processInput(words, phrases);
                 } catch (Exception e1) {
                     e1.printStackTrace();
                 }
@@ -116,7 +115,7 @@ public class DatabaseInput {
         }
     }
 
-    public static void getWords() throws Exception {
+    public static ArrayList<String> getWords() throws Exception {
         ArrayList<String> words = new ArrayList<String>();
 
         try {
@@ -128,14 +127,17 @@ public class DatabaseInput {
             while (rs.next()) {
                 words.add(rs.getString(1));
             }
-            System.out.println(words);
-            System.out.println("select words completed");
+//            System.out.println(words);
+//            System.out.println("select words completed");
+            return words;
         } catch (Exception e) {
             System.out.println(e);
+            return null;
         }
+
     }
 
-    public static void getPhrases() throws Exception {
+    public static ArrayList<String> getPhrases() throws Exception {
         ArrayList<String> phrases = new ArrayList<String>();
 
         try {
@@ -147,31 +149,77 @@ public class DatabaseInput {
             while (rs.next()) {
                 phrases.add(rs.getString(1));
             }
-            System.out.println(phrases);
-            System.out.println("select phrases completed");
+//            System.out.println(phrases);
+//            System.out.println("select phrases completed");
+            return phrases;
         } catch (Exception e) {
             System.out.println(e);
+            return null;
         }
     }
 
 
     public void processInput(String[] words, String[] phrases) throws Exception {
         //TODO: loop through input String array, and check each against database before adding
-        ArrayList<String> stemmedWords, stemmedPhrases;
-        try {
-            if(words.length != 0) {
-                stemmedWords = StringToHash.getHashes(words, false);    //stems and hashes each word
+        ArrayList<String>   stemmedWords,
+                            stemmedPhrases,
+                            dbHashedWords,
+                            dbHashedPhrases;
+        String[] unique_words = new String[words.length],
+                 unique_phrases = new String[phrases.length];
 
-                for (String word : stemmedWords) {
-                    insertWords(word, RARITY);                          //inserts the hashed word into the database
+        try {
+            dbHashedWords = getWords();
+            dbHashedPhrases = getPhrases();
+
+            if(words.length != 0) {
+                boolean duplicate = false, empty = true;
+                int i = 0;
+                for (String inputWord : words) {
+                    for(String hash: dbHashedWords) {
+                        if (!duplicate && Hasher.checkHash(inputWord, hash)) {
+                            // once a match is found, we no longer need to check each word
+                            duplicate = true; // should stop if statement from running
+                        }
+                    }
+                    if(!duplicate){ // word is not in database
+                        unique_words[i++] = inputWord;
+                        empty = false;
+                    }
+                    duplicate = false; // reset variable
+                }
+
+                if(!empty) {
+                    stemmedWords = StringToHash.getHashes(unique_words, false);
+                    for (String hashedWord : stemmedWords) {
+                        insertWords(hashedWord, RARITY);
+                    }
                 }
             }
-            if(phrases.length != 0) {
-                stemmedPhrases = StringToHash.getHashes(phrases, true); //stems and hashes each phrase
 
-                for (String hashedPhrase : stemmedPhrases) {
-                    insertPhrases(hashedPhrase, RARITY);                //inserts the hashed phrase into the database
+
+            if(phrases.length != 0) {
+                boolean duplicate = false, empty = true;
+                int i = 0;
+                for (String inputPhrase : phrases) {
+                    for(String hash : dbHashedPhrases) {
+                        if (!duplicate && Hasher.checkHash(inputPhrase, hash)) {
+                            duplicate = true;
+                        }
+                    }
+                    if(!duplicate){
+                        unique_words[i++] = inputPhrase;
+                        empty = false;
+                    }
                 }
+
+                if(!empty) {
+                    stemmedPhrases = StringToHash.getHashes(unique_phrases, true);
+                    for (String hashedPhrase : stemmedPhrases) {
+                        insertPhrases(hashedPhrase, RARITY);
+                    }
+                }
+
             }
 
         } catch (IOException e) {
