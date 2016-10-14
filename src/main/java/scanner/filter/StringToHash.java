@@ -34,7 +34,7 @@ public class StringToHash {
      * and returns the hashed words, re-concatenating phrases to preserve them
      * if phrases is set as true
      */
-    public static ArrayList<String> getHashes(String[] input, boolean phrases) throws IOException {
+    public static ArrayList<String> getHashes(ArrayList<String> input, boolean phrases) throws IOException {
         ArrayList<String> wordlist = new ArrayList<String>();
 
         if(phrases){

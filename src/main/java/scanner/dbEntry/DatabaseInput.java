@@ -93,9 +93,8 @@ public class DatabaseInput {
             Connection conn = getConnection();              //get connection
             Statement statement = conn.createStatement();   //create statement
             String sql = String.format("insert into Words (word, rarity) Values ('%s', %2d);", wordIn, rarityIn);
-            //System.out.println(sql);
+            System.out.println("\n" + sql);
             statement.executeUpdate(sql);                   //execute the update
-
         } catch (Exception e) {
             System.out.println(e);
         }
@@ -106,9 +105,8 @@ public class DatabaseInput {
             Connection conn = getConnection();              //get connection
             Statement statement = conn.createStatement();   //create statement
             String sql = String.format("insert into Phrases (phrase, rarity, count) Values ('%s', %2d, %2d);", phraseIn, rarityIn, count);
-            //System.out.println(sql);
+            System.out.println("\n" + sql);
             statement.executeUpdate(sql);                   //execute the update
-
         } catch (Exception e) {
             System.out.println(e);
         }
@@ -162,9 +160,9 @@ public class DatabaseInput {
         ArrayList<String>   stemmedWords,
                             stemmedPhrases,
                             dbHashedWords,
-                            dbHashedPhrases;
-        String[] unique_words = new String[words.length],
-                 unique_phrases = new String[phrases.length];
+                            dbHashedPhrases,
+                            unique_words = new ArrayList<String>(),
+                            unique_phrases = new ArrayList<String>();
 
         try {
             dbHashedWords = getWords();
@@ -184,8 +182,9 @@ public class DatabaseInput {
                             }
                         }
                     }
+
                     if(!duplicate){ // word is not in database
-                        unique_words[i++] = inputWord;
+                        unique_words.add(inputWord);
                         empty = false;
                     }
                     duplicate = false; // reset variable
@@ -219,7 +218,7 @@ public class DatabaseInput {
                         }
                     }
                     if(!duplicate){
-                        unique_words[i++] = inputPhrase;
+                        unique_phrases.add(inputPhrase);
                         empty = false;
                     }
                 }

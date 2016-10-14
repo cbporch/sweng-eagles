@@ -40,9 +40,9 @@ public class LuceneStemmer {
     /*
      * Method reduces each String in an array to its root word
      */
-    public static ArrayList<String> stemWords(String[] input) throws IOException {
+    public static ArrayList<String> stemWords(ArrayList<String> input) throws IOException {
         analyzer = new StemAnalyzer();
-        ArrayList<String> output = new ArrayList<String>(input.length);
+        ArrayList<String> output = new ArrayList<String>(input.size());
         for (String word : input) {
             if (word != "") {
                 TokenStream ts = analyzer.tokenStream("myfield", new StringReader(word));

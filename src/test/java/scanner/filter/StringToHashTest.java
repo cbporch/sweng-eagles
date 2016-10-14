@@ -14,7 +14,9 @@ public class StringToHashTest {
      */
     @Test
     public void testGetHashesSingle() throws Exception {
-        String[] input = {"the", "dogs"};
+        ArrayList<String> input = new ArrayList<>();
+        input.add("the");
+        input.add("dogs");
         boolean phrases = false;
         ArrayList<String> output = StringToHash.getHashes(input, false);
         assertTrue(Hasher.checkHash("dog", output.get(0)));
@@ -25,7 +27,9 @@ public class StringToHashTest {
      */
     @Test
     public void testGetHashesPhrases() throws Exception {
-        String[] input = {"the dog barked", "He runs home quickly"};
+        ArrayList<String> input = new ArrayList<>();
+        input.add("the dog barked");
+        input.add("He runs home quickly");
         boolean phrases = true;
         StringToHash sth = new StringToHash();
         ArrayList<String> output = sth.getHashes(input, phrases);
