@@ -27,7 +27,12 @@ public class Hasher {
      * Wrapper method for BCrypt's checkpw method
      */
     public static boolean checkHash(String word, String hash){
-        return BCrypt.checkpw(word, hash);
+        try {
+            return BCrypt.checkpw(word, hash);
+        } catch (Exception e) {
+           // e.printStackTrace();
+        }
+        return false;
     }
 
 }

@@ -31,13 +31,13 @@ public class DatabaseInputTest {
     @Test
     public void insertWords() throws Exception {
         DatabaseInput.insertWords(BCrypt.hashpw("test", BCrypt.gensalt(10)), 10);
-        assertTrue(outputStream.toString().equals("insert completed\r\n"));
+        assertEquals(outputStream.toString().substring(0,7),"\ninsert");
     }
 
     @Test
     public void insertPhrases() throws Exception {
         DatabaseInput.insertPhrases(BCrypt.hashpw("testphrase", BCrypt.gensalt(10)), 10, 2);
-        assertTrue(outputStream.toString().equals("insert completed\r\n"));
+        assertEquals(outputStream.toString().substring(0,7),"\ninsert");
     }
 
     @Test
