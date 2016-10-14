@@ -160,9 +160,9 @@ public class DatabaseInput {
         ArrayList<String>   stemmedWords,
                             stemmedPhrases,
                             dbHashedWords,
-                            dbHashedPhrases;
-        String[] unique_words = new String[words.length],
-                 unique_phrases = new String[phrases.length];
+                            dbHashedPhrases,
+                            unique_words = new ArrayList<String>(),
+                            unique_phrases = new ArrayList<String>();
 
         try {
             dbHashedWords = getWords();
@@ -182,8 +182,9 @@ public class DatabaseInput {
                             }
                         }
                     }
+
                     if(!duplicate){ // word is not in database
-                        unique_words[i++] = inputWord;
+                        unique_words.add(inputWord);
                         empty = false;
                     }
                     duplicate = false; // reset variable
@@ -217,7 +218,7 @@ public class DatabaseInput {
                         }
                     }
                     if(!duplicate){
-                        unique_words[i++] = inputPhrase;
+                        unique_phrases.add(inputPhrase);
                         empty = false;
                     }
                 }

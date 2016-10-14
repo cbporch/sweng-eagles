@@ -13,7 +13,8 @@ import static org.junit.Assert.*;
 public class LuceneStemmerTest {
     @Test
     public void testStemWords() throws IOException {
-        String[] input = new String[]{"runs"};
+        ArrayList<String> input = new ArrayList<>();
+        input.add("runs");
         LuceneStemmer stemmer = new LuceneStemmer();
         ArrayList<String> output = stemmer.stemWords(input);
         assertEquals("run", output.get(0));
