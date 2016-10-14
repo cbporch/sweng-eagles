@@ -15,6 +15,7 @@ package scanner.filter;
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 import org.apache.lucene.analysis.TokenStream;
 import org.apache.lucene.analysis.tokenattributes.CharTermAttribute;
 
@@ -26,58 +27,68 @@ import java.util.ArrayList;
  * Created by Chris Porch on 10/10/2016.
  * Utilizes Lucene's stemming capabilities to reduce words to their respective
  * stems in an effort to reduce duplicates in the database further on.
- *
+ * <p>
  * The copyright block above is required by Apache
  */
 
 public class LuceneStemmer {
-    private static StemAnalyzer analyzer = new StemAnalyzer();
+    private static StemAnalyzer analyzer;
 
-    public LuceneStemmer() {}
+    public LuceneStemmer() {
+    }
 
     /*
      * Method reduces each String in an array to its root word
      */
     public static ArrayList<String> stemWords(String[] input) throws IOException {
-    ArrayList<String> output = new ArrayList<String>(input.length);
-        for(String word : input){
-            TokenStream ts = analyzer.tokenStream("myfield", new StringReader(word));
-            CharTermAttribute termAtt = ts.addAttribute(CharTermAttribute.class);
-            try {
-                ts.reset();
-                while (ts.incrementToken()) {
-                    output.add(termAtt.toString());
+        analyzer = new StemAnalyzer();
+        ArrayList<String> output = new ArrayList<String>(input.length);
+        for (String word : input) {
+            if (word != "") {
+                TokenStream ts = analyzer.tokenStream("myfield", new StringReader(word));
+                CharTermAttribute termAtt = ts.addAttribute(CharTermAttribute.class);
+                try {
+                    ts.reset();
+                    while (ts.incrementToken()) {
+                        output.add(termAtt.toString());
+                    }
+                    ts.end();
+                } finally {
+                    ts.close();
                 }
-                ts.end();
-            } finally {
-                ts.close();
             }
         }
-       return output;
+        return output;
     }
 
     /*
      * Method reduces the words in a String to its root word, splitting by whitespace
      * if there are more than one word, then re-concatenates them, preserving phrases
      */
-    public static String stemPhrase(String input) throws IOException{
+    public static String stemPhrase(String input) throws IOException {
+        analyzer = new StemAnalyzer();
         String output = "";
-        TokenStream ts = analyzer.tokenStream("field",
-                new StringReader(input));
-        CharTermAttribute termAtt = ts.addAttribute(CharTermAttribute.class);
-        try {
-            ts.reset();
-            while (ts.incrementToken()) {
-                if(output.equals("")) {
-                    output = termAtt.toString();
-                }else{
-                    output = output + termAtt.toString();
+        if (input != "" && input != null) {
+            TokenStream ts = analyzer.tokenStream("field",
+                    new StringReader(input));
+            CharTermAttribute termAtt = ts.addAttribute(CharTermAttribute.class);
+            try {
+                ts.reset();
+                while (ts.incrementToken()) {
+                    if (output.equals("")) {
+                        output = termAtt.toString();
+                    } else {
+                        output = output + termAtt.toString();
+                    }
                 }
+                ts.end();
+            } finally {
+                ts.close();
             }
-            ts.end();
-        } finally {
-            ts.close();
         }
-        return output;
+        if (!output.equals("")) {
+            return output;
+        }
+        return null;
     }
 }
