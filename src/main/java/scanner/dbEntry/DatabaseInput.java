@@ -36,7 +36,7 @@ public class DatabaseInput {
     private final int RARITY = 10;
 
 
-    public DatabaseInput() {
+    protected DatabaseInput() {
 
         submitButton.addMouseListener(new MouseAdapter() {
             @Override
@@ -73,24 +73,20 @@ public class DatabaseInput {
         frame.setVisible(true);
     }
 
-    public static Connection getConnection() throws Exception {
+    private static Connection getConnection() throws Exception {
         String url = "jdbc:mysql://asrcemail.cfz28h3zsskv.us-east-1.rds.amazonaws.com/asrcemail";
         String username = "asrc";
         String password = "rOwan!Sw3ng?";
-        Connection conn = DriverManager.getConnection(url, username, password);
-        System.out.println("Connected");
-        return conn;
+        return DriverManager.getConnection(url, username, password);
+        //System.out.println("Connected");
     }
 
-    public static void insertWords(String wordIn, int rarityIn) throws Exception {
-        final String word = wordIn;
-        final int rarity = rarityIn;
-
+    static void insertWords(String wordIn, int rarityIn) throws Exception {
         try {
             Connection conn = getConnection();              //get connection
             Statement statement = conn.createStatement();   //create statement
-            String sql = String.format("insert into Words (word, rarity) Values ('%s', %2d);", word, rarity);
-            System.out.println(sql);
+            String sql = String.format("insert into Words (word, rarity) Values ('%s', %2d);", wordIn, rarityIn);
+            //System.out.println(sql);
             statement.executeUpdate(sql);                   //execute the update
             System.out.println("insert completed");
         } catch (Exception e) {
@@ -98,16 +94,12 @@ public class DatabaseInput {
         }
     }
 
-    public static void insertPhrases(String phraseIn, int rarityIn) throws Exception {
-        final String phrase = phraseIn;
-        final int rarity = rarityIn;
-        final int count = phraseIn.split("\\s+").length;
-
+    static void insertPhrases(String phraseIn, int rarityIn, int count) throws Exception {
         try {
             Connection conn = getConnection();              //get connection
             Statement statement = conn.createStatement();   //create statement
-            String sql = String.format("insert into Phrases (phrase, rarity, count) Values ('%s', %2d, %2d);", phrase, rarity, count);
-            System.out.println(sql);
+            String sql = String.format("insert into Phrases (phrase, rarity, count) Values ('%s', %2d, %2d);", phraseIn, rarityIn, count);
+            //System.out.println(sql);
             statement.executeUpdate(sql);                   //execute the update
             System.out.println("insert completed");
         } catch (Exception e) {
@@ -115,20 +107,20 @@ public class DatabaseInput {
         }
     }
 
-    public static ArrayList<String> getWords() throws Exception {
+    static ArrayList<String> getWords() throws Exception {
         ArrayList<String> words = new ArrayList<String>();
 
         try {
             Connection conn = getConnection();              //get connection
             Statement statement = conn.createStatement();   //create statement
             String sql = String.format("select word from Words");
-            System.out.println(sql);
+//            System.out.println(sql);
             ResultSet rs = statement.executeQuery(sql);     //execute the select query
             while (rs.next()) {
                 words.add(rs.getString(1));
             }
 //            System.out.println(words);
-//            System.out.println("select words completed");
+            System.out.println("select words completed");
             return words;
         } catch (Exception e) {
             System.out.println(e);
@@ -137,20 +129,20 @@ public class DatabaseInput {
 
     }
 
-    public static ArrayList<String> getPhrases() throws Exception {
+    static ArrayList<String> getPhrases() throws Exception {
         ArrayList<String> phrases = new ArrayList<String>();
 
         try {
             Connection conn = getConnection();              //get connection
             Statement statement = conn.createStatement();   //create statement
             String sql = String.format("select phrase from Phrases");
-            System.out.println(sql);
+//            System.out.println(sql);
             ResultSet rs = statement.executeQuery(sql);     //execute the select query
             while (rs.next()) {
                 phrases.add(rs.getString(1));
             }
 //            System.out.println(phrases);
-//            System.out.println("select phrases completed");
+            System.out.println("select phrases completed");
             return phrases;
         } catch (Exception e) {
             System.out.println(e);
@@ -159,8 +151,7 @@ public class DatabaseInput {
     }
 
 
-    public void processInput(String[] words, String[] phrases) throws Exception {
-        //TODO: loop through input String array, and check each against database before adding
+    private void processInput(String[] words, String[] phrases) throws Exception {
         ArrayList<String>   stemmedWords,
                             stemmedPhrases,
                             dbHashedWords,
@@ -176,10 +167,13 @@ public class DatabaseInput {
                 boolean duplicate = false, empty = true;
                 int i = 0;
                 for (String inputWord : words) {
-                    for(String hash: dbHashedWords) {
-                        if (!duplicate && Hasher.checkHash(inputWord, hash)) {
-                            // once a match is found, we no longer need to check each word
-                            duplicate = true; // should stop if statement from running
+
+                    if (dbHashedWords != null) {
+                        for(String hash: dbHashedWords) {
+                            if (!duplicate && Hasher.checkHash(inputWord, hash)) {
+                                // once a match is found, we no longer need to check each word
+                                duplicate = true; // should stop if statement from running
+                            }
                         }
                     }
                     if(!duplicate){ // word is not in database
@@ -197,14 +191,20 @@ public class DatabaseInput {
                 }
             }
 
+            int[] counts = new int[phrases.length];
+            for (int i = 0; i < counts.length; i++){
+                counts[i] = phrases[i].split("\\s+").length;
+            }
 
             if(phrases.length != 0) {
                 boolean duplicate = false, empty = true;
                 int i = 0;
                 for (String inputPhrase : phrases) {
-                    for(String hash : dbHashedPhrases) {
-                        if (!duplicate && Hasher.checkHash(inputPhrase, hash)) {
-                            duplicate = true;
+                    if (dbHashedPhrases != null) {
+                        for(String hash : dbHashedPhrases) {
+                            if (!duplicate && Hasher.checkHash(inputPhrase, hash)) {
+                                duplicate = true;
+                            }
                         }
                     }
                     if(!duplicate){
@@ -215,8 +215,8 @@ public class DatabaseInput {
 
                 if(!empty) {
                     stemmedPhrases = StringToHash.getHashes(unique_phrases, true);
-                    for (String hashedPhrase : stemmedPhrases) {
-                        insertPhrases(hashedPhrase, RARITY);
+                    for (int j = 0; j< stemmedPhrases.size();j++) {
+                        insertPhrases(stemmedPhrases.get(j), RARITY, counts[j]);
                     }
                 }
 
