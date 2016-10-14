@@ -57,6 +57,13 @@ public class DatabaseInput {
                 //have lucene run through the inputs to take out filler words before going into the database
                 //word with number is more confidential
                 try {
+                    // remove empty input
+                    if(phrases.length == 1 && phrases[0].equals("")){
+                        phrases = new String[0];
+                    }
+                    if(words.length == 1 && words[0].equals("")){
+                        words = new String[0];
+                    }
                         processInput(words, phrases);
                 } catch (Exception e1) {
                     e1.printStackTrace();
@@ -88,7 +95,7 @@ public class DatabaseInput {
             String sql = String.format("insert into Words (word, rarity) Values ('%s', %2d);", wordIn, rarityIn);
             //System.out.println(sql);
             statement.executeUpdate(sql);                   //execute the update
-            System.out.println("insert completed");
+
         } catch (Exception e) {
             System.out.println(e);
         }
@@ -101,7 +108,7 @@ public class DatabaseInput {
             String sql = String.format("insert into Phrases (phrase, rarity, count) Values ('%s', %2d, %2d);", phraseIn, rarityIn, count);
             //System.out.println(sql);
             statement.executeUpdate(sql);                   //execute the update
-            System.out.println("insert completed");
+
         } catch (Exception e) {
             System.out.println(e);
         }
@@ -165,9 +172,10 @@ public class DatabaseInput {
 
             if(words.length != 0) {
                 boolean duplicate = false, empty = true;
-                int i = 0;
+                int i = 0, count = 1;
+                System.out.print("Checking word ");
                 for (String inputWord : words) {
-
+                    System.out.print(count++ + ", ");
                     if (dbHashedWords != null) {
                         for(String hash: dbHashedWords) {
                             if (!duplicate && Hasher.checkHash(inputWord, hash)) {
@@ -188,6 +196,7 @@ public class DatabaseInput {
                     for (String hashedWord : stemmedWords) {
                         insertWords(hashedWord, RARITY);
                     }
+                    System.out.println("\nWords inserted");
                 }
             }
 
@@ -198,8 +207,10 @@ public class DatabaseInput {
 
             if(phrases.length != 0) {
                 boolean duplicate = false, empty = true;
-                int i = 0;
+                int i = 0, count = 1;
+                System.out.print("Checking phrase ");
                 for (String inputPhrase : phrases) {
+                    System.out.print(count++ + ", ");
                     if (dbHashedPhrases != null) {
                         for(String hash : dbHashedPhrases) {
                             if (!duplicate && Hasher.checkHash(inputPhrase, hash)) {
@@ -218,13 +229,15 @@ public class DatabaseInput {
                     for (int j = 0; j< stemmedPhrases.size();j++) {
                         insertPhrases(stemmedPhrases.get(j), RARITY, counts[j]);
                     }
+                    System.out.println("\nPhrases inserted");
                 }
 
             }
-
+            System.out.println("Entry Successful");
         } catch (IOException e) {
             e.printStackTrace();
         }
+
     }
 }
 
