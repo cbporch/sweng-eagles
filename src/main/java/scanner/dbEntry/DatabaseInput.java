@@ -57,7 +57,7 @@ public class DatabaseInput {
                 //have lucene run through the inputs to take out filler words before going into the database
                 //word with number is more confidential
                 try {
-                    processInput(words, phrases);
+                        processInput(words, phrases);
                 } catch (Exception e1) {
                     e1.printStackTrace();
                 }
@@ -173,41 +173,51 @@ public class DatabaseInput {
             dbHashedPhrases = getPhrases();
 
             if(words.length != 0) {
-                boolean duplicate = false;
+                boolean duplicate = false, empty = true;
                 int i = 0;
                 for (String inputWord : words) {
                     for(String hash: dbHashedWords) {
-                        if (Hasher.checkHash(inputWord, hash)) {
-                            // do nothing, word is in database
-                        } else {
-                            unique_words[i++] = inputWord;
+                        if (!duplicate && Hasher.checkHash(inputWord, hash)) {
+                            // once a match is found, we no longer need to check each word
+                            duplicate = true; // should stop if statement from running
                         }
                     }
+                    if(!duplicate){ // word is not in database
+                        unique_words[i++] = inputWord;
+                        empty = false;
+                    }
+                    duplicate = false; // reset variable
                 }
 
-                stemmedWords = StringToHash.getHashes(unique_words, false);
-                for(String hashedWord : stemmedWords){
-                    insertWords(hashedWord, RARITY);
+                if(!empty) {
+                    stemmedWords = StringToHash.getHashes(unique_words, false);
+                    for (String hashedWord : stemmedWords) {
+                        insertWords(hashedWord, RARITY);
+                    }
                 }
             }
 
 
             if(phrases.length != 0) {
-                boolean duplicate = false;
+                boolean duplicate = false, empty = true;
                 int i = 0;
-                for (String phrase : phrases) {
+                for (String inputPhrase : phrases) {
                     for(String hash : dbHashedPhrases) {
-                        if (Hasher.checkHash(phrase, hash)){
-                            // do nothing, duplicate phrase
-                        }else{
-                            unique_phrases[i++] = phrase;
+                        if (!duplicate && Hasher.checkHash(inputPhrase, hash)) {
+                            duplicate = true;
                         }
+                    }
+                    if(!duplicate){
+                        unique_words[i++] = inputPhrase;
+                        empty = false;
                     }
                 }
 
-                stemmedPhrases = StringToHash.getHashes(unique_phrases, true);
-                for(String hashedPhrase : stemmedPhrases){
-                    insertPhrases(hashedPhrase, RARITY);
+                if(!empty) {
+                    stemmedPhrases = StringToHash.getHashes(unique_phrases, true);
+                    for (String hashedPhrase : stemmedPhrases) {
+                        insertPhrases(hashedPhrase, RARITY);
+                    }
                 }
 
             }
