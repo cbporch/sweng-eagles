@@ -9,6 +9,7 @@ import java.util.ArrayList;
  * Wrapper class that uses jBCrypt to hash a given ArrayList of Strings
  */
 public class Hasher {
+    private static final int SALTSPEED = 5;
 
     /*
      * Hashes an ArrayList of strings using a salt generated using the default number of rounds
@@ -17,7 +18,7 @@ public class Hasher {
         ArrayList<String> hashedList = new ArrayList();
         for(String word: list){
             if(word != "" && word != null) {
-                hashedList.add(BCrypt.hashpw(word, BCrypt.gensalt(10)));
+                hashedList.add(BCrypt.hashpw(word, BCrypt.gensalt(SALTSPEED)));
             }
         }
         return hashedList;

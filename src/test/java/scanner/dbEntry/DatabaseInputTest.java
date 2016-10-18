@@ -30,25 +30,25 @@ public class DatabaseInputTest {
 
     @Test
     public void insertWords() throws Exception {
-        DatabaseInput.insertWords(BCrypt.hashpw("test", BCrypt.gensalt(10)), 10);
+        Database.insertWords(BCrypt.hashpw("test", BCrypt.gensalt(10)), 10);
         assertEquals(outputStream.toString().substring(0,7),"\ninsert");
     }
 
     @Test
     public void insertPhrases() throws Exception {
-        DatabaseInput.insertPhrases(BCrypt.hashpw("testphrase", BCrypt.gensalt(10)), 10, 2);
+        Database.insertPhrases(BCrypt.hashpw("testphrase", BCrypt.gensalt(10)), 10, 2);
         assertEquals(outputStream.toString().substring(0,7),"\ninsert");
     }
 
     @Test
     public void getWords() throws Exception {
-        DatabaseInput.getWords();
+        Database.getWords();
         assertTrue(outputStream.toString().equals("select words completed" + System.lineSeparator()));
     }
 
     @Test
     public void getPhrases() throws Exception {
-        DatabaseInput.getPhrases();
+        Database.getPhrases();
         assertTrue(outputStream.toString().equals("select phrases completed" + System.lineSeparator()));
     }
 
