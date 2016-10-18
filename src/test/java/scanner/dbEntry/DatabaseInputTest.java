@@ -5,7 +5,6 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mindrot.jbcrypt.BCrypt;
 
-import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
 
@@ -16,6 +15,7 @@ import static org.junit.Assert.*;
  * jUnit Test for DatabaseInput class
  */
 public class DatabaseInputTest {
+
     private ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
 
     @Before
@@ -43,13 +43,13 @@ public class DatabaseInputTest {
     @Test
     public void getWords() throws Exception {
         DatabaseInput.getWords();
-        assertTrue(outputStream.toString().equals("select words completed\r\n"));
+        assertTrue(outputStream.toString().equals("select words completed" + System.lineSeparator()));
     }
 
     @Test
     public void getPhrases() throws Exception {
         DatabaseInput.getPhrases();
-        assertTrue(outputStream.toString().equals("select phrases completed\r\n"));
+        assertTrue(outputStream.toString().equals("select phrases completed" + System.lineSeparator()));
     }
 
 }
