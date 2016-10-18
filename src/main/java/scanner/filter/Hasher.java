@@ -23,6 +23,10 @@ public class Hasher {
         return hashedList;
     }
 
+    public static String hashString(String input){
+        return BCrypt.hashpw(input, BCrypt.gensalt(10));
+    }
+
     /*
      * Wrapper method for BCrypt's checkpw method
      */

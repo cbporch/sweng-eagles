@@ -227,7 +227,7 @@ public class DatabaseInput {
                 }
 
                 if(!empty) {
-                    unique_phrases = StringToHash.getHashes(unique_phrases, true);
+                    unique_phrases = StringToHash.getPhraseHashes(unique_phrases);
                     int j = 0;
                     for (Phrase phrase: unique_phrases) {
                         insertPhrases(phrase.getPhrase(), RARITY, phrase.getWordcount());

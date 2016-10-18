@@ -34,22 +34,16 @@ public class StringToHash {
      * and returns the hashed words, re-concatenating phrases to preserve them
      * if phrases is set as true
      */
-    public static ArrayList<String> getHashes(ArrayList<String> input, boolean phrases) throws IOException {
-        ArrayList<String> wordlist = new ArrayList<String>();
+    public static ArrayList<String> getHashes(ArrayList<String> input) throws IOException {
+         return Hasher.hashArrayList(LuceneStemmer.stemWords(input));
+    }
 
-        if(phrases){
-            for (String phrase : input){
-                if(phrase != "") {
-                    wordlist.add(LuceneStemmer.stemPhrase(phrase)); // stem each phrase individually
-                }
-            }
-        } else{
-            wordlist = LuceneStemmer.stemWords(input); // stem list of individual words only
+    public static ArrayList<Phrase> getPhraseHashes(ArrayList<Phrase> input) throws IOException {
+        ArrayList<Phrase> hashedPhrases = new ArrayList<>();
+        for(Phrase phrase : input){
+            hashedPhrases.add(new Phrase(Hasher.hashString(LuceneStemmer.stemPhrase(phrase.getPhrase())), phrase.getWordcount()));
         }
-
-        wordlist = Hasher.hashArrayList(wordlist);
-
-        return wordlist;
+        return hashedPhrases;
     }
 
 }
