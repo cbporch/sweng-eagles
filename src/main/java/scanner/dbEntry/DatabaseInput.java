@@ -170,17 +170,24 @@ public class DatabaseInput {
             dbHashedWords = getWords();
             dbHashedPhrases = getPhrases();
 
-            if(words.length != 0) {
+            // move array into ArrayList for method call
+            ArrayList<String> w = new ArrayList<>();
+            for (String word : words){
+                w.add(word);
+            }
+            stemmedWords = LuceneStemmer.stemWords(w);
+
+            if(stemmedWords.size() != 0) {
                 boolean duplicate = false, empty = true;
                 int i = 0, count = 1;
                 System.out.print("Checking word ");
-                for (String inputWord : words) {
+                for (String inputWord : stemmedWords) {
                     System.out.print(count++ + ", ");
                     if (dbHashedWords != null) {
                         for(String hash: dbHashedWords) {
                             if (!duplicate && Hasher.checkHash(inputWord, hash)) {
                                 // once a match is found, we no longer need to check each word
-                                duplicate = true; // should stop if statement from running
+                                duplicate = true; // should stop if statement from running when it hits a duplicate
                             }
                         }
                     }
@@ -193,7 +200,8 @@ public class DatabaseInput {
                 }
 
                 if(!empty) {
-                    stemmedWords = StringToHash.getHashes(unique_words);
+                    // hash unique words
+                    unique_words = StringToHash.getHashes(unique_words);
                     for (String hashedWord : stemmedWords) {
                         insertWords(hashedWord, RARITY);
                     }
@@ -227,8 +235,8 @@ public class DatabaseInput {
                 }
 
                 if(!empty) {
+                    // hash unique phrases
                     unique_phrases = StringToHash.getPhraseHashes(unique_phrases);
-                    int j = 0;
                     for (Phrase phrase: unique_phrases) {
                         insertPhrases(phrase.getPhrase(), RARITY, phrase.getWordcount());
                     }
