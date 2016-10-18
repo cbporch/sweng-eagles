@@ -236,7 +236,7 @@ public class DatabaseInput {
                 }
 
             }
-            System.out.println("Entry Successful");
+            System.out.println("Processing complete");
         } catch (IOException e) {
             e.printStackTrace();
         }
