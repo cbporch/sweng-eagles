@@ -2,6 +2,8 @@ package scanner.dbEntry;
 
 
 import scanner.filter.Hasher;
+import scanner.filter.LuceneStemmer;
+import scanner.filter.Phrase;
 import scanner.filter.StringToHash;
 
 import javax.swing.*;
@@ -157,12 +159,12 @@ public class DatabaseInput {
 
 
     private void processInput(String[] words, String[] phrases) throws Exception {
-        ArrayList<String>   stemmedWords,
-                            stemmedPhrases,
+        ArrayList<String>   stemmedWords = new ArrayList<String>(),
                             dbHashedWords,
                             dbHashedPhrases,
-                            unique_words = new ArrayList<String>(),
-                            unique_phrases = new ArrayList<String>();
+                            unique_words = new ArrayList<String>();
+        ArrayList<Phrase>   stemmedPhrases = new ArrayList<Phrase>(),
+                            unique_phrases = new ArrayList<Phrase>();
 
         try {
             dbHashedWords = getWords();
@@ -199,20 +201,21 @@ public class DatabaseInput {
                 }
             }
 
-            int[] counts = new int[phrases.length];
-            for (int i = 0; i < counts.length; i++){
-                counts[i] = phrases[i].split("\\s+").length;
+            // stem phrases before checking in database, maintaining word count for each phrase
+            for(String phrase: phrases){
+                stemmedPhrases.add(new Phrase(LuceneStemmer.stemPhrase(phrase), phrase.split("\\s+").length));
             }
 
-            if(phrases.length != 0) {
+            // find unique phrases in input
+            if(stemmedPhrases.size() != 0) {
                 boolean duplicate = false, empty = true;
                 int i = 0, count = 1;
                 System.out.print("Checking phrase ");
-                for (String inputPhrase : phrases) {
+                for (Phrase inputPhrase : stemmedPhrases) {
                     System.out.print(count++ + ", ");
                     if (dbHashedPhrases != null) {
                         for(String hash : dbHashedPhrases) {
-                            if (!duplicate && Hasher.checkHash(inputPhrase, hash)) {
+                            if (!duplicate && Hasher.checkHash(inputPhrase.getPhrase(), hash)) {
                                 duplicate = true;
                             }
                         }
@@ -224,9 +227,10 @@ public class DatabaseInput {
                 }
 
                 if(!empty) {
-                    stemmedPhrases = StringToHash.getHashes(unique_phrases, true);
-                    for (int j = 0; j< stemmedPhrases.size();j++) {
-                        insertPhrases(stemmedPhrases.get(j), RARITY, counts[j]);
+                    unique_phrases = StringToHash.getHashes(unique_phrases, true);
+                    int j = 0;
+                    for (Phrase phrase: unique_phrases) {
+                        insertPhrases(phrase.getPhrase(), RARITY, phrase.getWordcount());
                     }
                     System.out.println("\nPhrases inserted");
                 }
