@@ -18,7 +18,7 @@ public class StringToHashTest {
         input.add("the");
         input.add("dogs");
         boolean phrases = false;
-        ArrayList<String> output = StringToHash.getHashes(input, false);
+        ArrayList<String> output = StringToHash.getHashes(input);
         assertTrue(Hasher.checkHash("dog", output.get(0)));
     }
 
@@ -27,13 +27,16 @@ public class StringToHashTest {
      */
     @Test
     public void testGetHashesPhrases() throws Exception {
-        ArrayList<String> input = new ArrayList<>();
-        input.add("the dog barked");
-        input.add("He runs home quickly");
+        ArrayList<Phrase> input = new ArrayList<>();
+        ArrayList<Phrase> output = new ArrayList<>();
+        input.add(new Phrase("the dog barked"));
+        input.add(new Phrase("He runs home quickly"));
         boolean phrases = true;
         StringToHash sth = new StringToHash();
-        ArrayList<String> output = sth.getHashes(input, phrases);
-        assertTrue(Hasher.checkHash("dogbarked", output.get(0)));
-        assertTrue(Hasher.checkHash("herunhomequickly", output.get(1)));
+        for(Phrase p : input) {
+            output = sth.getPhraseHashes(input);
+        }
+        assertTrue(Hasher.checkHash("dogbarked", output.get(0).getPhrase()));
+        assertTrue(Hasher.checkHash("herunhomequickly", output.get(1).getPhrase()));
     }
 }

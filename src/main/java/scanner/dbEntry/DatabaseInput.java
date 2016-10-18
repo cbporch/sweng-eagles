@@ -193,7 +193,7 @@ public class DatabaseInput {
                 }
 
                 if(!empty) {
-                    stemmedWords = StringToHash.getHashes(unique_words, false);
+                    stemmedWords = StringToHash.getHashes(unique_words);
                     for (String hashedWord : stemmedWords) {
                         insertWords(hashedWord, RARITY);
                     }
