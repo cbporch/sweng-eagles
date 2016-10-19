@@ -32,14 +32,24 @@ public class EmailTextGUI {
         JPanel scoringPanel = new JPanel();
         JButton evaluateButton = new JButton("Evaluate Email");
         final JLabel scoreLabel = new JLabel("Test");
+        JButton uploadFileBtn = new JButton("Upload File");
         scoringPanel.add(evaluateButton);
+        scoringPanel.add(uploadFileBtn);
         scoringPanel.add(scoreLabel);
+
         pane.add(scoringPanel, BorderLayout.SOUTH);
 
         evaluateButton.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
                 scoreLabel.setText("45");
+            }
+        });
+
+        uploadFileBtn.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                scoreLabel.setText("65");
             }
         });
     }
@@ -51,7 +61,7 @@ public class EmailTextGUI {
      */
     private static void createAndShowGUI() {
         //Create and set up the window.
-        JFrame frame = new JFrame("BoxLayoutDemo");
+        JFrame frame = new JFrame("EmailGUI");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setLocationRelativeTo(null);
         frame.setPreferredSize(new Dimension(500,400));
