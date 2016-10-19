@@ -39,6 +39,8 @@ public class DatabaseInput {
     private String phrase;
     private String[] phraseToWords;
     private String[] phrases;
+    private static JLabel successLabel;
+    private static JButton submitButton2;
     private final int RARITY = 10;
 
 
@@ -47,6 +49,7 @@ public class DatabaseInput {
         submitButton.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
+
                 //word storing and cutting off white space
                 word = wordsTextField.getText();
                 word = word.replaceAll("\\s+", "");
@@ -107,7 +110,7 @@ public class DatabaseInput {
 
         // words input panel
         JPanel wordsInputPanel = new JPanel();
-        wordsInputPanel.setBackground(Color.BLACK);
+        wordsInputPanel.setBackground(Color.DARK_GRAY);
         pane.add(wordsInputPanel, new BoxLayout(pane, BoxLayout.Y_AXIS));
         JLabel wordsLabel = new JLabel("Words");
         wordsInputPanel.add(wordsLabel);
@@ -125,17 +128,30 @@ public class DatabaseInput {
         wordOptions.add(numDependentBtn);
         wordOptions.add(probField);
 
+        JPanel newWordPanel = new JPanel();
+        newWordPanel.setBackground(Color.LIGHT_GRAY);
+        JButton newWordBtn = new JButton("New Word");
+        newWordPanel.add(newWordBtn);
+        pane.add(newWordPanel);
+
+        newWordBtn.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                successLabel.setText("11");
+            }
+        });
+
         // phrases input panel
         JPanel phrasesInputPanel = new JPanel();
-        phrasesInputPanel.setBackground(Color.BLACK);
-        pane.add(wordsInputPanel, new BoxLayout(pane, BoxLayout.Y_AXIS));
+        phrasesInputPanel.setBackground(Color.DARK_GRAY);
+        pane.add(phrasesInputPanel, new BoxLayout(pane, BoxLayout.Y_AXIS));
         JLabel phrasesLabel = new JLabel("Phrases");
-        wordsInputPanel.add(phrasesLabel);
+        phrasesInputPanel.add(phrasesLabel);
 
         //phrase text field and options
 
         JPanel phraseOptions = new JPanel();
-        phrasesInputPanel.add(wordOptions, new BoxLayout(pane, BoxLayout.X_AXIS));
+        phrasesInputPanel.add(phraseOptions, new BoxLayout(pane, BoxLayout.X_AXIS));
         JTextField phraseTextField = new JTextField();
         JRadioButton phraseSynBtn = new JRadioButton("Synonyms?");
         JRadioButton phraseNumDependentBtn = new JRadioButton("# Dependent?");
@@ -146,19 +162,32 @@ public class DatabaseInput {
         phraseOptions.add(phraseNumDependentBtn);
         phraseOptions.add(phraseProbField);
 
+        JPanel newPhrasePanel = new JPanel();
+        newPhrasePanel.setBackground(Color.LIGHT_GRAY);
+        JButton newPhraseBtn = new JButton("New Phrase");
+        newPhrasePanel.add(newPhraseBtn);
+        pane.add(newPhrasePanel);
+
+        newPhraseBtn.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                successLabel.setText("22");
+            }
+        });
+
         JPanel submitPanel = new JPanel();
-        JButton submitButton = new JButton("Submit");
-        final JLabel successLabel = new JLabel("Test");
-        submitPanel.add(submitButton);
+        submitButton2 = new JButton("Submit");
+        successLabel = new JLabel("Test");
+        submitPanel.add(submitButton2);
         submitPanel.add(successLabel);
         pane.add(submitPanel, BorderLayout.SOUTH);
 
-        /*evaluateButton.addMouseListener(new MouseAdapter() {
+        submitButton2.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                scoreLabel.setText("45");
+                successLabel.setText("45");
             }
-        });*/
+        });
     }
 
     /**
