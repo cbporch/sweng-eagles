@@ -1,7 +1,9 @@
 package scanner.filter;
 
 import org.mindrot.jbcrypt.BCrypt;
+import java.security.MessageDigest;
 
+import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 
 /**
@@ -14,7 +16,7 @@ public class Hasher {
     /*
      * Hashes an ArrayList of strings using a salt generated using the default number of rounds
      */
-    public static ArrayList<String> hashArrayList(ArrayList<String> list){
+    public static ArrayList<String> hashArrayListBCrypt(ArrayList<String> list){
         ArrayList<String> hashedList = new ArrayList();
         for(String word: list){
             if(word != "" && word != null) {
@@ -24,14 +26,14 @@ public class Hasher {
         return hashedList;
     }
 
-    public static String hashString(String input){
+    public static String hashStringBCrypt(String input){
         return BCrypt.hashpw(input, BCrypt.gensalt(10));
     }
 
     /*
      * Wrapper method for BCrypt's checkpw method
      */
-    public static boolean checkHash(String word, String hash){
+    public static boolean checkHashBCrypt(String word, String hash){
         try {
             return BCrypt.checkpw(word, hash);
         } catch (Exception e) {
@@ -40,4 +42,13 @@ public class Hasher {
         return false;
     }
 
+    public static String hashSHA(String word) throws NoSuchAlgorithmException {
+        MessageDigest md = MessageDigest.getInstance("SHA-512");
+        return md.digest(word.getBytes()).toString();
+    }
+
+    public static boolean checkSHA(String word, String hash) throws NoSuchAlgorithmException {
+        MessageDigest md = MessageDigest.getInstance("SHA-512");
+        return md.digest(word.getBytes()).equals(hash);
+    }
 }
