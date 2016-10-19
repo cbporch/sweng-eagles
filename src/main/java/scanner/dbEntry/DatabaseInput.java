@@ -108,20 +108,29 @@ public class DatabaseInput {
         instructionsPanel.add(instructions);
         pane.add(instructionsPanel);
 
+
         // words input panel
         JPanel wordsInputPanel = new JPanel();
         wordsInputPanel.setBackground(Color.DARK_GRAY);
         pane.add(wordsInputPanel, new BoxLayout(pane, BoxLayout.Y_AXIS));
         JLabel wordsLabel = new JLabel("Words");
+        wordsLabel.setFont(new Font("Serif", Font.BOLD, 16));
+        wordsLabel.setForeground(Color.WHITE);
         wordsInputPanel.add(wordsLabel);
 
         //words text field and options
         JPanel wordOptions = new JPanel();
         wordsInputPanel.add(wordOptions, new BoxLayout(pane, BoxLayout.X_AXIS));
         JTextField wordsTextField = new JTextField();
+        wordsTextField.setMinimumSize(new Dimension(350, 30));
+        wordsTextField.setMaximumSize(new Dimension(350, 30));
+        wordsTextField.setPreferredSize(new Dimension(350, 30));
         JRadioButton synBtn = new JRadioButton("Synonyms?");
         JRadioButton numDependentBtn = new JRadioButton("# Dependent?");
         JTextField probField = new JTextField();
+        probField.setMinimumSize(new Dimension(100, 30));
+        probField.setMaximumSize(new Dimension(100, 30));
+        probField.setPreferredSize(new Dimension(100, 30));
         //look into hint text
         wordOptions.add(wordsTextField);
         wordOptions.add(synBtn);
@@ -146,6 +155,8 @@ public class DatabaseInput {
         phrasesInputPanel.setBackground(Color.DARK_GRAY);
         pane.add(phrasesInputPanel, new BoxLayout(pane, BoxLayout.Y_AXIS));
         JLabel phrasesLabel = new JLabel("Phrases");
+        phrasesLabel.setFont(new Font("Serif", Font.BOLD, 16));
+        phrasesLabel.setForeground(Color.WHITE);
         phrasesInputPanel.add(phrasesLabel);
 
         //phrase text field and options
@@ -153,9 +164,15 @@ public class DatabaseInput {
         JPanel phraseOptions = new JPanel();
         phrasesInputPanel.add(phraseOptions, new BoxLayout(pane, BoxLayout.X_AXIS));
         JTextField phraseTextField = new JTextField();
+        phraseTextField.setMinimumSize(new Dimension(350, 30));
+        phraseTextField.setMaximumSize(new Dimension(350, 30));
+        phraseTextField.setPreferredSize(new Dimension(350, 30));
         JRadioButton phraseSynBtn = new JRadioButton("Synonyms?");
         JRadioButton phraseNumDependentBtn = new JRadioButton("# Dependent?");
         JTextField phraseProbField = new JTextField();
+        phraseProbField.setMinimumSize(new Dimension(100, 30));
+        phraseProbField.setMaximumSize(new Dimension(100, 30));
+        phraseProbField.setPreferredSize(new Dimension(100, 30));
         //look into hint text
         phraseOptions.add(phraseTextField);
         phraseOptions.add(phraseSynBtn);
@@ -200,9 +217,11 @@ public class DatabaseInput {
         JFrame frame = new JFrame("DatabaseGUI");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setLocationRelativeTo(null);
-        frame.setPreferredSize(new Dimension(500,400));
         frame.setTitle("Database Input");
         frame.setResizable(true);
+        frame.setMaximumSize(new Dimension(700, 500));
+        frame.setMinimumSize(new Dimension(700, 500));
+        frame.setPreferredSize(new Dimension(700, 500));
         //Set up the content pane.
         addComponentsToPane(frame.getContentPane());
 
