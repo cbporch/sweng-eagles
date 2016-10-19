@@ -8,6 +8,8 @@ import scanner.filter.StringToHash;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.FocusEvent;
+import java.awt.event.FocusListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.IOException;
@@ -37,6 +39,10 @@ public class DatabaseInput {
     private String[] phrases;
     private static JLabel successLabel;
     private static JButton submitButton2;
+    private static Boolean phraseProbFieldFocus = false;
+    private static Boolean phraseTextFieldFocus = false;
+    private static Boolean wordProbFieldFocus = false;
+    private static Boolean wordTextFieldFocus = false;
     private final int RARITY = 10;
 
 
@@ -117,13 +123,15 @@ public class DatabaseInput {
         //words text field and options
         JPanel wordOptions = new JPanel();
         wordsInputPanel.add(wordOptions, new BoxLayout(pane, BoxLayout.X_AXIS));
-        JTextField wordsTextField = new JTextField();
+        final JTextField wordsTextField = new JTextField("Enter word here...");
+        wordsTextField.setForeground(Color.LIGHT_GRAY);
         wordsTextField.setMinimumSize(new Dimension(350, 30));
         wordsTextField.setMaximumSize(new Dimension(350, 30));
         wordsTextField.setPreferredSize(new Dimension(350, 30));
         JRadioButton synBtn = new JRadioButton("Synonyms?");
         JRadioButton numDependentBtn = new JRadioButton("# Dependent?");
-        JTextField probField = new JTextField();
+        final JTextField probField = new JTextField("Enter probability..");
+        probField.setForeground(Color.LIGHT_GRAY);
         probField.setMinimumSize(new Dimension(100, 30));
         probField.setMaximumSize(new Dimension(100, 30));
         probField.setPreferredSize(new Dimension(100, 30));
@@ -132,6 +140,30 @@ public class DatabaseInput {
         wordOptions.add(synBtn);
         wordOptions.add(numDependentBtn);
         wordOptions.add(probField);
+
+        wordsTextField.addFocusListener(new FocusListener() {
+            public void focusGained(FocusEvent e) {
+                wordsTextField.setText("");
+                wordTextFieldFocus = true;
+                wordsTextField.setForeground(Color.BLACK);
+            }
+
+            public void focusLost(FocusEvent e) {
+                // nothing
+            }
+        });
+
+        probField.addFocusListener(new FocusListener() {
+            public void focusGained(FocusEvent e) {
+                probField.setText("");
+                wordProbFieldFocus = true;
+                probField.setForeground(Color.BLACK);
+            }
+
+            public void focusLost(FocusEvent e) {
+                // nothing
+            }
+        });
 
         JPanel newWordPanel = new JPanel();
         newWordPanel.setBackground(Color.WHITE);
@@ -159,16 +191,43 @@ public class DatabaseInput {
 
         JPanel phraseOptions = new JPanel();
         phrasesInputPanel.add(phraseOptions, new BoxLayout(pane, BoxLayout.X_AXIS));
-        JTextField phraseTextField = new JTextField();
+        final JTextField phraseTextField = new JTextField("Enter phrase here..");
+        phraseTextField.setForeground(Color.LIGHT_GRAY);
         phraseTextField.setMinimumSize(new Dimension(350, 30));
         phraseTextField.setMaximumSize(new Dimension(350, 30));
         phraseTextField.setPreferredSize(new Dimension(350, 30));
         JRadioButton phraseSynBtn = new JRadioButton("Synonyms?");
         JRadioButton phraseNumDependentBtn = new JRadioButton("# Dependent?");
-        JTextField phraseProbField = new JTextField();
+        final JTextField phraseProbField = new JTextField("Enter probability..");
+        phraseProbField.setForeground(Color.LIGHT_GRAY);
         phraseProbField.setMinimumSize(new Dimension(100, 30));
         phraseProbField.setMaximumSize(new Dimension(100, 30));
         phraseProbField.setPreferredSize(new Dimension(100, 30));
+
+        phraseTextField.addFocusListener(new FocusListener() {
+            public void focusGained(FocusEvent e) {
+                phraseTextField.setText("");
+                phraseTextFieldFocus = true;
+                phraseTextField.setForeground(Color.BLACK);
+            }
+
+            public void focusLost(FocusEvent e) {
+                // nothing
+            }
+        });
+
+        phraseProbField.addFocusListener(new FocusListener() {
+            public void focusGained(FocusEvent e) {
+                phraseProbField.setText("");
+                phraseProbFieldFocus = true;
+                phraseProbField.setForeground(Color.BLACK);
+            }
+
+            public void focusLost(FocusEvent e) {
+                // nothing
+            }
+        });
+
         //look into hint text
         phraseOptions.add(phraseTextField);
         phraseOptions.add(phraseSynBtn);
