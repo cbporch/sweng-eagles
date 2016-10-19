@@ -10,10 +10,6 @@ import javax.swing.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.IOException;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.ResultSet;
-import java.sql.Statement;
 import java.util.ArrayList;
 
 import static scanner.dbEntry.Database.*;
@@ -112,7 +108,7 @@ public class DatabaseInput {
                     System.out.print(count++ + ", ");
                     if (dbHashedWords != null) {
                         for(String hash: dbHashedWords) {
-                            if (!duplicate && Hasher.checkHash(inputWord, hash)) {
+                            if (!duplicate && Hasher.checkHashBCrypt(inputWord, hash)) {
                                 // once a match is found, we no longer need to check each word
                                 duplicate = true; // should stop if statement from running when it hits a duplicate
                             }
@@ -150,7 +146,7 @@ public class DatabaseInput {
                     System.out.print(count++ + ", ");
                     if (dbHashedPhrases != null) {
                         for(String hash : dbHashedPhrases) {
-                            if (!duplicate && Hasher.checkHash(inputPhrase.getPhrase(), hash)) {
+                            if (!duplicate && Hasher.checkHashBCrypt(inputPhrase.getPhrase(), hash)) {
                                 duplicate = true;
                             }
                         }

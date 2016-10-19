@@ -19,7 +19,7 @@ public class StringToHashTest {
         input.add("dogs");
         boolean phrases = false;
         ArrayList<String> output = StringToHash.getHashes(input);
-        assertTrue(Hasher.checkHash("dog", output.get(0)));
+        assertTrue(Hasher.checkHashBCrypt("dog", output.get(0)));
     }
 
     /**
@@ -36,7 +36,7 @@ public class StringToHashTest {
         for(Phrase p : input) {
             output = sth.getPhraseHashes(input);
         }
-        assertTrue(Hasher.checkHash("dogbarked", output.get(0).getPhrase()));
-        assertTrue(Hasher.checkHash("herunhomequickly", output.get(1).getPhrase()));
+        assertTrue(Hasher.checkHashBCrypt("dogbarked", output.get(0).getPhrase()));
+        assertTrue(Hasher.checkHashBCrypt("herunhomequickly", output.get(1).getPhrase()));
     }
 }

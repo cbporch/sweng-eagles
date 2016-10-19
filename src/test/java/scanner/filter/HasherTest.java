@@ -39,14 +39,14 @@ public class HasherTest {
         inputList.add("dog");
         inputList.add("barked");
 
-        ArrayList<String> outputList = Hasher.hashArrayList(inputList);
-        assertTrue(Hasher.checkHash("The", outputList.get(0)));
-        assertTrue(Hasher.checkHash("dog", outputList.get(1)));
-        assertTrue(Hasher.checkHash("barked", outputList.get(2)));
+        ArrayList<String> outputList = Hasher.hashArrayListBCrypt(inputList);
+        assertTrue(Hasher.checkHashBCrypt("The", outputList.get(0)));
+        assertTrue(Hasher.checkHashBCrypt("dog", outputList.get(1)));
+        assertTrue(Hasher.checkHashBCrypt("barked", outputList.get(2)));
 
-        assertFalse(Hasher.checkHash("the", outputList.get(0)));
-        assertFalse(Hasher.checkHash("", outputList.get(1)));
-        assertFalse(Hasher.checkHash("bark", outputList.get(2)));
+        assertFalse(Hasher.checkHashBCrypt("the", outputList.get(0)));
+        assertFalse(Hasher.checkHashBCrypt("", outputList.get(1)));
+        assertFalse(Hasher.checkHashBCrypt("bark", outputList.get(2)));
     }
 
 }

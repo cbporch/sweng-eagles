@@ -17,8 +17,6 @@ package scanner.filter;
 import java.io.IOException;
 import java.util.ArrayList;
 
-import static scanner.filter.Hasher.*;
-
 /**
  * Created by Chris on 10/11/2016.
  * Uses Lucene Stemmer and Hasher classes to filter input into an array of hashes
@@ -35,13 +33,13 @@ public class StringToHash {
      * if phrases is set as true
      */
     public static ArrayList<String> getHashes(ArrayList<String> input) throws IOException {
-         return Hasher.hashArrayList(LuceneStemmer.stemWords(input));
+         return Hasher.hashArrayListBCrypt(LuceneStemmer.stemWords(input));
     }
 
     public static ArrayList<Phrase> getPhraseHashes(ArrayList<Phrase> input) throws IOException {
         ArrayList<Phrase> hashedPhrases = new ArrayList<>();
         for(Phrase phrase : input){
-            hashedPhrases.add(new Phrase(Hasher.hashString(LuceneStemmer.stemPhrase(phrase.getPhrase())), phrase.getWordcount()));
+            hashedPhrases.add(new Phrase(Hasher.hashStringBCrypt(LuceneStemmer.stemPhrase(phrase.getPhrase())), phrase.getWordcount()));
         }
         return hashedPhrases;
     }
