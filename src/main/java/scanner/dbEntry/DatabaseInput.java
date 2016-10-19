@@ -11,10 +11,6 @@ import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.IOException;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.ResultSet;
-import java.sql.Statement;
 import java.util.ArrayList;
 
 import static scanner.dbEntry.Database.*;
@@ -111,11 +107,11 @@ public class DatabaseInput {
 
         // words input panel
         JPanel wordsInputPanel = new JPanel();
-        wordsInputPanel.setBackground(Color.DARK_GRAY);
+        wordsInputPanel.setBackground(Color.WHITE);
         pane.add(wordsInputPanel, new BoxLayout(pane, BoxLayout.Y_AXIS));
         JLabel wordsLabel = new JLabel("Words");
         wordsLabel.setFont(new Font("Serif", Font.BOLD, 16));
-        wordsLabel.setForeground(Color.WHITE);
+        wordsLabel.setForeground(Color.BLACK);
         wordsInputPanel.add(wordsLabel);
 
         //words text field and options
@@ -138,7 +134,7 @@ public class DatabaseInput {
         wordOptions.add(probField);
 
         JPanel newWordPanel = new JPanel();
-        newWordPanel.setBackground(Color.LIGHT_GRAY);
+        newWordPanel.setBackground(Color.WHITE);
         JButton newWordBtn = new JButton("New Word");
         newWordPanel.add(newWordBtn);
         pane.add(newWordPanel);
@@ -152,11 +148,11 @@ public class DatabaseInput {
 
         // phrases input panel
         JPanel phrasesInputPanel = new JPanel();
-        phrasesInputPanel.setBackground(Color.DARK_GRAY);
+        phrasesInputPanel.setBackground(Color.WHITE);
         pane.add(phrasesInputPanel, new BoxLayout(pane, BoxLayout.Y_AXIS));
         JLabel phrasesLabel = new JLabel("Phrases");
         phrasesLabel.setFont(new Font("Serif", Font.BOLD, 16));
-        phrasesLabel.setForeground(Color.WHITE);
+        phrasesLabel.setForeground(Color.BLACK);
         phrasesInputPanel.add(phrasesLabel);
 
         //phrase text field and options
@@ -180,7 +176,7 @@ public class DatabaseInput {
         phraseOptions.add(phraseProbField);
 
         JPanel newPhrasePanel = new JPanel();
-        newPhrasePanel.setBackground(Color.LIGHT_GRAY);
+        newPhrasePanel.setBackground(Color.WHITE);
         JButton newPhraseBtn = new JButton("New Phrase");
         newPhrasePanel.add(newPhraseBtn);
         pane.add(newPhrasePanel);
@@ -192,17 +188,28 @@ public class DatabaseInput {
             }
         });
 
+        //bottom label
         JPanel submitPanel = new JPanel();
         submitButton2 = new JButton("Submit");
         successLabel = new JLabel("Test");
+        JButton uploadFileBtn = new JButton("Upload File");
         submitPanel.add(submitButton2);
+        submitPanel.add(uploadFileBtn);
         submitPanel.add(successLabel);
+
         pane.add(submitPanel, BorderLayout.SOUTH);
 
         submitButton2.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
                 successLabel.setText("45");
+            }
+        });
+
+        uploadFileBtn.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                successLabel.setText("44");
             }
         });
     }
