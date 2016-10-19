@@ -1,7 +1,9 @@
 package scanner.filter;
 
 import org.mindrot.jbcrypt.BCrypt;
+import java.security.MessageDigest;
 
+import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 
 /**
@@ -40,4 +42,13 @@ public class Hasher {
         return false;
     }
 
+    public static String hashSHA(String word) throws NoSuchAlgorithmException {
+        MessageDigest md = MessageDigest.getInstance("SHA-512");
+        return md.digest(word.getBytes()).toString();
+    }
+
+    public static boolean checkSHA(String word, String hash) throws NoSuchAlgorithmException {
+        MessageDigest md = MessageDigest.getInstance("SHA-512");
+        return md.digest(word.getBytes()).equals(hash);
+    }
 }
