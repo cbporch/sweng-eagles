@@ -1,6 +1,8 @@
-package scanner.filter;
+package scanner.filtering;
 
 import org.junit.Test;
+import scanner.Phrase;
+
 import java.util.ArrayList;
 import static org.junit.Assert.*;
 

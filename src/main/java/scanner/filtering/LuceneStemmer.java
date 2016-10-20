@@ -1,4 +1,4 @@
-package scanner.filter;
+package scanner.filtering;
 
 /*
  * Copyright 2016 Christopher Porch, Christopher Deck, Steve Leonetti, Tom Miller, Dan Smith, Mike Bayruns

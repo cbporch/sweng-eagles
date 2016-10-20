@@ -1,9 +1,6 @@
 package scanner.dbEntry;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.ResultSet;
-import java.sql.Statement;
+import java.sql.*;
 import java.util.ArrayList;
 
 /**
@@ -19,7 +16,7 @@ public class Database {
         //System.out.println("Connected");
     }
 
-    static void insertWords(String wordIn, int rarityIn) throws Exception {
+    static void insertWords(String wordIn, int rarityIn) throws Exception   {
         try {
             Connection conn = getConnection();              //get connection
             Statement statement = conn.createStatement();   //create statement

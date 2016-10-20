@@ -1,11 +1,12 @@
-package scanner.filter;
+package scanner;
 
 /**
  * Created by Chris on 10/18/2016.
  */
 public class Phrase {
     private String phrase;
-    private int wordcount;
+    private int wordcount, rarity;
+    private boolean num;
 
     public Phrase(String phrase) {
         this.phrase = phrase;
@@ -23,5 +24,9 @@ public class Phrase {
 
     public int getWordcount() {
         return wordcount;
+    }
+
+    public void setPhrase(String phrase) {
+        this.phrase = phrase;
     }
 }

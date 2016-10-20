@@ -1,4 +1,4 @@
-package scanner.filter;
+package scanner.filtering;
 
 import org.junit.Test;
 import java.util.ArrayList;
@@ -6,16 +6,12 @@ import static org.junit.Assert.*;
 
 /**
  * Created by Chris on 10/11/2016.
+ * modified by the same on 10/20/16
  */
 public class HasherTest {
 
     @Test
     public void hashStringBCrypt() throws Exception {
-
-    }
-
-    @Test
-    public void checkHashBCrypt() throws Exception {
 
     }
 
