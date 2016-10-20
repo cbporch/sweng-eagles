@@ -10,11 +10,15 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.io.BufferedReader;
+import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
-import static scanner.dbEntry.Database.*;
+//import static scanner.dbEntry.Database.*;
 
 
 /**
@@ -247,8 +251,8 @@ public class DatabaseInput {
                 unique_phrases = new ArrayList<>();
 
         try {
-            dbHashedWords = getWords();
-            dbHashedPhrases = getPhrases();
+            dbHashedWords = Database.getWords();
+            dbHashedPhrases = Database.getPhrases();
 
             // move array into ArrayList for method call
             ArrayList<String> w = new ArrayList<>(Arrays.asList(words));
@@ -281,7 +285,7 @@ public class DatabaseInput {
                     // hash unique words
                     unique_words = StringToHash.getHashes(unique_words);
                     for (String hashedWord : unique_words) {
-                        insertWords(hashedWord, RARITY);
+                        Database.insertWords(hashedWord, RARITY);
                     }
                     System.out.println("\nWords inserted");
                 }
@@ -316,7 +320,7 @@ public class DatabaseInput {
                     // hash unique phrases
                     unique_phrases = StringToHash.getPhraseHashes(unique_phrases);
                     for (Phrase phrase: unique_phrases) {
-                        insertPhrases(phrase.getPhrase(), RARITY, phrase.getWordcount());
+                        Database.insertPhrases(phrase.getPhrase(), RARITY, phrase.getWordcount());
                     }
                     System.out.println("\nPhrases inserted");
                 }
@@ -338,8 +342,8 @@ public class DatabaseInput {
                             unique_phrases = new ArrayList<>();
 
         try {
-            dbHashedWords = getWords();
-            dbHashedPhrases = getPhrases();
+            dbHashedWords = Database.getWords();
+            dbHashedPhrases = Database.getPhrases();
 
             // move array into ArrayList for method call
             ArrayList<String> w = new ArrayList<>(Arrays.asList(words));
@@ -376,7 +380,7 @@ public class DatabaseInput {
                     // hash unique words
                     // unique_words = StringToHash.(unique_words);
                     for (String hashedWord : unique_words) {
-                        insertWords(hashedWord, RARITY);
+                        Database.insertWords(hashedWord, RARITY);
                     }
                     System.out.println("\nWords inserted");
                 }
@@ -418,7 +422,7 @@ public class DatabaseInput {
                     // hash unique phrases
                     unique_phrases = StringToHash.getPhraseHashes(unique_phrases);
                     for (Phrase phrase: unique_phrases) {
-                        insertPhrases(phrase.getPhrase(), RARITY, phrase.getWordcount());
+                        Database.insertPhrases(phrase.getPhrase(), RARITY, phrase.getWordcount());
                     }
                     System.out.println("\nPhrases inserted");
                 }
@@ -428,6 +432,32 @@ public class DatabaseInput {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+
+
+    /**
+     * This will take in a file name and it will go through it if its a CSV file and seperate it into an arraylist.
+     * You must enter either a single words only file, or a phrases only file.
+     */
+    public ArrayList<String> interpretCSVFile(String filename)
+    {
+        BufferedReader br;
+        ArrayList<String> listOfWords = new ArrayList<String>(); //Returned list of all the words in this file.
+        try {
+            br = new BufferedReader(new FileReader(filename));
+            String line;
+            while ((line = br.readLine()) != null) {
+                String[] unsortedWords = line.split(",");
+                for (int i = 0; i < unsortedWords.length; i++) {
+                    listOfWords.add(unsortedWords[i]);
+                }
+            }
+        }
+        catch (IOException e) {
+            e.printStackTrace();
+        }
+        return listOfWords;
     }
 
     public static void main(String[] args) {

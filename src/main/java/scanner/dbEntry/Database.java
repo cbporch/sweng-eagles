@@ -13,7 +13,6 @@ public class Database {
         String username = "asrc";
         String password = "rOwan!Sw3ng?";
         return DriverManager.getConnection(url, username, password);
-        //System.out.println("Connected");
     }
 
     static void insertWords(String wordIn, int rarityIn) throws Exception   {
