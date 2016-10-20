@@ -43,14 +43,22 @@ public class Hasher {
         return false;
     }
 
+    /*
+     * Hashes a given String using SHA-512, encodes it as Base64 and returns it
+     */
     public static String hashSHA(String word) throws NoSuchAlgorithmException {
 
         MessageDigest md = MessageDigest.getInstance("SHA-512");
         return Base64.encode(md.digest(word.getBytes()));
     }
 
+    /*
+     * Hashes a given word and checks it against the given hash.
+     * Note: preferred way to check SHA hashes is to call hashSHA() on the word then call a .equals()
+     * against the hash to be checked against
+     */
     public static boolean checkSHA(String word, String hash) throws NoSuchAlgorithmException {
         MessageDigest md = MessageDigest.getInstance("SHA-512");
-        return Base64.encode(md.digest(word.getBytes())).equals(hash);
+        return hashSHA(word).equals(hash);
     }
 }
