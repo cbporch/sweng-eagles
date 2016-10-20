@@ -18,9 +18,9 @@ public class Hasher {
      * Hashes an ArrayList of strings using a salt generated using the default number of rounds
      */
     public static ArrayList<String> hashArrayListBCrypt(ArrayList<String> list){
-        ArrayList<String> hashedList = new ArrayList();
+        ArrayList<String> hashedList = new ArrayList<>();
         for(String word: list){
-            if(word != "" && word != null) {
+            if(!word.equals("") && word != null) {
                 hashedList.add(BCrypt.hashpw(word, BCrypt.gensalt(SALTSPEED)));
             }
         }
@@ -58,7 +58,6 @@ public class Hasher {
      * against the hash to be checked against
      */
     public static boolean checkSHA(String word, String hash) throws NoSuchAlgorithmException {
-        MessageDigest md = MessageDigest.getInstance("SHA-512");
         return hashSHA(word).equals(hash);
     }
 }

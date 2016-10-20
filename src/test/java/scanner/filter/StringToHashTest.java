@@ -18,7 +18,6 @@ public class StringToHashTest {
         ArrayList<String> input = new ArrayList<>();
         input.add("the");
         input.add("dogs");
-        boolean phrases = false;
         ArrayList<String> output = StringToHash.getHashes(input);
         assertTrue(Hasher.checkHashBCrypt("dog", output.get(0)));
     }
@@ -32,7 +31,6 @@ public class StringToHashTest {
         ArrayList<Phrase> output = new ArrayList<>();
         input.add(new Phrase("the dog barked"));
         input.add(new Phrase("He runs home quickly"));
-        boolean phrases = true;
         for(Phrase p : input) {
             output = StringToHash.getPhraseHashes(input);
         }

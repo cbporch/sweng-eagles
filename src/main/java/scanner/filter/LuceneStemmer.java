@@ -42,9 +42,9 @@ public class LuceneStemmer {
      */
     public static ArrayList<String> stemWords(ArrayList<String> input) throws IOException {
         analyzer = new StemAnalyzer();
-        ArrayList<String> output = new ArrayList<String>(input.size());
+        ArrayList<String> output = new ArrayList<>(input.size());
         for (String word : input) {
-            if (word != "") {
+            if (!word.equals("")) {
                 TokenStream ts = analyzer.tokenStream("myfield", new StringReader(word));
                 CharTermAttribute termAtt = ts.addAttribute(CharTermAttribute.class);
                 try {
@@ -68,7 +68,7 @@ public class LuceneStemmer {
     public static String stemPhrase(String input) throws IOException {
         analyzer = new StemAnalyzer();
         String output = "";
-        if (input != "" && input != null) {
+        if (!input.equals("") && input != null) {
             TokenStream ts = analyzer.tokenStream("field",
                     new StringReader(input));
             CharTermAttribute termAtt = ts.addAttribute(CharTermAttribute.class);

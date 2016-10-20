@@ -12,6 +12,7 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 import static scanner.dbEntry.Database.*;
 
@@ -237,27 +238,25 @@ public class DatabaseInput {
         frame.setVisible(true);
     }
     private void processInput(String[] words, String[] phrases) throws Exception {
-        ArrayList<String>   stemmedWords = new ArrayList<String>(),
+        ArrayList<String>   stemmedWords,
                 dbHashedWords,
                 dbHashedPhrases,
-                unique_words = new ArrayList<String>();
-        ArrayList<Phrase>   stemmedPhrases = new ArrayList<Phrase>(),
-                unique_phrases = new ArrayList<Phrase>();
+                unique_words = new ArrayList<>();
+        ArrayList<Phrase>   stemmedPhrases = new ArrayList<>(),
+                unique_phrases = new ArrayList<>();
 
         try {
             dbHashedWords = getWords();
             dbHashedPhrases = getPhrases();
 
             // move array into ArrayList for method call
-            ArrayList<String> w = new ArrayList<>();
-            for (String word : words){
-                w.add(word);
-            }
+            ArrayList<String> w = new ArrayList<>(Arrays.asList(words));
+
             stemmedWords = LuceneStemmer.stemWords(w);
 
             if(stemmedWords.size() != 0) {
                 boolean duplicate = false, empty = true;
-                int i = 0, count = 1;
+                int count = 1;
                 System.out.print("Checking word ");
                 for (String inputWord : stemmedWords) {
                     System.out.print(count++ + ", ");
@@ -295,7 +294,7 @@ public class DatabaseInput {
             // find unique phrases in input
             if(stemmedPhrases.size() != 0) {
                 boolean duplicate = false, empty = true;
-                int i = 0, count = 1;
+                int count = 1;
                 System.out.print("Checking phrase ");
                 for (Phrase inputPhrase : stemmedPhrases) {
                     System.out.print(count++ + ", ");
