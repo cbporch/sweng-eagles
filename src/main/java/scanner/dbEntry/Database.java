@@ -1,11 +1,5 @@
 package scanner.dbEntry;
 
-import scanner.filter.Hasher;
-import scanner.filter.LuceneStemmer;
-import scanner.filter.Phrase;
-import scanner.filter.StringToHash;
-
-import java.io.IOException;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
