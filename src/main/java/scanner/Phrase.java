@@ -2,6 +2,7 @@ package scanner;
 
 /**
  * Created by Chris on 10/18/2016.
+ * Modified on 10/20/16
  */
 public class Phrase {
     private String phrase;
