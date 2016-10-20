@@ -1,8 +1,9 @@
-package scanner.filter;
+package scanner.filtering;
 
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+import scanner.Phrase;
 
 /**
  * Created by chris on 10/18/16.

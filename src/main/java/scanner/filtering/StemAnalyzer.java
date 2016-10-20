@@ -1,4 +1,4 @@
-package scanner.filter;
+package scanner.filtering;
 
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.analysis.CharArraySet;

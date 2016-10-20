@@ -1,10 +1,10 @@
 package scanner.dbEntry;
 
 
-import scanner.filter.Hasher;
-import scanner.filter.LuceneStemmer;
-import scanner.filter.Phrase;
-import scanner.filter.StringToHash;
+import scanner.filtering.Hasher;
+import scanner.filtering.LuceneStemmer;
+import scanner.Phrase;
+import scanner.filtering.StringToHash;
 
 import javax.swing.*;
 import java.awt.*;

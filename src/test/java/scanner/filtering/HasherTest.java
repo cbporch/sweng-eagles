@@ -1,4 +1,4 @@
-package scanner.filter;
+package scanner.filtering;
 
 import org.junit.Test;
 import java.util.ArrayList;

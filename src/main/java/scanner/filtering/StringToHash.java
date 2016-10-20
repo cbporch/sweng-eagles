@@ -1,4 +1,4 @@
-package scanner.filter;
+package scanner.filtering;
 /*
  * Copyright 2016 Christopher Porch, Christopher Deck, Steve Leonetti, Tom Miller, Dan Smith, Mike Bayruns
  *
@@ -14,12 +14,14 @@ package scanner.filter;
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+import scanner.Phrase;
+
 import java.io.IOException;
 import java.util.ArrayList;
 
 /**
  * Created by Chris on 10/11/2016.
- * Uses Lucene Stemmer and Hasher classes to filter input into an array of hashes
+ * Uses Lucene Stemmer and Hasher classes to filtering input into an array of hashes
  *
  * The copyright block above is required by Apache
  */
