@@ -98,7 +98,7 @@ public class DatabaseInput {
         frame.setVisible(true);*//*
     }*/
 
-    public static void addComponentsToPane(Container pane) {
+    private static void addComponentsToPane(Container pane) {
         pane.setLayout(new BoxLayout(pane, BoxLayout.Y_AXIS));
         JPanel instructionsPanel = new JPanel();
         JLabel instructions = new JLabel("Enter the words/phrases to be inputted below");
@@ -223,7 +223,7 @@ public class DatabaseInput {
     private static void createAndShowGUI() {
         //Create and set up the window.
         JFrame frame = new JFrame("DatabaseGUI");
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         frame.setLocationRelativeTo(null);
         frame.setTitle("Database Input");
         frame.setResizable(true);
@@ -355,7 +355,7 @@ public class DatabaseInput {
 
                 for (String inputWord : stemmedWords) {
                     System.out.print(count++ + ", ");
-                    hashedInputWord = Hasher.hashSHA(inputWord);
+                    hashedInputWord = Hasher.hashSHA(inputWord);        // hash the inputted word
                     if (dbHashedWords != null) {
                         for(String hash: dbHashedWords) {
                             if (!duplicate && hash.equals(hashedInputWord)) {
@@ -366,7 +366,7 @@ public class DatabaseInput {
                     }
 
                     if(!duplicate){ // word is not in database
-                        unique_words.add(inputWord);
+                        unique_words.add(hashedInputWord);
                         empty = false;
                     }
                     duplicate = false; // reset variable
@@ -374,7 +374,7 @@ public class DatabaseInput {
 
                 if(!empty) {
                     // hash unique words
-                    unique_words = StringToHash.getHashes(unique_words);
+                    // unique_words = StringToHash.(unique_words);
                     for (String hashedWord : unique_words) {
                         insertWords(hashedWord, RARITY);
                     }
