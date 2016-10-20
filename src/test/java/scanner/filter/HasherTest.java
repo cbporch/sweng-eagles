@@ -33,11 +33,11 @@ public class HasherTest {
     }
 
     @Test
-    /**
+    /*
      * This will test to see if the words are being hashed
      */
     public void testHashArrayListBCrypt() throws Exception {
-        ArrayList<String> inputList = new ArrayList<String>();
+        ArrayList<String> inputList = new ArrayList<>();
         inputList.add("The");
         inputList.add("dog");
         inputList.add("barked");

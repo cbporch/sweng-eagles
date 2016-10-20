@@ -1,11 +1,5 @@
 package scanner.dbEntry;
 
-import scanner.filter.Hasher;
-import scanner.filter.LuceneStemmer;
-import scanner.filter.Phrase;
-import scanner.filter.StringToHash;
-
-import java.io.IOException;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
@@ -50,7 +44,7 @@ public class Database {
     }
 
     static ArrayList<String> getWords() throws Exception {
-        ArrayList<String> words = new ArrayList<String>();
+        ArrayList<String> words = new ArrayList<>();
 
         try {
             Connection conn = getConnection();              //get connection
@@ -72,7 +66,7 @@ public class Database {
     }
 
     static ArrayList<String> getPhrases() throws Exception {
-        ArrayList<String> phrases = new ArrayList<String>();
+        ArrayList<String> phrases = new ArrayList<>();
 
         try {
             Connection conn = getConnection();              //get connection
