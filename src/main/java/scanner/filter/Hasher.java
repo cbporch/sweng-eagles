@@ -1,8 +1,9 @@
 package scanner.filter;
 
+import com.sun.org.apache.xerces.internal.impl.dv.util.Base64;
 import org.mindrot.jbcrypt.BCrypt;
-import java.security.MessageDigest;
 
+import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 
@@ -42,13 +43,22 @@ public class Hasher {
         return false;
     }
 
+    /*
+     * Hashes a given String using SHA-512, encodes it as Base64 and returns it
+     */
     public static String hashSHA(String word) throws NoSuchAlgorithmException {
+
         MessageDigest md = MessageDigest.getInstance("SHA-512");
-        return md.digest(word.getBytes()).toString();
+        return Base64.encode(md.digest(word.getBytes()));
     }
 
+    /*
+     * Hashes a given word and checks it against the given hash.
+     * Note: preferred way to check SHA hashes is to call hashSHA() on the word then call a .equals()
+     * against the hash to be checked against
+     */
     public static boolean checkSHA(String word, String hash) throws NoSuchAlgorithmException {
         MessageDigest md = MessageDigest.getInstance("SHA-512");
-        return md.digest(word.getBytes()).equals(hash);
+        return hashSHA(word).equals(hash);
     }
 }
