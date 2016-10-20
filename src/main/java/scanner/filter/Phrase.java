@@ -24,4 +24,8 @@ public class Phrase {
     public int getWordcount() {
         return wordcount;
     }
+
+    public void setPhrase(String phrase) {
+        this.phrase = phrase;
+    }
 }

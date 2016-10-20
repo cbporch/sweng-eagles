@@ -237,6 +237,7 @@ public class DatabaseInput {
         frame.pack();
         frame.setVisible(true);
     }
+
     private void processInput(String[] words, String[] phrases) throws Exception {
         ArrayList<String>   stemmedWords,
                 dbHashedWords,
@@ -326,6 +327,107 @@ public class DatabaseInput {
             e.printStackTrace();
         }
 
+    }
+
+    private void processInputSHA(String[] words, String[] phrases) throws Exception {
+        ArrayList<String>   stemmedWords,
+                            dbHashedWords,
+                            dbHashedPhrases,
+                            unique_words   = new ArrayList<>();
+        ArrayList<Phrase>   stemmedPhrases = new ArrayList<>(),
+                            unique_phrases = new ArrayList<>();
+
+        try {
+            dbHashedWords = getWords();
+            dbHashedPhrases = getPhrases();
+
+            // move array into ArrayList for method call
+            ArrayList<String> w = new ArrayList<>(Arrays.asList(words));
+
+            stemmedWords = LuceneStemmer.stemWords(w);
+
+            if(stemmedWords.size() != 0) {
+                boolean duplicate = false, empty = true;
+                int count = 1;
+                String hashedInputWord;
+
+                System.out.print("Checking word ");
+
+                for (String inputWord : stemmedWords) {
+                    System.out.print(count++ + ", ");
+                    hashedInputWord = Hasher.hashSHA(inputWord);
+                    if (dbHashedWords != null) {
+                        for(String hash: dbHashedWords) {
+                            if (!duplicate && hash.equals(hashedInputWord)) {
+                                // once a match is found, we no longer need to check each word
+                                duplicate = true; // should stop if statement from running when it hits a duplicate
+                            }
+                        }
+                    }
+
+                    if(!duplicate){ // word is not in database
+                        unique_words.add(inputWord);
+                        empty = false;
+                    }
+                    duplicate = false; // reset variable
+                }
+
+                if(!empty) {
+                    // hash unique words
+                    unique_words = StringToHash.getHashes(unique_words);
+                    for (String hashedWord : unique_words) {
+                        insertWords(hashedWord, RARITY);
+                    }
+                    System.out.println("\nWords inserted");
+                }
+            }
+
+            // stem phrases before checking in database, maintaining word count for each phrase
+            for(String phrase: phrases){
+                stemmedPhrases.add(new Phrase(LuceneStemmer.stemPhrase(phrase), phrase.split("\\s+").length));
+            }
+
+            // find unique phrases in input
+            if(stemmedPhrases.size() != 0) {
+                boolean duplicate = false, empty = true;
+                int count = 1;
+                String hashedInputPhrase;
+
+                System.out.print("Checking phrase ");
+
+                for (Phrase inputPhrase : stemmedPhrases) {
+                    hashedInputPhrase = Hasher.hashSHA(inputPhrase.getPhrase());    // hash one of the inputted phrases
+                    System.out.print(count++ + ", ");                               // increment count
+                    if (dbHashedPhrases != null) {
+                        for(String hash : dbHashedPhrases) {
+                            if (!duplicate && hash.equals(hashedInputPhrase)) {
+                                duplicate = true;
+                            }
+                        }
+                    }
+
+                    if(!duplicate){
+                        // reset phrase as its hashed form and add to ArrayList
+                        inputPhrase.setPhrase(hashedInputPhrase);
+                        unique_phrases.add(inputPhrase);
+                        empty = false;
+                    }
+                }
+
+                if(!empty) {
+                    // hash unique phrases
+                    unique_phrases = StringToHash.getPhraseHashes(unique_phrases);
+                    for (Phrase phrase: unique_phrases) {
+                        insertPhrases(phrase.getPhrase(), RARITY, phrase.getWordcount());
+                    }
+                    System.out.println("\nPhrases inserted");
+                }
+
+            }
+            System.out.println("Processing complete");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     public static void main(String[] args) {
