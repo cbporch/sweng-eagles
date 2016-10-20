@@ -9,22 +9,23 @@ import static org.junit.Assert.*;
 
 /**
  * Created by Chris on 10/11/2016.
+ *
  */
 public class LuceneStemmerTest {
     @Test
     public void testStemWords() throws IOException {
         ArrayList<String> input = new ArrayList<>();
         input.add("runs");
-        LuceneStemmer stemmer = new LuceneStemmer();
-        ArrayList<String> output = stemmer.stemWords(input);
+
+        ArrayList<String> output = LuceneStemmer.stemWords(input);
         assertEquals("run", output.get(0));
     }
 
     @Test
     public void testStemPhrase() throws IOException {
         String input = "The dog runs";
-        LuceneStemmer stemmer = new LuceneStemmer();
-        String output = stemmer.stemPhrase(input);
+
+        String output = LuceneStemmer.stemPhrase(input);
         assertEquals("dogrun", output);
     }
 }

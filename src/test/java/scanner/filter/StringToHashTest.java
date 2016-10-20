@@ -6,6 +6,7 @@ import static org.junit.Assert.*;
 
 /**
  * Created by Chris on 10/11/2016.
+ *
  */
 public class StringToHashTest {
 
@@ -32,9 +33,8 @@ public class StringToHashTest {
         input.add(new Phrase("the dog barked"));
         input.add(new Phrase("He runs home quickly"));
         boolean phrases = true;
-        StringToHash sth = new StringToHash();
         for(Phrase p : input) {
-            output = sth.getPhraseHashes(input);
+            output = StringToHash.getPhraseHashes(input);
         }
         assertTrue(Hasher.checkHashBCrypt("dogbarked", output.get(0).getPhrase()));
         assertTrue(Hasher.checkHashBCrypt("herunhomequickly", output.get(1).getPhrase()));
