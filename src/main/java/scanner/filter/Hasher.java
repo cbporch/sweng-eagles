@@ -1,8 +1,9 @@
 package scanner.filter;
 
+import com.sun.org.apache.xerces.internal.impl.dv.util.Base64;
 import org.mindrot.jbcrypt.BCrypt;
-import java.security.MessageDigest;
 
+import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 
@@ -43,12 +44,13 @@ public class Hasher {
     }
 
     public static String hashSHA(String word) throws NoSuchAlgorithmException {
+
         MessageDigest md = MessageDigest.getInstance("SHA-512");
-        return md.digest(word.getBytes()).toString();
+        return Base64.encode(md.digest(word.getBytes()));
     }
 
     public static boolean checkSHA(String word, String hash) throws NoSuchAlgorithmException {
         MessageDigest md = MessageDigest.getInstance("SHA-512");
-        return md.digest(word.getBytes()).equals(hash);
+        return Base64.encode(md.digest(word.getBytes())).equals(hash);
     }
 }

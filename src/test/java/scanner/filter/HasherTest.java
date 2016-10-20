@@ -10,22 +10,25 @@ import static org.junit.Assert.*;
 public class HasherTest {
 
     @Test
-    public void hashString() throws Exception {
+    public void hashStringBCrypt() throws Exception {
 
     }
 
     @Test
-    public void checkHash() throws Exception {
+    public void checkHashBCrypt() throws Exception {
 
     }
 
     @Test
-    public void hashSHA() throws Exception {
-
+    public void testHashSHA() throws Exception {
+        assertEquals("7iaw3Ur350mqGo7jwQrpkj9hiYB3Lkc/iBml1JQODbJ6wYX4oOHV+E+IvIh/1nsUNzLDBMxfqa2Ob1f1ACio/w==",
+                     Hasher.hashSHA("test"));
     }
 
     @Test
-    public void checkSHA() throws Exception {
+    public void testCheckSHA() throws Exception {
+        assertTrue(Hasher.checkSHA("test",
+                "7iaw3Ur350mqGo7jwQrpkj9hiYB3Lkc/iBml1JQODbJ6wYX4oOHV+E+IvIh/1nsUNzLDBMxfqa2Ob1f1ACio/w=="));
 
     }
 
@@ -33,7 +36,7 @@ public class HasherTest {
     /**
      * This will test to see if the words are being hashed
      */
-    public void testHashArrayList() throws Exception {
+    public void testHashArrayListBCrypt() throws Exception {
         ArrayList<String> inputList = new ArrayList<String>();
         inputList.add("The");
         inputList.add("dog");
