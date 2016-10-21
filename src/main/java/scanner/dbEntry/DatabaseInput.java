@@ -1,9 +1,8 @@
 package scanner.dbEntry;
 
-
+import scanner.Phrase;
 import scanner.filtering.Hasher;
 import scanner.filtering.LuceneStemmer;
-import scanner.Phrase;
 import scanner.filtering.StringToHash;
 
 import javax.swing.*;
@@ -15,15 +14,8 @@ import java.awt.event.MouseEvent;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
-
-import static scanner.dbEntry.Database.*;
-
 
 /**
  * Created by cdeck_000 on 10/5/2016.
@@ -528,4 +520,3 @@ public class DatabaseInput {
         frame.setVisible(true);
     }
 }
-
