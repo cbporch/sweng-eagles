@@ -7,10 +7,7 @@ import scanner.filtering.StringToHash;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.FocusEvent;
-import java.awt.event.FocusListener;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
+import java.awt.event.*;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
@@ -30,7 +27,6 @@ public class DatabaseInput {
     private JTextField phraseTextField;
     private JLabel phrasesInputLabel;
     private JTextField phrasesTextField;
-    private JButton submitButton;
     private JTextArea noteText2;
     private String word;
     private String[] words;
@@ -38,12 +34,13 @@ public class DatabaseInput {
     private String[] phraseToWords;
     private String[] phrases;
     private static JLabel successLabel;
+    private JButton submitButton;
     private static JButton submitButton2;
     private static Boolean phraseProbFieldFocus = false;
     private static Boolean phraseTextFieldFocus = false;
     private static Boolean wordProbFieldFocus = false;
     private static Boolean wordTextFieldFocus = false;
-    private final int RARITY = 10;
+    private static final int RARITY = 10;
     private static JButton newPhraseBtn = new JButton("New Phrase");
     private static JButton newWordBtn = new JButton("New Word");
     private static JButton uploadFileBtn = new JButton("Upload File");
@@ -51,41 +48,6 @@ public class DatabaseInput {
 
     protected DatabaseInput() {
 
-        submitButton2.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mouseClicked(MouseEvent e) {
-                String word = wordsTextField.getText();
-                String[] wordInput = {word};
-                String phrase = phraseTextField.getText();
-                String[] phraseInput = {phrase};
-                try {
-                    processInput(wordInput, phraseInput);
-                } catch (Exception ex) {
-                    System.out.println(ex);
-                }
-            }
-        });
-
-        newPhraseBtn.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mouseClicked(MouseEvent e) {
-                successLabel.setText("22");
-            }
-        });
-
-        newWordBtn.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mouseClicked(MouseEvent e) {
-                successLabel.setText("11");
-            }
-        });
-
-        uploadFileBtn.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mouseClicked(MouseEvent e) {
-                successLabel.setText("44");
-            }
-        });
     }
 
 
@@ -153,7 +115,7 @@ public class DatabaseInput {
 
         JPanel newWordPanel = new JPanel();
         newWordPanel.setBackground(Color.WHITE);
-        newWordPanel.add(newWordBtn);
+        //newWordPanel.add(newWordBtn);
         pane.add(newWordPanel);
 
         // phrases input panel
@@ -215,12 +177,51 @@ public class DatabaseInput {
 
         JPanel newPhrasePanel = new JPanel();
         newPhrasePanel.setBackground(Color.WHITE);
-        newPhrasePanel.add(newPhraseBtn);
+        //newPhrasePanel.add(newPhraseBtn);
         pane.add(newPhrasePanel);
 
         //bottom label
         JPanel submitPanel = new JPanel();
         submitButton2 = new JButton("Submit");
+
+        submitButton2.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                System.out.println("Trying...");
+                String word = wordsTextField.getText();
+                String[] wordInput = {word};
+                String phrase = phraseTextField.getText();
+                String[] phraseInput = {phrase};
+                try {
+                    processInput(wordInput, phraseInput);
+                } catch (Exception ex) {
+                    System.out.println(ex);
+                }
+            }
+        });
+
+
+        newPhraseBtn.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                successLabel.setText("22");
+            }
+        });
+
+        newWordBtn.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                successLabel.setText("11");
+            }
+        });
+
+        uploadFileBtn.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                successLabel.setText("44");
+            }
+        });
+
         successLabel = new JLabel("Test");
         submitPanel.add(submitButton2);
         submitPanel.add(uploadFileBtn);
@@ -229,7 +230,7 @@ public class DatabaseInput {
         pane.add(submitPanel, BorderLayout.SOUTH);
     }
 
-    private void processInput(String[] words, String[] phrases) throws Exception {
+    private static void processInput(String[] words, String[] phrases) throws Exception {
         ArrayList<String>   stemmedWords,
                 dbHashedWords,
                 dbHashedPhrases,
