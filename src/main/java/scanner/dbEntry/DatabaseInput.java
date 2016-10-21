@@ -1,9 +1,8 @@
 package scanner.dbEntry;
 
-
+import scanner.Phrase;
 import scanner.filtering.Hasher;
 import scanner.filtering.LuceneStemmer;
-import scanner.Phrase;
 import scanner.filtering.StringToHash;
 
 import javax.swing.*;
@@ -17,11 +16,6 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
-//import static scanner.dbEntry.Database.*;
-
 
 /**
  * Created by cdeck_000 on 10/5/2016.
@@ -33,6 +27,7 @@ public class DatabaseInput {
     private JLabel titleLabel;
     private JLabel wordInputLabel;
     private JTextField wordsTextField;
+    private JTextField phraseTextField;
     private JLabel phrasesInputLabel;
     private JTextField phrasesTextField;
     private JButton submitButton;
@@ -49,11 +44,14 @@ public class DatabaseInput {
     private static Boolean wordProbFieldFocus = false;
     private static Boolean wordTextFieldFocus = false;
     private final int RARITY = 10;
+    private static JButton newPhraseBtn = new JButton("New Phrase");
+    private static JButton newWordBtn = new JButton("New Word");
+    private static JButton uploadFileBtn = new JButton("Upload File");
 
 
     protected DatabaseInput() {
 
-        submitButton.addMouseListener(new MouseAdapter() {
+        /*submitButton.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
 
@@ -85,8 +83,46 @@ public class DatabaseInput {
                     e1.printStackTrace();
                 }
             }
+        });*/
+
+        submitButton2.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                String word = wordsTextField.getText();
+                String[] wordInput = {word};
+                String phrase = phraseTextField.getText();
+                String[] phraseInput = {phrase};
+                try {
+                    processInput(wordInput, phraseInput);
+                } catch (Exception ex) {
+                    System.out.println(ex);
+                }
+            }
+        });
+
+        newPhraseBtn.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                successLabel.setText("22");
+            }
+        });
+
+        newWordBtn.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                successLabel.setText("11");
+            }
+        });
+
+        uploadFileBtn.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                successLabel.setText("44");
+            }
         });
     }
+
+
 
     /*public static void main(String[] args) {
         JFrame frame = new JFrame("DatabaseInput");
@@ -172,16 +208,8 @@ public class DatabaseInput {
 
         JPanel newWordPanel = new JPanel();
         newWordPanel.setBackground(Color.WHITE);
-        JButton newWordBtn = new JButton("New Word");
         newWordPanel.add(newWordBtn);
         pane.add(newWordPanel);
-
-        newWordBtn.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mouseClicked(MouseEvent e) {
-                successLabel.setText("11");
-            }
-        });
 
         // phrases input panel
         JPanel phrasesInputPanel = new JPanel();
@@ -208,6 +236,7 @@ public class DatabaseInput {
         phraseProbField.setMinimumSize(new Dimension(100, 30));
         phraseProbField.setMaximumSize(new Dimension(100, 30));
         phraseProbField.setPreferredSize(new Dimension(100, 30));
+
 
         phraseTextField.addFocusListener(new FocusListener() {
             public void focusGained(FocusEvent e) {
@@ -241,64 +270,18 @@ public class DatabaseInput {
 
         JPanel newPhrasePanel = new JPanel();
         newPhrasePanel.setBackground(Color.WHITE);
-        JButton newPhraseBtn = new JButton("New Phrase");
         newPhrasePanel.add(newPhraseBtn);
         pane.add(newPhrasePanel);
-
-        newPhraseBtn.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mouseClicked(MouseEvent e) {
-                successLabel.setText("22");
-            }
-        });
 
         //bottom label
         JPanel submitPanel = new JPanel();
         submitButton2 = new JButton("Submit");
         successLabel = new JLabel("Test");
-        JButton uploadFileBtn = new JButton("Upload File");
         submitPanel.add(submitButton2);
         submitPanel.add(uploadFileBtn);
         submitPanel.add(successLabel);
 
         pane.add(submitPanel, BorderLayout.SOUTH);
-
-        submitButton2.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mouseClicked(MouseEvent e) {
-                successLabel.setText("45");
-            }
-        });
-
-        uploadFileBtn.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mouseClicked(MouseEvent e) {
-                successLabel.setText("44");
-            }
-        });
-    }
-
-    /**
-     * Create the GUI and show it.  For thread safety,
-     * this method should be invoked from the
-     * event-dispatching thread.
-     */
-    private static void createAndShowGUI() {
-        //Create and set up the window.
-        JFrame frame = new JFrame("DatabaseGUI");
-        frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-        frame.setLocationRelativeTo(null);
-        frame.setTitle("Database Input");
-        frame.setResizable(true);
-        frame.setMaximumSize(new Dimension(700, 500));
-        frame.setMinimumSize(new Dimension(700, 500));
-        frame.setPreferredSize(new Dimension(700, 500));
-        //Set up the content pane.
-        addComponentsToPane(frame.getContentPane());
-
-        //Display the window.
-        frame.pack();
-        frame.setVisible(true);
     }
 
     private void processInput(String[] words, String[] phrases) throws Exception {
@@ -520,13 +503,20 @@ public class DatabaseInput {
     }
 
     public static void main(String[] args) {
-        //Schedule a job for the event-dispatching thread:
-        //creating and showing this application's GUI.
-        javax.swing.SwingUtilities.invokeLater(new Runnable() {
-            public void run() {
-                createAndShowGUI();
-            }
-        });
+        //Create and set up the window.
+        JFrame frame = new JFrame("DatabaseGUI");
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setLocationRelativeTo(null);
+        frame.setTitle("Database Input");
+        frame.setResizable(true);
+        frame.setMaximumSize(new Dimension(700, 500));
+        frame.setMinimumSize(new Dimension(700, 500));
+        frame.setPreferredSize(new Dimension(700, 500));
+        //Set up the content pane.
+        addComponentsToPane(frame.getContentPane());
+
+        //Display the window.
+        frame.pack();
+        frame.setVisible(true);
     }
 }
-
