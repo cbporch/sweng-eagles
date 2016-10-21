@@ -51,40 +51,6 @@ public class DatabaseInput {
 
     protected DatabaseInput() {
 
-        /*submitButton.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mouseClicked(MouseEvent e) {
-
-                //word storing and cutting off white space
-                word = wordsTextField.getText();
-                word = word.replaceAll("\\s+", "");
-
-                // separate the words into its own index in an array
-                words = word.split(",");
-
-                //phrase storing
-                phrase = phrasesTextField.getText();
-
-                //split each phrase into its own index in an array
-                phrases = phrase.split(",");
-
-                //have lucene run through the inputs to take out filler words before going into the database
-                //word with number is more confidential
-                try {
-                    // remove empty input
-                    if(phrases.length == 1 && phrases[0].equals("")){
-                        phrases = new String[0];
-                    }
-                    if(words.length == 1 && words[0].equals("")){
-                        words = new String[0];
-                    }
-                        processInput(words, phrases);
-                } catch (Exception e1) {
-                    e1.printStackTrace();
-                }
-            }
-        });*/
-
         submitButton2.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
@@ -122,27 +88,6 @@ public class DatabaseInput {
         });
     }
 
-
-
-    /*public static void main(String[] args) {
-        JFrame frame = new JFrame("DatabaseInput");
-        frame.setContentPane(new DatabaseInput().container);
-        frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-        frame.pack();
-        frame.setVisible(true);
-
-       *//* //Create the frame.
-        JFrame frame = new JFrame("FrameDemo");
-        //Set what happens when the frame closes?
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        //3. Create components and put them in the frame.
-        //...create emptyLabel...
-        frame.getContentPane().add(emptyLabel, BorderLayout.CENTER);
-        //Size the frame.
-        frame.pack();
-        //Show it.
-        frame.setVisible(true);*//*
-    }*/
 
     private static void addComponentsToPane(Container pane) {
         pane.setLayout(new BoxLayout(pane, BoxLayout.Y_AXIS));
