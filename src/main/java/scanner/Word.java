@@ -9,7 +9,8 @@ package scanner;
  */
 public class Word {
     private String word;
-    private int rarity, conf, norm;
+    private float rarity;
+    private int conf, norm;
     private boolean num;
 
     public Word(String word, int rarity, boolean num) {
@@ -34,7 +35,7 @@ public class Word {
         return word;
     }
 
-    public int getRarity() {
+    public float getRarity() {
         return rarity;
     }
 
@@ -46,7 +47,7 @@ public class Word {
         this.word = word;
     }
 
-    public void setRarity(int rarity) {
+    public void setRarity(float rarity) {
         this.rarity = rarity;
     }
 

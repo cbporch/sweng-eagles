@@ -9,7 +9,8 @@ package scanner;
  */
 public class Phrase {
     private String phrase;
-    private int wordcount, rarity, conf, norm;
+    private float rarity;
+    private int wordcount, conf, norm;
     private boolean num;    // whether numbers effect the probability
 
     public Phrase(String phrase) {
@@ -50,7 +51,7 @@ public class Phrase {
         return wordcount;
     }
 
-    public int getRarity() {
+    public float getRarity() {
         return rarity;
     }
 
@@ -66,7 +67,7 @@ public class Phrase {
         this.wordcount = wordcount;
     }
 
-    public void setRarity(int rarity) {
+    public void setRarity(float rarity) {
         this.rarity = rarity;
     }
 
