@@ -30,13 +30,11 @@ public class TextParser {
     }
 
     private Word findWord(String word){
-//        Word w = db.getWord;
-        return null;
+        return db.getWord(word);
     }
 
-    private Phrase findPhrase(){
-//        Phrase p = db.getPhrase();
-        return null;
+    private Phrase findPhrase(String phrase){
+        return db.getPhrase(phrase);
     }
 
 }
