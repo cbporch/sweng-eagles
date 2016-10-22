@@ -1,4 +1,4 @@
-package scanner.filtering;
+package scanner;
 
 import org.junit.Assert;
 import org.junit.Before;
