@@ -11,9 +11,7 @@ import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.IOException;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.Arrays;
 
@@ -427,18 +425,16 @@ public class DatabaseInput {
      * This will take in a file name and it will go through it if its a CSV file and seperate it into an arraylist.
      * You must enter either a single words only file, or a phrases only file.
      */
-    public ArrayList<String> interpretCSVFile(String filename)
+    public static ArrayList<String> interpretCSVFile(String filename)
     {
         BufferedReader br;
-        ArrayList<String> listOfWords = new ArrayList<String>(); //Returned list of all the words in this file.
+        ArrayList<String> listOfWords = new ArrayList<>(); //Returned list of all the words in this file.
         try {
             br = new BufferedReader(new FileReader(filename));
             String line;
             while ((line = br.readLine()) != null) {
                 String[] unsortedWords = line.split(",");
-                for (int i = 0; i < unsortedWords.length; i++) {
-                    listOfWords.add(unsortedWords[i]);
-                }
+                listOfWords = new ArrayList<>(Arrays.asList(unsortedWords));
             }
         }
         catch (IOException e) {
@@ -450,7 +446,7 @@ public class DatabaseInput {
     public static void main(String[] args) {
         //Create and set up the window.
         JFrame frame = new JFrame("DatabaseGUI");
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         frame.setLocationRelativeTo(null);
         frame.setTitle("Database Input");
         frame.setResizable(true);
