@@ -2,7 +2,10 @@ package scanner;
 
 /**
  * Created by Chris on 10/18/2016.
- * Modified on 10/20/16
+ * Modified on 10/22/16
+ *
+ * This class models a row in the Phrases Database, to better allow passing of
+ * relevant data regarding a phrase throughout the project.
  */
 public class Phrase {
     private String phrase;
@@ -26,7 +29,14 @@ public class Phrase {
         this.num = num;
     }
 
-
+    public Phrase(String phrase, int wordcount, int rarity, int conf, int norm, boolean num) {
+        this.phrase = phrase;
+        this.wordcount = wordcount;
+        this.rarity = rarity;
+        this.conf = conf;
+        this.norm = norm;
+        this.num = num;
+    }
 
     public String getPhrase() {
         return phrase;
