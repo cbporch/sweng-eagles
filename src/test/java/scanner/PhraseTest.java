@@ -14,6 +14,7 @@ import scanner.Phrase;
  */
 public class PhraseTest {
     private Phrase testPhrase;
+    private static final double DELTA = 1e-15;
     @Before
     public void setUp() throws Exception {
         testPhrase = new Phrase("test text", 2, 1,3,4,true);
@@ -21,14 +22,14 @@ public class PhraseTest {
 
     @Test
     public void getRarity() throws Exception {
-        Assert.assertEquals(1, testPhrase.getRarity());
+        Assert.assertEquals(1, testPhrase.getRarity(), DELTA);
     }
 
     @Test
     public void setRarity() throws Exception {
         Phrase p = new Phrase("phrase", 1);
         p.setRarity(0);
-        Assert.assertEquals(0, p.getRarity());
+        Assert.assertEquals(0, p.getRarity(), DELTA);
 
     }
 

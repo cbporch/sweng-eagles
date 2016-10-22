@@ -13,6 +13,7 @@ import static org.junit.Assert.*;
  */
 public class WordTest {
     private Word testWord;
+    private static final double DELTA = 1e-15;
     @Before
     public void setUp() throws Exception {
         testWord = new Word("test", 1, 4, 2, true);
@@ -25,7 +26,7 @@ public class WordTest {
 
     @Test
     public void getRarity() throws Exception {
-        Assert.assertEquals(1, testWord.getRarity());
+        Assert.assertEquals(1, testWord.getRarity(), DELTA);
     }
 
     @Test
@@ -54,7 +55,7 @@ public class WordTest {
     public void setRarity() throws Exception {
         Word w = new Word("test", 1, true);
         w.setRarity(0);
-        Assert.assertEquals(0, w.getRarity());
+        Assert.assertEquals(0, w.getRarity(), DELTA);
     }
 
     @Test
