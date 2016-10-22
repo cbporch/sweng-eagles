@@ -105,13 +105,13 @@ public class Database {
             String sql = String.format("select * from Words");
             ResultSet rs = statement.executeQuery(sql);     //execute the select query
             while (rs.next()) {
-                if(rs.getString(1).equals(word)){
+                if(rs.getString(2).equals(word)){
                     //TODO : get Word attributes from Words Database
                     found.setWord(word);
-                    found.setRarity(2);
-//                    found.setConf();
-//                    found.setNorm();
-//                    found.setNum();
+                    found.setRarity(rs.getFloat(3));
+//                    found.setConf(rs.getInt(4));
+//                    found.setNorm(rs.getInt(5));
+//                    found.setNum(rs.getBoolean(6));
                     return found;
                 }
             }
@@ -139,14 +139,14 @@ public class Database {
             String sql = String.format("select * from Phrases");
             ResultSet rs = statement.executeQuery(sql);     //execute the select query
             while (rs.next()) {
-                if(rs.getString(1).equals(phrase)){
+                if(rs.getString(2).equals(phrase)){
                     //TODO : get Phrase attributes from Words Database
                     found.setPhrase(phrase);
-                    found.setRarity(2);
-                    found.setWordcount(3);
-//                    found.setConf();
-//                    found.setNorm();
-//                    found.setNum();
+                    found.setRarity(rs.getFloat(3));
+                    found.setWordcount(rs.getInt(4));
+//                    found.setConf(rs.getInt(5));
+//                    found.setNorm(rs.getInt(6));
+//                    found.setNum(rs.getBoolean(7));
                     return found;
                 }
             }
