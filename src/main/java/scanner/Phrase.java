@@ -38,6 +38,10 @@ public class Phrase {
         this.num = num;
     }
 
+    public Phrase() {
+
+    }
+
     public String getPhrase() {
         return phrase;
     }
