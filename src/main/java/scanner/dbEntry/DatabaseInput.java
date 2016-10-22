@@ -236,6 +236,7 @@ public class DatabaseInput {
                 unique_words = new ArrayList<>();
         ArrayList<Phrase>   stemmedPhrases = new ArrayList<>(),
                 unique_phrases = new ArrayList<>();
+        LuceneStemmer ls = new LuceneStemmer();
 
         try {
             dbHashedWords = Database.getWords();
@@ -244,7 +245,7 @@ public class DatabaseInput {
             // move array into ArrayList for method call
             ArrayList<String> w = new ArrayList<>(Arrays.asList(words));
 
-            stemmedWords = LuceneStemmer.stemWords(w);
+            stemmedWords = ls.stemWords(w);
 
             if(stemmedWords.size() != 0) {
                 boolean duplicate = false, empty = true;
@@ -280,7 +281,7 @@ public class DatabaseInput {
 
             // stem phrases before checking in database, maintaining word count for each phrase
             for(String phrase: phrases){
-                stemmedPhrases.add(new Phrase(LuceneStemmer.stemPhrase(phrase), phrase.split("\\s+").length));
+                stemmedPhrases.add(new Phrase(ls.stemPhrase(phrase), phrase.split("\\s+").length));
             }
 
             // find unique phrases in input
@@ -327,6 +328,7 @@ public class DatabaseInput {
                             unique_words   = new ArrayList<>();
         ArrayList<Phrase>   stemmedPhrases = new ArrayList<>(),
                             unique_phrases = new ArrayList<>();
+        LuceneStemmer ls = new LuceneStemmer();
 
         try {
             dbHashedWords = Database.getWords();
@@ -335,7 +337,7 @@ public class DatabaseInput {
             // move array into ArrayList for method call
             ArrayList<String> w = new ArrayList<>(Arrays.asList(words));
 
-            stemmedWords = LuceneStemmer.stemWords(w);
+            stemmedWords = ls.stemWords(w);
 
             if(stemmedWords.size() != 0) {
                 boolean duplicate = false, empty = true;
@@ -375,7 +377,7 @@ public class DatabaseInput {
 
             // stem phrases before checking in database, maintaining word count for each phrase
             for(String phrase: phrases){
-                stemmedPhrases.add(new Phrase(LuceneStemmer.stemPhrase(phrase), phrase.split("\\s+").length));
+                stemmedPhrases.add(new Phrase(ls.stemPhrase(phrase), phrase.split("\\s+").length));
             }
 
             // find unique phrases in input
