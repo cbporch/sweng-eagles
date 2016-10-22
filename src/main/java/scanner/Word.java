@@ -26,6 +26,10 @@ public class Word {
         this.num = num;
     }
 
+    public Word() {
+
+    }
+
     public String getWord() {
         return word;
     }

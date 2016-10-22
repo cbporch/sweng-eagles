@@ -1,5 +1,9 @@
 package scanner.dbEntry;
 
+import scanner.Phrase;
+import scanner.Word;
+import scanner.filtering.Hasher;
+
 import java.sql.*;
 import java.util.ArrayList;
 
@@ -80,5 +84,36 @@ public class Database {
             System.out.println(e);
             return null;
         }
+    }
+
+
+    /*
+     * Method hashes a given word, checks for it in the database and returns it if it is found,
+     * otherwise returns null
+     *
+     * Word is assumed to be stemmed before being passed in
+     */
+    public Word getWord(String word){
+        Word found = new Word();
+        word = Hasher.hashSHA(word);
+
+        //TODO : get Word attributes from Words Database
+
+        return null;
+    }
+
+    /*
+     * Method hashes a given phrase, checks for it in the database and returns it if it is found,
+     * otherwise returns null
+     *
+     * Phrase is assumed to be stemmed before being passed in
+     */
+    public Phrase getPhrase(String phrase){
+        Phrase found = new Phrase();
+        phrase = Hasher.hashSHA(phrase);
+
+        //TODO : get Phrase attributes from Phrases Database
+
+        return null;
     }
 }
