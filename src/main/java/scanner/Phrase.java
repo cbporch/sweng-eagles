@@ -6,7 +6,7 @@ package scanner;
  */
 public class Phrase {
     private String phrase;
-    private int wordcount, rarity;
+    private int wordcount, rarity, conf, norm;
     private boolean num;    // whether numbers effect the probability
 
     public Phrase(String phrase) {
@@ -25,6 +25,8 @@ public class Phrase {
         this.rarity = rarity;
         this.num = num;
     }
+
+
 
     public String getPhrase() {
         return phrase;
@@ -56,5 +58,21 @@ public class Phrase {
 
     public void setNum(boolean num) {
         this.num = num;
+    }
+
+    public int getConf() {
+        return conf;
+    }
+
+    public void setConf(int conf) {
+        this.conf = conf;
+    }
+
+    public int getNorm() {
+        return norm;
+    }
+
+    public void setNorm(int norm) {
+        this.norm = norm;
     }
 }

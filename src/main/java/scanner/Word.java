@@ -5,7 +5,7 @@ package scanner;
  */
 public class Word {
     private String word;
-    private int rarity;
+    private int rarity, conf, norm;
     private boolean num;
 
     public Word(String word, int rarity, boolean num) {
@@ -36,5 +36,21 @@ public class Word {
 
     public void setNum(boolean num) {
         this.num = num;
+    }
+
+    public int getNorm() {
+        return norm;
+    }
+
+    public void setNorm(int norm) {
+        this.norm = norm;
+    }
+
+    public int getConf() {
+        return conf;
+    }
+
+    public void setConf(int conf) {
+        this.conf = conf;
     }
 }
