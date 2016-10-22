@@ -60,6 +60,7 @@ public class DatabaseInput {
                 String[] phraseInput = {phrase};
                 try {
                     processInput(wordInput, phraseInput);
+                   // processInputSHA(wordInput, phraseInput);
                 } catch (Exception ex) {
                     System.out.println(ex);
                 }
@@ -87,7 +88,6 @@ public class DatabaseInput {
             }
         });
     }
-
 
     private static void addComponentsToPane(Container pane) {
         pane.setLayout(new BoxLayout(pane, BoxLayout.Y_AXIS));
@@ -422,8 +422,6 @@ public class DatabaseInput {
             e.printStackTrace();
         }
     }
-
-
 
     /**
      * This will take in a file name and it will go through it if its a CSV file and seperate it into an arraylist.
