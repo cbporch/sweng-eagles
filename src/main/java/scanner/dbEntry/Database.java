@@ -91,7 +91,9 @@ public class Database {
      * Method hashes a given word, checks for it in the database and returns it if it is found,
      * otherwise returns null
      *
-     * Word is assumed to be stemmed before being passed in
+     * Word is assumed to be stemmed but not hashed before being passed in
+     *
+     * Output is a Word object containing a hashed string with all other attributes
      */
     public Word getWord(String word){
         Word found = new Word();
@@ -106,7 +108,7 @@ public class Database {
                 if(rs.getString(1).equals(word)){
                     //TODO : get Word attributes from Words Database
                     found.setWord(word);
-//                    found.setRarity();
+                    found.setRarity(2);
 //                    found.setConf();
 //                    found.setNorm();
 //                    found.setNum();
@@ -123,7 +125,9 @@ public class Database {
      * Method hashes a given phrase, checks for it in the database and returns it if it is found,
      * otherwise returns null
      *
-     * Phrase is assumed to be stemmed before being passed in
+     * Phrase is assumed to be stemmed but not hashed before being passed in.
+     *
+     * Output is a Phrase object containing a hashed string with all other attributes
      */
     public Phrase getPhrase(String phrase){
         Phrase found = new Phrase();
@@ -138,11 +142,11 @@ public class Database {
                 if(rs.getString(1).equals(phrase)){
                     //TODO : get Phrase attributes from Words Database
                     found.setPhrase(phrase);
-//                    found.setRarity();
+                    found.setRarity(2);
+                    found.setWordcount(3);
 //                    found.setConf();
 //                    found.setNorm();
 //                    found.setNum();
-//                    found.setWordcount();
                     return found;
                 }
             }
