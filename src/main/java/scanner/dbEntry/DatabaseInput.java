@@ -11,9 +11,7 @@ import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.IOException;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.Arrays;
 
@@ -60,6 +58,7 @@ public class DatabaseInput {
                 String[] phraseInput = {phrase};
                 try {
                     processInput(wordInput, phraseInput);
+                   // processInputSHA(wordInput, phraseInput);
                 } catch (Exception ex) {
                     System.out.println(ex);
                 }
@@ -87,7 +86,6 @@ public class DatabaseInput {
             }
         });
     }
-
 
     private static void addComponentsToPane(Container pane) {
         pane.setLayout(new BoxLayout(pane, BoxLayout.Y_AXIS));
@@ -236,6 +234,7 @@ public class DatabaseInput {
                 unique_words = new ArrayList<>();
         ArrayList<Phrase>   stemmedPhrases = new ArrayList<>(),
                 unique_phrases = new ArrayList<>();
+        LuceneStemmer ls = new LuceneStemmer();
 
         try {
             dbHashedWords = Database.getWords();
@@ -244,7 +243,7 @@ public class DatabaseInput {
             // move array into ArrayList for method call
             ArrayList<String> w = new ArrayList<>(Arrays.asList(words));
 
-            stemmedWords = LuceneStemmer.stemWords(w);
+            stemmedWords = ls.stemWords(w);
 
             if(stemmedWords.size() != 0) {
                 boolean duplicate = false, empty = true;
@@ -280,7 +279,7 @@ public class DatabaseInput {
 
             // stem phrases before checking in database, maintaining word count for each phrase
             for(String phrase: phrases){
-                stemmedPhrases.add(new Phrase(LuceneStemmer.stemPhrase(phrase), phrase.split("\\s+").length));
+                stemmedPhrases.add(new Phrase(ls.stemPhrase(phrase), phrase.split("\\s+").length));
             }
 
             // find unique phrases in input
@@ -327,6 +326,7 @@ public class DatabaseInput {
                             unique_words   = new ArrayList<>();
         ArrayList<Phrase>   stemmedPhrases = new ArrayList<>(),
                             unique_phrases = new ArrayList<>();
+        LuceneStemmer ls = new LuceneStemmer();
 
         try {
             dbHashedWords = Database.getWords();
@@ -335,7 +335,7 @@ public class DatabaseInput {
             // move array into ArrayList for method call
             ArrayList<String> w = new ArrayList<>(Arrays.asList(words));
 
-            stemmedWords = LuceneStemmer.stemWords(w);
+            stemmedWords = ls.stemWords(w);
 
             if(stemmedWords.size() != 0) {
                 boolean duplicate = false, empty = true;
@@ -375,7 +375,7 @@ public class DatabaseInput {
 
             // stem phrases before checking in database, maintaining word count for each phrase
             for(String phrase: phrases){
-                stemmedPhrases.add(new Phrase(LuceneStemmer.stemPhrase(phrase), phrase.split("\\s+").length));
+                stemmedPhrases.add(new Phrase(ls.stemPhrase(phrase), phrase.split("\\s+").length));
             }
 
             // find unique phrases in input
@@ -421,24 +421,20 @@ public class DatabaseInput {
         }
     }
 
-
-
     /**
      * This will take in a file name and it will go through it if its a CSV file and seperate it into an arraylist.
      * You must enter either a single words only file, or a phrases only file.
      */
-    public ArrayList<String> interpretCSVFile(String filename)
+    public static ArrayList<String> interpretCSVFile(String filename)
     {
         BufferedReader br;
-        ArrayList<String> listOfWords = new ArrayList<String>(); //Returned list of all the words in this file.
+        ArrayList<String> listOfWords = new ArrayList<>(); //Returned list of all the words in this file.
         try {
             br = new BufferedReader(new FileReader(filename));
             String line;
             while ((line = br.readLine()) != null) {
                 String[] unsortedWords = line.split(",");
-                for (int i = 0; i < unsortedWords.length; i++) {
-                    listOfWords.add(unsortedWords[i]);
-                }
+                listOfWords = new ArrayList<>(Arrays.asList(unsortedWords));
             }
         }
         catch (IOException e) {
@@ -450,7 +446,7 @@ public class DatabaseInput {
     public static void main(String[] args) {
         //Create and set up the window.
         JFrame frame = new JFrame("DatabaseGUI");
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         frame.setLocationRelativeTo(null);
         frame.setTitle("Database Input");
         frame.setResizable(true);

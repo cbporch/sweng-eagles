@@ -35,13 +35,15 @@ public class StringToHash {
      * if phrases is set as true
      */
     public static ArrayList<String> getHashes(ArrayList<String> input) throws IOException {
-         return Hasher.hashArrayListBCrypt(LuceneStemmer.stemWords(input));
+        LuceneStemmer ls = new LuceneStemmer();
+         return Hasher.hashArrayListBCrypt(ls.stemWords(input));
     }
 
     public static ArrayList<Phrase> getPhraseHashes(ArrayList<Phrase> input) throws IOException {
+        LuceneStemmer ls = new LuceneStemmer();
         ArrayList<Phrase> hashedPhrases = new ArrayList<>();
         for(Phrase phrase : input){
-            hashedPhrases.add(new Phrase(Hasher.hashStringBCrypt(LuceneStemmer.stemPhrase(phrase.getPhrase())), phrase.getWordcount()));
+            hashedPhrases.add(new Phrase(Hasher.hashStringBCrypt(ls.stemPhrase(phrase.getPhrase())), phrase.getWordcount()));
         }
         return hashedPhrases;
     }

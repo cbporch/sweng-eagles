@@ -39,7 +39,7 @@ public class Database {
         }
     }
 
-    static ArrayList<String> getWords() throws Exception {
+    public static ArrayList<String> getWords() throws Exception {
         ArrayList<String> words = new ArrayList<>();
 
         try {
@@ -61,7 +61,7 @@ public class Database {
 
     }
 
-    static ArrayList<String> getPhrases() throws Exception {
+    public static ArrayList<String> getPhrases() throws Exception {
         ArrayList<String> phrases = new ArrayList<>();
 
         try {
