@@ -44,6 +44,7 @@ public class DatabaseInput {
     private static JButton newPhraseBtn = new JButton("New Phrase");
     private static JButton newWordBtn = new JButton("New Word");
     private static JButton uploadFileBtn = new JButton("Upload File");
+    private static String phraseHintText = "Enter phrase here..";
 
 
     protected DatabaseInput() {
@@ -131,7 +132,7 @@ public class DatabaseInput {
 
         JPanel phraseOptions = new JPanel();
         phrasesInputPanel.add(phraseOptions, new BoxLayout(pane, BoxLayout.X_AXIS));
-        final JTextField phraseTextField = new JTextField("Enter phrase here..");
+        final JTextField phraseTextField = new JTextField(phraseHintText);
         phraseTextField.setForeground(Color.LIGHT_GRAY);
         phraseTextField.setMinimumSize(new Dimension(350, 30));
         phraseTextField.setMaximumSize(new Dimension(350, 30));
@@ -192,6 +193,12 @@ public class DatabaseInput {
                 String[] wordInput = {word};
                 String phrase = phraseTextField.getText();
                 String[] phraseInput = {phrase};
+                if(phrase.equals(phraseHintText)){
+                    //process only words
+                }
+                else{
+                    //do nothing
+                }
                 try {
                     processInput(wordInput, phraseInput);
                 } catch (Exception ex) {
