@@ -194,7 +194,7 @@ public class DatabaseInput {
                 String phrase = phraseTextField.getText();
                 String[] phraseInput = {phrase};
                 if(phrase.equals(phraseHintText)){
-                    //process only words
+                    //process only wordss
                 }
                 else{
                     //do nothing
