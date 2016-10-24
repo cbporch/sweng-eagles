@@ -1,12 +1,14 @@
-package scanner;
+package scanner.analysis;
+
+import scanner.Doublet;
 
 import java.util.ArrayList;
 
 public class CalculateEmailScore
 {
-	static ArrayList<Doublet> termProbabilityList = new ArrayList<>();
+//	static ArrayList<Doublet> termProbabilityList = new ArrayList<>();
 	
-	public static double calculate()
+	public static double calculate(ArrayList<Doublet> termProbabilityList)
 	{
 		double emailScoreX = 1;
 		double emailScoreY = 1;

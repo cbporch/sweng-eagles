@@ -1,5 +1,6 @@
 package scanner.analysis;
 
+import scanner.Doublet;
 import scanner.Phrase;
 import scanner.Word;
 import scanner.dbEntry.Database;
@@ -22,11 +23,20 @@ public class TextParser {
     public TextParser(String email) throws Exception {
         db = new Database();
         ls = new LuceneStemmer();
+        ArrayList<Doublet> pairs = new ArrayList<>();
         try {
             text = ls.splitText(email);
         } catch (IOException e) {
             e.printStackTrace();
         }
+
+        for(String word: text){
+            Word w = findWord(word);
+            pairs.add(new Doublet(w.getConf(), w.getNorm()));
+        }
+
+        double score = CalculateEmailScore.calculate(pairs);
+
     }
 
     private Word findWord(String word){
