@@ -190,17 +190,25 @@ public class DatabaseInput {
             public void mouseClicked(MouseEvent e) {
                 System.out.println("Trying...");
                 String word = wordsTextField.getText();
-                String[] wordInput = {word};
+                ArrayList<String> wordInput = new ArrayList<String>();
                 String phrase = phraseTextField.getText();
-                String[] phraseInput = {phrase};
+                ArrayList<String> phraseInput = new ArrayList<String>();
                 if(phrase.equals(phraseHintText)){
-                    //process only wordss
-                }
-                else{
                     //do nothing
                 }
+                else{
+                    phraseInput.add(phrase);
+                }
+                if(word.equals(phraseHintText)){
+                    //do nothing
+                }
+                else{
+                   wordInput.add(word);
+                }
                 try {
-                    processInput(wordInput, phraseInput);
+                    String[] words = wordInput.toArray(new String[wordInput.size()]);
+                    String[] phrases = phraseInput.toArray(new String[phraseInput.size()]);
+                    processInput(words, phrases);
                 } catch (Exception ex) {
                     System.out.println(ex);
                 }
