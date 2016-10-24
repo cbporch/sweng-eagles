@@ -50,6 +50,7 @@ public class DatabaseInput {
     private static JButton newWordBtn = new JButton("New Word");
     private static JButton uploadFileBtn = new JButton("Upload File");
     private static String phraseHintText = "Enter phrase here..";
+    private static String probHintText = "Enter probability..";
 
 
     protected DatabaseInput() {
@@ -81,9 +82,9 @@ public class DatabaseInput {
         wordsTextField.setMinimumSize(new Dimension(350, 30));
         wordsTextField.setMaximumSize(new Dimension(350, 30));
         wordsTextField.setPreferredSize(new Dimension(350, 30));
-        JRadioButton synBtn = new JRadioButton("Synonyms?");
-        JRadioButton numDependentBtn = new JRadioButton("# Dependent?");
-        final JTextField probField = new JTextField("Enter probability..");
+        final JRadioButton synBtn = new JRadioButton("Synonyms?");
+        final JRadioButton numDependentBtn = new JRadioButton("# Dependent?");
+        final JTextField probField = new JTextField(probHintText);
         probField.setForeground(Color.LIGHT_GRAY);
         probField.setMinimumSize(new Dimension(100, 30));
         probField.setMaximumSize(new Dimension(100, 30));
@@ -141,9 +142,9 @@ public class DatabaseInput {
         phraseTextField.setMinimumSize(new Dimension(350, 30));
         phraseTextField.setMaximumSize(new Dimension(350, 30));
         phraseTextField.setPreferredSize(new Dimension(350, 30));
-        JRadioButton phraseSynBtn = new JRadioButton("Synonyms?");
-        JRadioButton phraseNumDependentBtn = new JRadioButton("# Dependent?");
-        final JTextField phraseProbField = new JTextField("Enter probability..");
+        final JRadioButton phraseSynBtn = new JRadioButton("Synonyms?");
+        final JRadioButton phraseNumDependentBtn = new JRadioButton("# Dependent?");
+        final JTextField phraseProbField = new JTextField(probHintText);
         phraseProbField.setForeground(Color.LIGHT_GRAY);
         phraseProbField.setMinimumSize(new Dimension(100, 30));
         phraseProbField.setMaximumSize(new Dimension(100, 30));
@@ -193,10 +194,35 @@ public class DatabaseInput {
             @Override
             public void mouseClicked(MouseEvent e) {
                 System.out.println("Trying...");
+
+                //set up the words
                 String word = wordsTextField.getText();
                 ArrayList<String> wordInput = new ArrayList<String>();
+                Boolean wordSyn = synBtn.isSelected();
+                Boolean wordNumDep = numDependentBtn.isSelected();
+                Double wordProb;
+                if(probField.getText().equals(probHintText)) {
+                    wordProb = -1.0;
+                }
+                else {
+                    wordProb = Double.parseDouble(probField.getText());
+                }
+                System.out.println(wordProb);
+
+
+                //set up the phrase
                 String phrase = phraseTextField.getText();
                 ArrayList<String> phraseInput = new ArrayList<String>();
+                Boolean phraseSyn = phraseSynBtn.isSelected();
+                Boolean phraseNumDep = phraseNumDependentBtn.isSelected();
+                Double phraseProb;
+                if(phraseProbField.getText().equals(probHintText)) {
+                    phraseProb = -1.0;
+                }
+                else {
+                    phraseProb = Double.parseDouble(phraseProbField.getText());
+                }
+                System.out.println(phraseProb);
                 if(phrase.equals(phraseHintText)){
                     //do nothing
                 }
@@ -212,7 +238,7 @@ public class DatabaseInput {
                 try {
                     String[] words = wordInput.toArray(new String[wordInput.size()]);
                     String[] phrases = phraseInput.toArray(new String[phraseInput.size()]);
-                    processInput(words, phrases);
+                    processInputSHA(words, phrases, wordProb, phraseProb);
                 } catch (Exception ex) {
                     System.out.println(ex);
                 }
@@ -249,7 +275,7 @@ public class DatabaseInput {
         pane.add(submitPanel, BorderLayout.SOUTH);
     }
 
-    private static void processInput(String[] words, String[] phrases) throws Exception {
+    /*private static void processInput(String[] words, String[] phrases) throws Exception {
         ArrayList<String>   stemmedWords,
                 dbHashedWords,
                 dbHashedPhrases,
@@ -339,9 +365,9 @@ public class DatabaseInput {
             e.printStackTrace();
         }
 
-    }
+    }*/
 
-    private void processInputSHA(String[] words, String[] phrases) throws Exception {
+    private static void processInputSHA(String[] words, String[] phrases, Double wordProb, Double phraseProb) throws Exception {
         ArrayList<String>   stemmedWords,
                             dbHashedWords,
                             dbHashedPhrases,
@@ -349,6 +375,13 @@ public class DatabaseInput {
         ArrayList<Phrase>   stemmedPhrases = new ArrayList<>(),
                             unique_phrases = new ArrayList<>();
         LuceneStemmer ls = new LuceneStemmer();
+
+        if(wordProb == -1.0){
+            wordProb = 1.0;
+        }
+        if(phraseProb == -1.0){
+            wordProb = 1.0;
+        }
 
         try {
             dbHashedWords = Database.getWords();
