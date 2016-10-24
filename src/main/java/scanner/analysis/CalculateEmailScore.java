@@ -15,8 +15,8 @@ public class CalculateEmailScore
 		
 		for (Doublet term : termProbabilityList)
 		{
-			double wordConfProb = term.getNumConf() / term.getNumNorm();
-			double wordNormProb = term.getNumNorm() / term.getNumConf();
+			double wordConfProb = term.getNumConf() / (double) term.getNumNorm();
+			double wordNormProb = term.getNumNorm() / (double) term.getNumConf();
 
 			if(wordConfProb > 1.0){
 				wordConfProb = 1.0;
@@ -26,11 +26,11 @@ public class CalculateEmailScore
 				wordNormProb = 1.0;
 			}
 
-			double wordProb = wordConfProb / (wordConfProb * wordNormProb);
+			double wordProb = wordConfProb / (wordConfProb + wordNormProb);
 			emailScoreX *= wordProb;
 			emailScoreY *= 1 - wordProb;
 		}
 		
-		return emailScoreX / (emailScoreX + emailScoreY);
+		return (emailScoreX / (emailScoreX + emailScoreY));
 	}
 }
