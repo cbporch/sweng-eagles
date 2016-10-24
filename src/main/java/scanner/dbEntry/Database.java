@@ -1,5 +1,9 @@
 package scanner.dbEntry;
 
+import scanner.Phrase;
+import scanner.Word;
+import scanner.filtering.Hasher;
+
 import java.sql.*;
 import java.util.ArrayList;
 
@@ -39,7 +43,7 @@ public class Database {
         }
     }
 
-    static ArrayList<String> getWords() throws Exception {
+    public static ArrayList<String> getWords() throws Exception {
         ArrayList<String> words = new ArrayList<>();
 
         try {
@@ -61,7 +65,7 @@ public class Database {
 
     }
 
-    static ArrayList<String> getPhrases() throws Exception {
+    public static ArrayList<String> getPhrases() throws Exception {
         ArrayList<String> phrases = new ArrayList<>();
 
         try {
@@ -80,5 +84,75 @@ public class Database {
             System.out.println(e);
             return null;
         }
+    }
+
+
+    /*
+     * Method hashes a given word, checks for it in the database and returns it if it is found,
+     * otherwise returns null
+     *
+     * Word is assumed to be stemmed but not hashed before being passed in
+     *
+     * Output is a Word object containing a hashed string with all other attributes
+     */
+    public Word getWord(String word){
+        Word found = new Word();
+        word = Hasher.hashSHA(word);
+
+        try {
+            Connection conn = getConnection();              //get connection
+            Statement statement = conn.createStatement();   //create statement
+            String sql = String.format("select * from Words");
+            ResultSet rs = statement.executeQuery(sql);     //execute the select query
+            while (rs.next()) {
+                if(rs.getString(2).equals(word)){
+                    //TODO : get Word attributes from Words Database
+                    found.setWord(word);
+                    found.setRarity(rs.getFloat(3));
+//                    found.setConf(rs.getInt(4));
+//                    found.setNorm(rs.getInt(5));
+//                    found.setNum(rs.getBoolean(6));
+                    return found;
+                }
+            }
+        } catch (Exception e) {
+            System.out.println(e);
+        }
+        return null;
+    }
+
+    /*
+     * Method hashes a given phrase, checks for it in the database and returns it if it is found,
+     * otherwise returns null
+     *
+     * Phrase is assumed to be stemmed but not hashed before being passed in.
+     *
+     * Output is a Phrase object containing a hashed string with all other attributes
+     */
+    public Phrase getPhrase(String phrase){
+        Phrase found = new Phrase();
+        phrase = Hasher.hashSHA(phrase);
+
+        try {
+            Connection conn = getConnection();              //get connection
+            Statement statement = conn.createStatement();   //create statement
+            String sql = String.format("select * from Phrases");
+            ResultSet rs = statement.executeQuery(sql);     //execute the select query
+            while (rs.next()) {
+                if(rs.getString(2).equals(phrase)){
+                    //TODO : get Phrase attributes from Words Database
+                    found.setPhrase(phrase);
+                    found.setRarity(rs.getFloat(3));
+                    found.setWordcount(rs.getInt(4));
+//                    found.setConf(rs.getInt(5));
+//                    found.setNorm(rs.getInt(6));
+//                    found.setNum(rs.getBoolean(7));
+                    return found;
+                }
+            }
+        } catch (Exception e) {
+            System.out.println(e);
+        }
+        return null;
     }
 }

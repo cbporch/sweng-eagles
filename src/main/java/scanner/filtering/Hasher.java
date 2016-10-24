@@ -46,9 +46,14 @@ public class Hasher {
     /*
      * Hashes a given String using SHA-512, encodes it as Base64 and returns it
      */
-    public static String hashSHA(String word) throws NoSuchAlgorithmException {
+    public static String hashSHA(String word) {
 
-        MessageDigest md = MessageDigest.getInstance("SHA-512");
+        MessageDigest md = null;
+        try {
+            md = MessageDigest.getInstance("SHA-512");
+        } catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
+        }
         return Base64.encode(md.digest(word.getBytes()));
     }
 

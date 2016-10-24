@@ -7,6 +7,11 @@ import scanner.filtering.StringToHash;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.FocusEvent;
+import java.awt.event.FocusListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.io.*;
 import java.awt.event.*;
 import java.io.BufferedReader;
 import java.io.FileReader;
@@ -51,7 +56,6 @@ public class DatabaseInput {
 
     }
 
-
     private static void addComponentsToPane(Container pane) {
         pane.setLayout(new BoxLayout(pane, BoxLayout.Y_AXIS));
         JPanel instructionsPanel = new JPanel();
@@ -77,8 +81,8 @@ public class DatabaseInput {
         wordsTextField.setMinimumSize(new Dimension(350, 30));
         wordsTextField.setMaximumSize(new Dimension(350, 30));
         wordsTextField.setPreferredSize(new Dimension(350, 30));
-        final JRadioButton synBtn = new JRadioButton("Synonyms?");
-        final JRadioButton numDependentBtn = new JRadioButton("# Dependent?");
+        JRadioButton synBtn = new JRadioButton("Synonyms?");
+        JRadioButton numDependentBtn = new JRadioButton("# Dependent?");
         final JTextField probField = new JTextField("Enter probability..");
         probField.setForeground(Color.LIGHT_GRAY);
         probField.setMinimumSize(new Dimension(100, 30));
@@ -137,8 +141,8 @@ public class DatabaseInput {
         phraseTextField.setMinimumSize(new Dimension(350, 30));
         phraseTextField.setMaximumSize(new Dimension(350, 30));
         phraseTextField.setPreferredSize(new Dimension(350, 30));
-        final JRadioButton phraseSynBtn = new JRadioButton("Synonyms?");
-        final JRadioButton phraseNumDependentBtn = new JRadioButton("# Dependent?");
+        JRadioButton phraseSynBtn = new JRadioButton("Synonyms?");
+        JRadioButton phraseNumDependentBtn = new JRadioButton("# Dependent?");
         final JTextField phraseProbField = new JTextField("Enter probability..");
         phraseProbField.setForeground(Color.LIGHT_GRAY);
         phraseProbField.setMinimumSize(new Dimension(100, 30));
@@ -189,21 +193,10 @@ public class DatabaseInput {
             @Override
             public void mouseClicked(MouseEvent e) {
                 System.out.println("Trying...");
-
-                //getting word info
                 String word = wordsTextField.getText();
                 ArrayList<String> wordInput = new ArrayList<String>();
-                double wordProb = Double.parseDouble(probField.getText());
-                boolean wordAddSyn = synBtn.isSelected();
-                boolean wordNumDep = numDependentBtn.isSelected();
-
-                //getting phrase info
                 String phrase = phraseTextField.getText();
                 ArrayList<String> phraseInput = new ArrayList<String>();
-                double phraseProb = Double.parseDouble(phraseProbField.getText());
-                boolean phraseAddSyn = phraseSynBtn.isSelected();
-                boolean phraseNumDep = phraseNumDependentBtn.isSelected();
-
                 if(phrase.equals(phraseHintText)){
                     //do nothing
                 }
@@ -219,16 +212,7 @@ public class DatabaseInput {
                 try {
                     String[] words = wordInput.toArray(new String[wordInput.size()]);
                     String[] phrases = phraseInput.toArray(new String[phraseInput.size()]);
-                    processInputSHA(words, phrases, wordProb, phraseProb);
-
-                    if(wordAddSyn)
-                    {
-                        //insertSynonyms(words);
-                    }
-                    if(phraseAddSyn)
-                    {
-                        //insertSynonyms(phrases);
-                    }
+                    processInput(words, phrases);
                 } catch (Exception ex) {
                     System.out.println(ex);
                 }
@@ -272,6 +256,7 @@ public class DatabaseInput {
                 unique_words = new ArrayList<>();
         ArrayList<Phrase>   stemmedPhrases = new ArrayList<>(),
                 unique_phrases = new ArrayList<>();
+        LuceneStemmer ls = new LuceneStemmer();
 
         try {
             dbHashedWords = Database.getWords();
@@ -280,7 +265,7 @@ public class DatabaseInput {
             // move array into ArrayList for method call
             ArrayList<String> w = new ArrayList<>(Arrays.asList(words));
 
-            stemmedWords = LuceneStemmer.stemWords(w);
+            stemmedWords = ls.stemWords(w);
 
             if(stemmedWords.size() != 0) {
                 boolean duplicate = false, empty = true;
@@ -316,7 +301,7 @@ public class DatabaseInput {
 
             // stem phrases before checking in database, maintaining word count for each phrase
             for(String phrase: phrases){
-                stemmedPhrases.add(new Phrase(LuceneStemmer.stemPhrase(phrase), phrase.split("\\s+").length));
+                stemmedPhrases.add(new Phrase(ls.stemPhrase(phrase), phrase.split("\\s+").length));
             }
 
             // find unique phrases in input
@@ -356,25 +341,23 @@ public class DatabaseInput {
 
     }
 
-    private static void processInputSHA(String[] words, String[] phrases, Double wordProb, Double phraseProb) throws Exception {
+    private void processInputSHA(String[] words, String[] phrases) throws Exception {
         ArrayList<String>   stemmedWords,
                             dbHashedWords,
                             dbHashedPhrases,
                             unique_words   = new ArrayList<>();
         ArrayList<Phrase>   stemmedPhrases = new ArrayList<>(),
                             unique_phrases = new ArrayList<>();
+        LuceneStemmer ls = new LuceneStemmer();
 
         try {
             dbHashedWords = Database.getWords();
             dbHashedPhrases = Database.getPhrases();
 
-            //get probability
-
-
             // move array into ArrayList for method call
             ArrayList<String> w = new ArrayList<>(Arrays.asList(words));
 
-            stemmedWords = LuceneStemmer.stemWords(w);
+            stemmedWords = ls.stemWords(w);
 
             if(stemmedWords.size() != 0) {
                 boolean duplicate = false, empty = true;
@@ -414,7 +397,7 @@ public class DatabaseInput {
 
             // stem phrases before checking in database, maintaining word count for each phrase
             for(String phrase: phrases){
-                stemmedPhrases.add(new Phrase(LuceneStemmer.stemPhrase(phrase), phrase.split("\\s+").length));
+                stemmedPhrases.add(new Phrase(ls.stemPhrase(phrase), phrase.split("\\s+").length));
             }
 
             // find unique phrases in input
@@ -460,24 +443,20 @@ public class DatabaseInput {
         }
     }
 
-
-
     /**
      * This will take in a file name and it will go through it if its a CSV file and seperate it into an arraylist.
      * You must enter either a single words only file, or a phrases only file.
      */
-    public ArrayList<String> interpretCSVFile(String filename)
+    public static ArrayList<String> interpretCSVFile(String filename)
     {
         BufferedReader br;
-        ArrayList<String> listOfWords = new ArrayList<String>(); //Returned list of all the words in this file.
+        ArrayList<String> listOfWords = new ArrayList<>(); //Returned list of all the words in this file.
         try {
             br = new BufferedReader(new FileReader(filename));
             String line;
             while ((line = br.readLine()) != null) {
                 String[] unsortedWords = line.split(",");
-                for (int i = 0; i < unsortedWords.length; i++) {
-                    listOfWords.add(unsortedWords[i]);
-                }
+                listOfWords = new ArrayList<>(Arrays.asList(unsortedWords));
             }
         }
         catch (IOException e) {
@@ -489,7 +468,7 @@ public class DatabaseInput {
     public static void main(String[] args) {
         //Create and set up the window.
         JFrame frame = new JFrame("DatabaseGUI");
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         frame.setLocationRelativeTo(null);
         frame.setTitle("Database Input");
         frame.setResizable(true);

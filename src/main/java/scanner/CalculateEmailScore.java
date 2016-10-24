@@ -1,8 +1,10 @@
+package scanner;
+
 import java.util.ArrayList;
 
 public class CalculateEmailScore
 {
-	static ArrayList<Doublet> termProbabilityList = new ArrayList<Doublet>();
+	static ArrayList<Doublet> termProbabilityList = new ArrayList<>();
 	
 	public static double calculate()
 	{

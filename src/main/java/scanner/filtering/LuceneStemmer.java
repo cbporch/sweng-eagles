@@ -32,16 +32,16 @@ import java.util.ArrayList;
  */
 
 public class LuceneStemmer {
-    private static StemAnalyzer analyzer;
+    private StemAnalyzer analyzer;
 
     public LuceneStemmer() {
+        analyzer = new StemAnalyzer();
     }
 
     /*
      * Method reduces each String in an array to its root word
      */
-    public static ArrayList<String> stemWords(ArrayList<String> input) throws IOException {
-        analyzer = new StemAnalyzer();
+    public ArrayList<String> stemWords(ArrayList<String> input) throws IOException {
         ArrayList<String> output = new ArrayList<>(input.size());
         for (String word : input) {
             if (!word.equals("")) {
@@ -65,8 +65,7 @@ public class LuceneStemmer {
      * Method reduces the words in a String to its root word, splitting by whitespace
      * if there are more than one word, then re-concatenates them, preserving phrases
      */
-    public static String stemPhrase(String input) throws IOException {
-        analyzer = new StemAnalyzer();
+    public String stemPhrase(String input) throws IOException {
         String output = "";
         if (!input.equals("") && input != null) {
             TokenStream ts = analyzer.tokenStream("field",
@@ -90,5 +89,27 @@ public class LuceneStemmer {
             return output;
         }
         return null;
+    }
+
+    /*
+     * Splits a given String text into an ArrayList of stemmed Strings
+     */
+    public ArrayList<String> splitText(String text) throws IOException {
+        ArrayList<String> stemmedWordList = new ArrayList<>();
+
+        TokenStream ts = analyzer.tokenStream("field",
+                new StringReader(text));
+        CharTermAttribute termAtt = ts.addAttribute(CharTermAttribute.class);
+        try {
+            ts.reset();
+            while (ts.incrementToken()) {
+                stemmedWordList.add(termAtt.toString());
+            }
+            ts.end();
+        } finally {
+            ts.close();
+        }
+
+        return stemmedWordList;
     }
 }
