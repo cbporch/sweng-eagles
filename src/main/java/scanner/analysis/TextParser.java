@@ -29,11 +29,11 @@ public class TextParser {
         }
     }
 
-    private Word findWord(String word){
+    public Word findWord(String word){
         return db.getWord(word);
     }
 
-    private Phrase findPhrase(String phrase){
+    public Phrase findPhrase(String phrase){
         return db.getPhrase(phrase);
     }
 
