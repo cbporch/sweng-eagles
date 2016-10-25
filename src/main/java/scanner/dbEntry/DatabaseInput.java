@@ -3,7 +3,6 @@ package scanner.dbEntry;
 import scanner.Phrase;
 import scanner.filtering.Hasher;
 import scanner.filtering.LuceneStemmer;
-import scanner.filtering.StringToHash;
 
 import javax.swing.*;
 import java.awt.*;
@@ -11,8 +10,6 @@ import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.io.*;
-import java.awt.event.*;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
@@ -484,7 +481,7 @@ public class DatabaseInput {
 
                 if(!empty) {
                     // hash unique phrases
-                    unique_phrases = StringToHash.getPhraseHashes(unique_phrases);
+                   // unique_phrases = StringToHash.getPhraseHashes(unique_phrases);
                     for (Phrase phrase: unique_phrases) {
                         Database.insertPhrases(phrase.getPhrase(), phraseProb, phrase.getWordcount(), phraseNumDep);
                     }
