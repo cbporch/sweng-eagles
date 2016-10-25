@@ -105,10 +105,7 @@ public class Database {
             String sql = String.format("SELECT * from Words WHERE word like '%s'", word);
             ResultSet rs = statement.executeQuery(sql);     //execute the select query
             System.out.println(sql);
-            int count = 0;
             while (rs.next()) {
-                System.out.println(rs.getString(count));
-                count++;
                 if(rs.getString(2).equals(word)){
                     //TODO : get Word attributes from Words Database
                     found.setWord(word);
@@ -116,6 +113,7 @@ public class Database {
 //                    found.setConf(rs.getInt(4));
 //                    found.setNorm(rs.getInt(5));
 //                    found.setNum(rs.getBoolean(6));
+                    System.out.println("Good! for words");
                     return found;
                 }
             }
@@ -140,7 +138,8 @@ public class Database {
         try {
             Connection conn = getConnection();              //get connection
             Statement statement = conn.createStatement();   //create statement
-            String sql = String.format("select * from Phrases");
+            String sql = String.format("SELECT * from Phrases WHERE phrase like '%s'", phrase);
+            System.out.println(sql);
             ResultSet rs = statement.executeQuery(sql);     //execute the select query
             while (rs.next()) {
                 if(rs.getString(2).equals(phrase)){
@@ -151,6 +150,7 @@ public class Database {
 //                    found.setConf(rs.getInt(5));
 //                    found.setNorm(rs.getInt(6));
 //                    found.setNum(rs.getBoolean(7));
+                    System.out.println("Good for phrases!!!");
                     return found;
                 }
             }

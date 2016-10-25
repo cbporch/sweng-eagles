@@ -43,7 +43,7 @@ public class StringToHash {
         LuceneStemmer ls = new LuceneStemmer();
         ArrayList<Phrase> hashedPhrases = new ArrayList<>();
         for(Phrase phrase : input){
-            hashedPhrases.add(new Phrase(Hasher.hashStringBCrypt(ls.stemPhrase(phrase.getPhrase())), phrase.getWordcount()));
+            hashedPhrases.add(new Phrase(Hasher.hashSHA(ls.stemPhrase(phrase.getPhrase())), phrase.getWordcount()));
         }
         return hashedPhrases;
     }
