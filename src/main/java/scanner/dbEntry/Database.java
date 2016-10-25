@@ -12,6 +12,9 @@ import java.util.ArrayList;
  */
 public class Database {
 
+    private final static int CONF = 1;
+    private final static int NORM = 1;
+
     private static Connection getConnection() throws Exception {
         String url = "jdbc:mysql://asrcemail.cfz28h3zsskv.us-east-1.rds.amazonaws.com/asrcemail";
         String username = "asrc";
@@ -23,7 +26,7 @@ public class Database {
         try {
             Connection conn = getConnection();              //get connection
             Statement statement = conn.createStatement();   //create statement
-            String sql = String.format("insert into Words (word, rarity, NumDep) Values ('%s', '%f', '%d');", wordIn, rarityIn, numDep);
+            String sql = String.format("insert into Words (word, rarity, NumDep, conf, norm) Values ('%s', '%f', '%d', '%d', '%d');", wordIn, rarityIn, numDep, CONF, NORM);
             System.out.println("\n" + sql);
             statement.executeUpdate(sql);                   //execute the update
         } catch (Exception e) {
@@ -35,7 +38,7 @@ public class Database {
         try {
             Connection conn = getConnection();              //get connection
             Statement statement = conn.createStatement();   //create statement
-            String sql = String.format("insert into Phrases (phrase, rarity, count, NumDep) Values ('%s', '%f', '%d', '%d');", phraseIn, rarityIn, count, numDep);
+            String sql = String.format("insert into Phrases (phrase, rarity, count, NumDep) Values ('%s', '%f', '%d', '%d', '%d', '%d');", phraseIn, rarityIn, count, numDep, CONF, NORM);
             System.out.println("\n" + sql);
             statement.executeUpdate(sql);                   //execute the update
         } catch (Exception e) {
