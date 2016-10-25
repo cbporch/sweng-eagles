@@ -29,9 +29,9 @@ public class TestDriver {
             DatabaseInput.processInputSHA(word, phrase, .5, .5, 0, 0);
 
             for(String s: words){
-                tp.findWord(s);
+                //use parse method in textparser
             }
-            tp.findPhrase(phraseString);
+            //use parse method in textparser
         } catch (Exception e) {
             System.out.println(e);
         }
