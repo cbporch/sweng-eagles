@@ -32,7 +32,7 @@ public class DatabaseInputTest {
         System.setOut(null);
     }
 
-    @Test
+    /*@Test
     public void insertWords() throws Exception {
         Database.insertWords(Hasher.hashSHA("test"), 10);
         assertEquals(outputStream.toString().substring(0, 7), "\ninsert");
@@ -43,12 +43,19 @@ public class DatabaseInputTest {
         Database.insertPhrases(BCrypt.hashpw("testphrase", BCrypt.gensalt(10)), 10, 2);
         assertEquals(outputStream.toString().substring(0, 7), "\ninsert");
     }
-
+*/
     @Test
     public void getWords() throws Exception {
         Database.getWords();
         assertTrue(outputStream.toString().equals("select words completed" + System.lineSeparator()));
     }
+
+   /* @Test
+    public void getWord() throws Exception {
+        Database.insertWords("Spring", .6, 1);
+        System.out.println(Database.getWord("Spring"));
+        assertTrue(outputStream.toString().equals("select words completed" + System.lineSeparator()));
+    }*/
 
     @Test
     public void getPhrases() throws Exception {
