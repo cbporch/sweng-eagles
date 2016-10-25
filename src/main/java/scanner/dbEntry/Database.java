@@ -106,13 +106,12 @@ public class Database {
             ResultSet rs = statement.executeQuery(sql);     //execute the select query
             System.out.print(rs);
             while (rs.next()) {
-
                 if(rs.getString(2).equals(word)){
-//                    found.setWord(word);
-//                    found.setRarity(rs.getFloat(3));
-//                    found.setConf(rs.getInt(4));
+                    found.setWord(word);
+                    found.setRarity(rs.getFloat(3));
+                    found.setNum(rs.getBoolean(4));
+//                  found.setConf(rs.getInt(4));
 //                    found.setNorm(rs.getInt(5));
-//                    found.setNum(rs.getBoolean(6));
                     return found;
                 }
             }

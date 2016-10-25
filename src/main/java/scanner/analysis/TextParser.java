@@ -34,11 +34,12 @@ public class TextParser {
     }
 
     public double parse(){
+
         for(String word: text){
             Word w = findWord(word);
             pairs.add(new Doublet(w.getConf(), w.getNorm()));
         }
-        double score = CalculateEmailScore.calculate(pairs);
+
         return CalculateEmailScore.calculate(pairs);
     }
 

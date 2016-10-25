@@ -21,7 +21,7 @@ public class StringToHashTest {
         input.add("the");
         input.add("dogs");
         ArrayList<String> output = StringToHash.getHashes(input);
-        assertTrue(Hasher.checkHashBCrypt("dog", output.get(0)));
+        assertTrue(Hasher.checkSHA("dog", output.get(0)));
     }
 
     /**
@@ -36,7 +36,7 @@ public class StringToHashTest {
         for(Phrase p : input) {
             output = StringToHash.getPhraseHashes(input);
         }
-        assertTrue(Hasher.checkHashBCrypt("dogbarked", output.get(0).getPhrase()));
-        assertTrue(Hasher.checkHashBCrypt("herunhomequickly", output.get(1).getPhrase()));
+        assertTrue(Hasher.checkSHA("dogbarked", output.get(0).getPhrase()));
+        assertTrue(Hasher.checkSHA("herunhomequickly", output.get(1).getPhrase()));
     }
 }

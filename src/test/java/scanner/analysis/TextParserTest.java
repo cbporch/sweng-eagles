@@ -11,7 +11,7 @@ import static org.junit.Assert.*;
 public class TextParserTest {
     @Test
     public void parse() throws Exception {
-    TextParser t = new TextParser("Tom");
+    TextParser t = new TextParser("hello");
         Assert.assertEquals(1.0, t.parse(), .0000000001);
     }
 
