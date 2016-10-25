@@ -102,16 +102,16 @@ public class Database {
         try {
             Connection conn = getConnection();              //get connection
             Statement statement = conn.createStatement();   //create statement
-            String sql = String.format("select * from Words");
+            String sql = String.format("select * from Words where word like '%s'", word);
             ResultSet rs = statement.executeQuery(sql);     //execute the select query
+            System.out.print(rs);
             while (rs.next()) {
                 if(rs.getString(2).equals(word)){
-                    //TODO : get Word attributes from Words Database
                     found.setWord(word);
                     found.setRarity(rs.getFloat(3));
-//                    found.setConf(rs.getInt(4));
+                    found.setNum(rs.getBoolean(4));
+//                  found.setConf(rs.getInt(4));
 //                    found.setNorm(rs.getInt(5));
-//                    found.setNum(rs.getBoolean(6));
                     return found;
                 }
             }

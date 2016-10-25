@@ -36,14 +36,14 @@ public class StringToHash {
      */
     public static ArrayList<String> getHashes(ArrayList<String> input) throws IOException {
         LuceneStemmer ls = new LuceneStemmer();
-         return Hasher.hashArrayListBCrypt(ls.stemWords(input));
+         return Hasher.hashArrayListSHA(ls.stemWords(input));
     }
 
     public static ArrayList<Phrase> getPhraseHashes(ArrayList<Phrase> input) throws IOException {
         LuceneStemmer ls = new LuceneStemmer();
         ArrayList<Phrase> hashedPhrases = new ArrayList<>();
         for(Phrase phrase : input){
-            hashedPhrases.add(new Phrase(Hasher.hashStringBCrypt(ls.stemPhrase(phrase.getPhrase())), phrase.getWordcount()));
+            hashedPhrases.add(new Phrase(Hasher.hashSHA(ls.stemPhrase(phrase.getPhrase())), phrase.getWordcount()));
         }
         return hashedPhrases;
     }

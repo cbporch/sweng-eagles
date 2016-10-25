@@ -19,24 +19,28 @@ public class TextParser {
     private ArrayList<String> text;
     private LuceneStemmer ls;
     private Database db;
+    private ArrayList<Doublet> pairs;
 
     public TextParser(String email) throws Exception {
         db = new Database();
         ls = new LuceneStemmer();
-        ArrayList<Doublet> pairs = new ArrayList<>();
+        pairs = new ArrayList<>();
+
         try {
             text = ls.splitText(email);
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    public double parse(){
 
         for(String word: text){
             Word w = findWord(word);
             pairs.add(new Doublet(w.getConf(), w.getNorm()));
         }
 
-        double score = CalculateEmailScore.calculate(pairs);
-
+        return CalculateEmailScore.calculate(pairs);
     }
 
     private Word findWord(String word){

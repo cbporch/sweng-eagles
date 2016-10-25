@@ -19,7 +19,7 @@ public class Word {
         this.num = num;
     }
 
-    public Word(String word, int rarity, int conf, int norm, boolean num) {
+    public Word(String word, int rarity, boolean num, int conf, int norm) {
         this.word = word;
         this.rarity = rarity;
         this.conf = conf;

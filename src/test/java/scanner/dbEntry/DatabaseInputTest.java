@@ -4,6 +4,7 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.mindrot.jbcrypt.BCrypt;
+import scanner.filtering.Hasher;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -33,7 +34,7 @@ public class DatabaseInputTest {
 
     @Test
     public void insertWords() throws Exception {
-        Database.insertWords(BCrypt.hashpw("test", BCrypt.gensalt(10)), 10);
+        Database.insertWords(Hasher.hashSHA("test"), 10);
         assertEquals(outputStream.toString().substring(0, 7), "\ninsert");
     }
 
