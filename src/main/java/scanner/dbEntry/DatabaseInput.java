@@ -19,30 +19,17 @@ import java.util.Arrays;
 /**
  * Created by cdeck_000 on 10/5/2016.
  * Edited by cbporch on 10.13.16
+ * Launches a GUI and processes the input from the gui into the database
  */
 public class DatabaseInput {
 
-    private JPanel container;
-    private JLabel titleLabel;
-    private JLabel wordInputLabel;
-    private JTextField wordsTextField;
-    private JTextField phraseTextField;
-    private JLabel phrasesInputLabel;
-    private JTextField phrasesTextField;
-    private JTextArea noteText2;
-    private String word;
-    private String[] words;
-    private String phrase;
-    private String[] phraseToWords;
-    private String[] phrases;
+
     private static JLabel successLabel;
-    private JButton submitButton;
-    private static JButton submitButton2;
+    private static JButton submitButton;
     private static Boolean phraseProbFieldFocus = false;
     private static Boolean phraseTextFieldFocus = false;
     private static Boolean wordProbFieldFocus = false;
     private static Boolean wordTextFieldFocus = false;
-    private static final int RARITY = 10;
     private static JButton newPhraseBtn = new JButton("New Phrase");
     private static JButton newWordBtn = new JButton("New Word");
     private static JButton uploadFileBtn = new JButton("Upload File");
@@ -50,10 +37,16 @@ public class DatabaseInput {
     private static String probHintText = "Enter probability..";
 
 
+    /**
+     * Empty constructor
+     */
     protected DatabaseInput() {
-
     }
 
+    /**
+     * Makes the GUI
+     * @param pane - the gui reference
+     */
     private static void addComponentsToPane(Container pane) {
         pane.setLayout(new BoxLayout(pane, BoxLayout.Y_AXIS));
         JPanel instructionsPanel = new JPanel();
@@ -118,7 +111,6 @@ public class DatabaseInput {
 
         JPanel newWordPanel = new JPanel();
         newWordPanel.setBackground(Color.WHITE);
-        //newWordPanel.add(newWordBtn);
         pane.add(newWordPanel);
 
         // phrases input panel
@@ -172,7 +164,6 @@ public class DatabaseInput {
             }
         });
 
-        //look into hint text
         phraseOptions.add(phraseTextField);
         phraseOptions.add(phraseSynBtn);
         phraseOptions.add(phraseNumDependentBtn);
@@ -180,14 +171,13 @@ public class DatabaseInput {
 
         JPanel newPhrasePanel = new JPanel();
         newPhrasePanel.setBackground(Color.WHITE);
-        //newPhrasePanel.add(newPhraseBtn);
         pane.add(newPhrasePanel);
 
         //bottom label
         JPanel submitPanel = new JPanel();
-        submitButton2 = new JButton("Submit");
+        submitButton = new JButton("Submit");
 
-        submitButton2.addMouseListener(new MouseAdapter() {
+        submitButton.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
                 System.out.println("Trying...");
@@ -286,7 +276,7 @@ public class DatabaseInput {
         });
 
         successLabel = new JLabel("Test");
-        submitPanel.add(submitButton2);
+        submitPanel.add(submitButton);
         submitPanel.add(uploadFileBtn);
         submitPanel.add(successLabel);
 
@@ -519,10 +509,9 @@ public class DatabaseInput {
 
     public static void main(String[] args) {
         //Create and set up the window.
-        JFrame frame = new JFrame("DatabaseGUI");
+        JFrame frame = new JFrame("Database Input");
         frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         frame.setLocationRelativeTo(null);
-        frame.setTitle("Database Input");
         frame.setResizable(true);
         frame.setMaximumSize(new Dimension(700, 500));
         frame.setMinimumSize(new Dimension(700, 500));
