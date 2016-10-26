@@ -17,10 +17,14 @@ public class CalculateEmailScoreTest {
     @Test
     public void calculate() throws Exception {
         ArrayList<Doublet> pairs = new ArrayList<>();
-        pairs.add(new Doublet(2,1));
 
-        Assert.assertEquals(0.6666666666666666, CalculateEmailScore.calculate(pairs), DELTA);
+        Assert.assertEquals(0.0, CalculateEmailScore.calculate(pairs), DELTA);
 
+        pairs.add(new Doublet(0, 0));
+        Assert.assertEquals(0.0, CalculateEmailScore.calculate(pairs), DELTA);
+
+        pairs.add(new Doublet(2, 1));
+        Assert.assertEquals(0.6666666666666, CalculateEmailScore.calculate(pairs), DELTA);
     }
 
 }
