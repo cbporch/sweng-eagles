@@ -501,7 +501,7 @@ public class DatabaseInput {
 
     /**
      * This will take in a file name and it will go through it if its a CSV file and seperate it into an arraylist.
-     * You must enter a single words only file
+     * You must enter a single words only file for this method.
      * @filename this is the path of the file being selected.
      */
     public static ArrayList<scanner.Word> interpretCSVFile(String filename)
@@ -509,9 +509,10 @@ public class DatabaseInput {
         BufferedReader br;
         ArrayList<scanner.Word> listOfWords = new ArrayList<scanner.Word>(); //Returned list of all the words in this file.
 
-        String word = "";   //
-        String rarity = ""; //values used to create a new Word
-        String numDep = ""; //
+        //values used to create a new Phrase
+        String word = "";   //  selected word from file
+        String rarity = ""; //  rarity associated with the word
+        String isNum = ""; //   true if this word is a number
 
         try {
             br = new BufferedReader(new FileReader(filename));
@@ -530,15 +531,15 @@ public class DatabaseInput {
                     else if (rarity.equals("")) {
                         rarity = lineOfWords[i].trim();
                     }
-                    else if (numDep.equals("")) {
-                        numDep = lineOfWords[i].trim();
+                    else if (isNum.equals("")) {
+                        isNum = lineOfWords[i].trim();
                         i--;
                     }
                     else {
                         //Cleans the data up so it can be used for Word
                         int actualRarity = Integer.parseInt(rarity);
                         boolean actualNumDep;
-                        if (numDep.equals("0")) {
+                        if (isNum.equals("0")) {
                             actualNumDep = false;
                         }
                         else {
@@ -552,7 +553,7 @@ public class DatabaseInput {
                         //resets the values.
                         word = "";
                         rarity = "";
-                        numDep = "";
+                        isNum = "";
                     }}}}
         catch (IOException e) {
             e.printStackTrace();
@@ -563,7 +564,7 @@ public class DatabaseInput {
 
     /**
      * This will take in a file name and it will go through it if its a CSV file and seperate it into an arraylist.
-     * You must enter a phrase only file
+     * You must enter a phrase only file for this method.
      * @filename this is the path of the file being selected.
      */
     public static ArrayList<scanner.Phrase> interpretCSVPhraseFile(String filename)
@@ -571,10 +572,11 @@ public class DatabaseInput {
         BufferedReader br;
         ArrayList<scanner.Phrase> listOfPhrases = new ArrayList<>(); //Returned list of all the words in this file.
 
-        String phrase = "";   //
-        String rarity = ""; //values used to create a new Phrase
-        String count = "";  //
-        String numDep = ""; //
+        //values used to create a new Phrase
+        String phrase = "";   //    selected phrase from file
+        String rarity = ""; //      rarity associated with the phrase
+        String count = "";  //      number of words in this phrase
+        String isNum = ""; //       true if this phrase is a number
 
         try {
             br = new BufferedReader(new FileReader(filename));
@@ -596,8 +598,8 @@ public class DatabaseInput {
                     else if (rarity.equals("")) {
                         rarity = lineOfPhrases[i].trim();
                     }
-                    else if (numDep.equals("")) {
-                        numDep = lineOfPhrases[i].trim();
+                    else if (isNum.equals("")) {
+                        isNum = lineOfPhrases[i].trim();
                         i--;
                     }
                     else {
@@ -605,7 +607,7 @@ public class DatabaseInput {
                         int actualRarity = Integer.parseInt(rarity);
                         int actualCount = Integer.parseInt(count);
                         boolean actualNumDep;
-                        if (numDep.equals("0")) {
+                        if (isNum.equals("0")) {
                             actualNumDep = false;
                         }
                         else {
@@ -620,7 +622,7 @@ public class DatabaseInput {
                         phrase = "";
                         count = "";
                         rarity = "";
-                        numDep = "";
+                        isNum = "";
                     }}}}
         catch (IOException e) {
             e.printStackTrace();
