@@ -12,7 +12,7 @@ import java.util.ArrayList;
  */
 public class Database {
 
-    //test
+
     private final static int CONF = 1;
     private final static int NORM = 1;
 
