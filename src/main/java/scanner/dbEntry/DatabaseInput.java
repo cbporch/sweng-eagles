@@ -502,6 +502,7 @@ public class DatabaseInput {
     /**
      * This will take in a file name and it will go through it if its a CSV file and seperate it into an arraylist.
      * You must enter a single words only file
+     * @filename this is the path of the file being selected.
      */
     public static ArrayList<scanner.Word> interpretCSVFile(String filename)
     {
@@ -563,6 +564,7 @@ public class DatabaseInput {
     /**
      * This will take in a file name and it will go through it if its a CSV file and seperate it into an arraylist.
      * You must enter a phrase only file
+     * @filename this is the path of the file being selected.
      */
     public static ArrayList<scanner.Phrase> interpretCSVPhraseFile(String filename)
     {
