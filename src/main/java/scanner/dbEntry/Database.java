@@ -12,6 +12,9 @@ import java.util.ArrayList;
  */
 public class Database {
 
+    private final static int CONF = 1;
+    private final static int NORM = 1;
+
     private static Connection getConnection() throws Exception {
         String url = "jdbc:mysql://asrcemail.cfz28h3zsskv.us-east-1.rds.amazonaws.com/asrcemail";
         String username = "asrc";
@@ -19,11 +22,11 @@ public class Database {
         return DriverManager.getConnection(url, username, password);
     }
 
-    static void insertWords(String wordIn, int rarityIn) throws Exception   {
+    static void insertWords(String wordIn, double rarityIn, int numDep) throws Exception   {
         try {
             Connection conn = getConnection();              //get connection
             Statement statement = conn.createStatement();   //create statement
-            String sql = String.format("insert into Words (word, rarity) Values ('%s', %2d);", wordIn, rarityIn);
+            String sql = String.format("insert into Words (word, rarity, NumDep, conf, norm) Values ('%s', '%f', '%d', '%d', '%d');", wordIn, rarityIn, numDep, CONF, NORM);
             System.out.println("\n" + sql);
             statement.executeUpdate(sql);                   //execute the update
         } catch (Exception e) {
@@ -31,11 +34,11 @@ public class Database {
         }
     }
 
-    static void insertPhrases(String phraseIn, int rarityIn, int count) throws Exception {
+    static void insertPhrases(String phraseIn, double rarityIn, int count, int numDep) throws Exception {
         try {
             Connection conn = getConnection();              //get connection
             Statement statement = conn.createStatement();   //create statement
-            String sql = String.format("insert into Phrases (phrase, rarity, count) Values ('%s', %2d, %2d);", phraseIn, rarityIn, count);
+            String sql = String.format("insert into Phrases (phrase, rarity, count, NumDep) Values ('%s', '%f', '%d', '%d', '%d', '%d');", phraseIn, rarityIn, count, numDep, CONF, NORM);
             System.out.println("\n" + sql);
             statement.executeUpdate(sql);                   //execute the update
         } catch (Exception e) {
@@ -102,16 +105,18 @@ public class Database {
         try {
             Connection conn = getConnection();              //get connection
             Statement statement = conn.createStatement();   //create statement
-            String sql = String.format("select * from Words");
+            String sql = String.format("SELECT * from Words WHERE word like '%s'", word);
             ResultSet rs = statement.executeQuery(sql);     //execute the select query
+            System.out.println(sql);
             while (rs.next()) {
                 if(rs.getString(2).equals(word)){
-                    //TODO : get Word attributes from Words Database
                     found.setWord(word);
                     found.setRarity(rs.getFloat(3));
-//                    found.setConf(rs.getInt(4));
+                    found.setNum(rs.getBoolean(4));
+//                  found.setConf(rs.getInt(4));
 //                    found.setNorm(rs.getInt(5));
 //                    found.setNum(rs.getBoolean(6));
+                    System.out.println("Good! for words");
                     return found;
                 }
             }
@@ -136,7 +141,8 @@ public class Database {
         try {
             Connection conn = getConnection();              //get connection
             Statement statement = conn.createStatement();   //create statement
-            String sql = String.format("select * from Phrases");
+            String sql = String.format("SELECT * from Phrases WHERE phrase like '%s'", phrase);
+            System.out.println(sql);
             ResultSet rs = statement.executeQuery(sql);     //execute the select query
             while (rs.next()) {
                 if(rs.getString(2).equals(phrase)){
@@ -147,6 +153,7 @@ public class Database {
 //                    found.setConf(rs.getInt(5));
 //                    found.setNorm(rs.getInt(6));
 //                    found.setNum(rs.getBoolean(7));
+                    System.out.println("Good for phrases!!!");
                     return found;
                 }
             }

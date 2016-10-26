@@ -17,31 +17,31 @@ public class Hasher {
     /*
      * Hashes an ArrayList of strings using a salt generated using the default number of rounds
      */
-    public static ArrayList<String> hashArrayListBCrypt(ArrayList<String> list){
-        ArrayList<String> hashedList = new ArrayList<>();
-        for(String word: list){
-            if(!word.equals("") && word != null) {
-                hashedList.add(BCrypt.hashpw(word, BCrypt.gensalt(SALTSPEED)));
-            }
-        }
-        return hashedList;
-    }
-
-    public static String hashStringBCrypt(String input){
-        return BCrypt.hashpw(input, BCrypt.gensalt(10));
-    }
-
-    /*
-     * Wrapper method for BCrypt's checkpw method
-     */
-    public static boolean checkHashBCrypt(String word, String hash){
-        try {
-            return BCrypt.checkpw(word, hash);
-        } catch (Exception e) {
-           // e.printStackTrace();
-        }
-        return false;
-    }
+//    public static ArrayList<String> hashArrayListBCrypt(ArrayList<String> list){
+//        ArrayList<String> hashedList = new ArrayList<>();
+//        for(String word: list){
+//            if(!word.equals("") && word != null) {
+//                hashedList.add(BCrypt.hashpw(word, BCrypt.gensalt(SALTSPEED)));
+//            }
+//        }
+//        return hashedList;
+//    }
+//
+//    public static String hashStringBCrypt(String input){
+//        return BCrypt.hashpw(input, BCrypt.gensalt(10));
+//    }
+//
+//    /*
+//     * Wrapper method for BCrypt's checkpw method
+//     */
+//    public static boolean checkHashBCrypt(String word, String hash){
+//        try {
+//            return BCrypt.checkpw(word, hash);
+//        } catch (Exception e) {
+//           // e.printStackTrace();
+//        }
+//        return false;
+//    }
 
     /*
      * Hashes a given String using SHA-512, encodes it as Base64 and returns it
@@ -55,6 +55,16 @@ public class Hasher {
             e.printStackTrace();
         }
         return Base64.encode(md.digest(word.getBytes()));
+    }
+
+    public static ArrayList<String> hashArrayListSHA(ArrayList<String> list) {
+        ArrayList<String> hashedList = new ArrayList<>();
+        for(String word: list){
+            if(!word.equals("") && word != null) {
+                hashedList.add(hashSHA(word));
+            }
+        }
+        return hashedList;
     }
 
     /*

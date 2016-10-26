@@ -3,7 +3,6 @@ package scanner.dbEntry;
 import scanner.Phrase;
 import scanner.filtering.Hasher;
 import scanner.filtering.LuceneStemmer;
-import scanner.filtering.StringToHash;
 
 import javax.swing.*;
 import java.awt.*;
@@ -11,8 +10,6 @@ import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.io.*;
-import java.awt.event.*;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
@@ -199,8 +196,19 @@ public class DatabaseInput {
                 //set up the words
                 String word = wordsTextField.getText();
                 ArrayList<String> wordInput = new ArrayList<String>();
-                Boolean wordSyn = synBtn.isSelected();
-                Boolean wordNumDep = numDependentBtn.isSelected();
+                int wordSyn;
+                if(synBtn.isSelected()){
+                    wordSyn = 1;
+                }
+                else wordSyn = 0;
+
+                int wordNumDep;
+                if(numDependentBtn.isSelected()) {
+                    wordNumDep = 1;
+                }
+                else {
+                    wordNumDep = 0;
+                }
                 Double wordProb;
                 if(probField.getText().equals(probHintText)) {
                     wordProb = -1.0;
@@ -214,8 +222,18 @@ public class DatabaseInput {
                 //set up the phrase
                 String phrase = phraseTextField.getText();
                 ArrayList<String> phraseInput = new ArrayList<String>();
-                Boolean phraseSyn = phraseSynBtn.isSelected();
-                Boolean phraseNumDep = phraseNumDependentBtn.isSelected();
+                int phraseSyn;
+                if(phraseSynBtn.isSelected()){
+                    phraseSyn = 1;
+                }
+                else phraseSyn = 0;
+                int phraseNumDep;
+                if(phraseNumDependentBtn.isSelected()) {
+                   phraseNumDep = 1;
+                }
+                else {
+                    phraseNumDep = 0;
+                }
                 Double phraseProb;
                 if(phraseProbField.getText().equals(probHintText)) {
                     phraseProb = -1.0;
@@ -239,7 +257,7 @@ public class DatabaseInput {
                 try {
                     String[] words = wordInput.toArray(new String[wordInput.size()]);
                     String[] phrases = phraseInput.toArray(new String[phraseInput.size()]);
-                    processInputSHA(words, phrases, wordProb, phraseProb);
+                    processInputSHA(words, phrases, wordProb, phraseProb, wordNumDep, phraseNumDep);
                 } catch (Exception ex) {
                     System.out.println(ex);
                 }
@@ -368,7 +386,7 @@ public class DatabaseInput {
 
     }*/
 
-    private static void processInputSHA(String[] words, String[] phrases, Double wordProb, Double phraseProb) throws Exception {
+    public static void processInputSHA(String[] words, String[] phrases, double wordProb, double phraseProb, int wordNumDep, int phraseNumDep) throws Exception {
         ArrayList<String>   stemmedWords,
                             dbHashedWords,
                             dbHashedPhrases,
@@ -381,7 +399,7 @@ public class DatabaseInput {
             wordProb = 1.0;
         }
         if(phraseProb == -1.0){
-            wordProb = 1.0;
+            phraseProb = 1.0;
         }
 
         try {
@@ -403,6 +421,7 @@ public class DatabaseInput {
                 for (String inputWord : stemmedWords) {
                     System.out.print(count++ + ", ");
                     hashedInputWord = Hasher.hashSHA(inputWord);        // hash the inputted word
+                    System.out.println("Hashed word: " + hashedInputWord);
                     if (dbHashedWords != null) {
                         for(String hash: dbHashedWords) {
                             if (!duplicate && hash.equals(hashedInputWord)) {
@@ -423,7 +442,7 @@ public class DatabaseInput {
                     // hash unique words
                     // unique_words = StringToHash.(unique_words);
                     for (String hashedWord : unique_words) {
-                        Database.insertWords(hashedWord, RARITY);
+                        Database.insertWords(hashedWord, wordProb, wordNumDep);
                     }
                     System.out.println("\nWords inserted");
                 }
@@ -463,9 +482,9 @@ public class DatabaseInput {
 
                 if(!empty) {
                     // hash unique phrases
-                    unique_phrases = StringToHash.getPhraseHashes(unique_phrases);
+                   // unique_phrases = StringToHash.getPhraseHashes(unique_phrases);
                     for (Phrase phrase: unique_phrases) {
-                        Database.insertPhrases(phrase.getPhrase(), RARITY, phrase.getWordcount());
+                        Database.insertPhrases(phrase.getPhrase(), phraseProb, phrase.getWordcount(), phraseNumDep);
                     }
                     System.out.println("\nPhrases inserted");
                 }

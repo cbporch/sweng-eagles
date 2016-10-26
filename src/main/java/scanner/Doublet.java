@@ -2,16 +2,20 @@ package scanner;
 
 public class Doublet
 {
-	private final int numConf = 0;
-	private final int numNorm = 0;
-	
-	
-	protected int getNumConf()
+	private int numConf = 0;
+	private int numNorm = 0;
+
+	public Doublet(int conf, int norm) {
+		this.numConf = conf;
+		this.numNorm = norm;
+	}
+
+	public int getNumConf()
 	{
 		return numConf;
 	}
 
-	protected int getNumNorm()
+	public int getNumNorm()
 	{
 		return numNorm;
 	}

@@ -16,7 +16,7 @@ public class WordTest {
     private static final double DELTA = 1e-15;
     @Before
     public void setUp() throws Exception {
-        testWord = new Word("test", 1, 4, 2, true);
+        testWord = new Word("test", 1, true, 4, 2);
     }
 
     @Test
