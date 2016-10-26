@@ -37,6 +37,13 @@ import java.util.List;
  * limitations under the License.
  */
 
+/**
+ * StemAnalyzer extends the Analyzer class from the Apache Lucene
+ * library, modified to the project specifications.
+ *
+ * @author Chris Porch porchc0@students.rowan.edu
+ */
+
 public class StemAnalyzer extends Analyzer {
     private static final CharArraySet ENGLISH_STOP_WORDS_SET;
     private static final int DEFAULT_MAX_TOKEN_LENGTH = 255;
@@ -47,10 +54,20 @@ public class StemAnalyzer extends Analyzer {
         this(STOP_WORDS_SET);
     }
 
+    /**
+     * Constructor for StemAnalyzer
+     * @param stopWords The list of stopwords used in the filters
+     */
     public StemAnalyzer(CharArraySet stopWords) {
         this.maxTokenLength = 255;
     }
 
+    /**
+     * Strings a series of filters together and creates the components needed for the
+     * stemming functionality
+     * @param fieldname Required parameter from superclass
+     * @return TokenStreamComponents used by Analyzer
+     */
     protected TokenStreamComponents createComponents(String fieldname) {
         final StandardTokenizer src = new StandardTokenizer();
         src.setMaxTokenLength(this.maxTokenLength);

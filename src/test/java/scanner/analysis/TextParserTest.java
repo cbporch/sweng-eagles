@@ -12,7 +12,7 @@ public class TextParserTest {
     @Test
     public void parse() throws Exception {
     TextParser t = new TextParser("hello");
-        Assert.assertEquals(1.0, t.parse(), .0000000001);
+        Assert.assertEquals(0.5, t.parse(), .0000000001);
     }
 
 }

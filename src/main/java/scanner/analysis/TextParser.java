@@ -37,7 +37,8 @@ public class TextParser {
 
         for(String word: text){
             Word w = findWord(word);
-            pairs.add(new Doublet(w.getConf(), w.getNorm()));
+            if(w !=null)
+                pairs.add(new Doublet(w.getConf(), w.getNorm()));
         }
 
         return CalculateEmailScore.calculate(pairs);
