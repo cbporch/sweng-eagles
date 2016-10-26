@@ -9,13 +9,18 @@ import java.util.ArrayList;
 
 /**
  * Created by cdeck_000 on 10/18/2016.
+ * Creates a connection to our database, and inserts/gets Words/Phrases
  */
 public class Database {
 
+    private final static int CONF = 1;   //conf is the number of confidential emails a word has appeared in
+    private final static int NORM = 1;   //norm is the number of normal emails a word has appeared in
 
-    private final static int CONF = 1;
-    private final static int NORM = 1;
-
+    /**
+     * Gets and keeps open a connection to the database.
+     * @return a connection to the database
+     * @throws Exception
+     */
     private static Connection getConnection() throws Exception {
         String url = "jdbc:mysql://asrcemail.cfz28h3zsskv.us-east-1.rds.amazonaws.com/asrcemail";
         String username = "asrc";
@@ -23,85 +28,111 @@ public class Database {
         return DriverManager.getConnection(url, username, password);
     }
 
+    /**
+     * Inserts a word into the database. Gets & closes a connection to the database.
+     * @param wordIn - word to insert
+     * @param rarityIn - rarity of that word
+     * @param numDep - is the word number dependent
+     * @throws Exception
+     */
     static void insertWords(String wordIn, double rarityIn, int numDep) throws Exception   {
         try {
             Connection conn = getConnection();              //get connection
             Statement statement = conn.createStatement();   //create statement
             String sql = String.format("insert into Words (word, rarity, NumDep, conf, norm) Values ('%s', '%f', '%d', '%d', '%d');", wordIn, rarityIn, numDep, CONF, NORM);
-            System.out.println("\n" + sql);
+            System.out.println("\n" + sql);                 //display the update for testing
             statement.executeUpdate(sql);                   //execute the update
+            conn.close();                                   //close the connection
         } catch (Exception e) {
-            System.out.println(e);
+            System.out.println(e);                          //print the exception
         }
     }
 
+    /**
+     * Inserts a phrase into the database. Gets & closes a connection to the database.
+     * @param phraseIn - phrase to be inserted
+     * @param rarityIn - rarity for the phrase
+     * @param count
+     * @param numDep
+     * @throws Exception
+     */
     static void insertPhrases(String phraseIn, double rarityIn, int count, int numDep) throws Exception {
         try {
             Connection conn = getConnection();              //get connection
             Statement statement = conn.createStatement();   //create statement
             String sql = String.format("insert into Phrases (phrase, rarity, count, NumDep) Values ('%s', '%f', '%d', '%d', '%d', '%d');", phraseIn, rarityIn, count, numDep, CONF, NORM);
-            System.out.println("\n" + sql);
+            System.out.println("\n" + sql);                 //testing purposes
             statement.executeUpdate(sql);                   //execute the update
+            conn.close();                                   //close the connection
         } catch (Exception e) {
-            System.out.println(e);
+            System.out.println(e);                          //display the exception
         }
     }
 
+    /**
+     * Returns all the hashed words in the database
+     * @return an ArrayList of words.
+     * @throws Exception
+     */
     public static ArrayList<String> getWords() throws Exception {
         ArrayList<String> words = new ArrayList<>();
 
         try {
             Connection conn = getConnection();              //get connection
             Statement statement = conn.createStatement();   //create statement
-            String sql = String.format("select word from Words");
-//            System.out.println(sql);
+            String sql = String.format("select word from Words");   //only selecting the column word
+            //System.out.println(sql);
             ResultSet rs = statement.executeQuery(sql);     //execute the select query
             while (rs.next()) {
-                words.add(rs.getString(1));
+                words.add(rs.getString(1));                 //add the word to the arraylist
             }
-//            System.out.println(words);
+            //System.out.println(words);
             System.out.println("select words completed");
+            conn.close();                                   //close the connection
             return words;
         } catch (Exception e) {
-            System.out.println(e);
+            System.out.println(e);                          //display the exception
             return null;
         }
 
     }
 
+    /**
+     * Returns all the hashed phrases in the database.
+     * @return arraylist of phrases
+     * @throws Exception
+     */
     public static ArrayList<String> getPhrases() throws Exception {
         ArrayList<String> phrases = new ArrayList<>();
 
         try {
             Connection conn = getConnection();              //get connection
             Statement statement = conn.createStatement();   //create statement
-            String sql = String.format("select phrase from Phrases");
+            String sql = String.format("select phrase from Phrases");   //select on phrase column
 //            System.out.println(sql);
             ResultSet rs = statement.executeQuery(sql);     //execute the select query
             while (rs.next()) {
-                phrases.add(rs.getString(1));
+                phrases.add(rs.getString(1));               //add the phrase to the arraylist
             }
 //            System.out.println(phrases);
             System.out.println("select phrases completed");
+            conn.close();                                   //close the connection
             return phrases;
         } catch (Exception e) {
-            System.out.println(e);
+            System.out.println(e);                          //display exception
             return null;
         }
     }
 
 
-    /*
-     * Method hashes a given word, checks for it in the database and returns it if it is found,
-     * otherwise returns null
-     *
-     * Word is assumed to be stemmed but not hashed before being passed in
-     *
-     * Output is a Word object containing a hashed string with all other attributes
+    /**
+     * Hashes the given word and finds it in the database.
+     * @param word - word to get from database
+     * @return
      */
     public static Word getWord(String word){
-        Word found = new Word();
-        word = Hasher.hashSHA(word);
+        Word found = new Word();        //
+        word = Hasher.hashSHA(word);    //hash the word
 
         try {
             Connection conn = getConnection();              //get connection
@@ -110,7 +141,7 @@ public class Database {
             ResultSet rs = statement.executeQuery(sql);     //execute the select query
             System.out.println(sql);
             while (rs.next()) {
-                if(rs.getString(2).equals(word)){
+                if (rs.getString(2).equals(word)) {
                     found.setWord(word);
                     found.setRarity(rs.getFloat(3));
                     found.setNum(rs.getBoolean(4));
@@ -118,6 +149,7 @@ public class Database {
 //                    found.setNorm(rs.getInt(5));
 //                    found.setNum(rs.getBoolean(6));
                     System.out.println("Good! for words");
+                    conn.close();
                     return found;
                 }
             }
