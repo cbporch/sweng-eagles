@@ -42,7 +42,7 @@ public class DatabaseInputTest {
         Database.insertPhrases(BCrypt.hashpw("testphrase", BCrypt.gensalt(10)), 10, 2);
         assertEquals(outputStream.toString().substring(0, 7), "\ninsert");
     }*/
-/*
+
     @Test
     public void getWords() throws Exception {
         Database.getWords();
@@ -86,21 +86,5 @@ public class DatabaseInputTest {
             assertEquals(2.0, test.get(0).getRarity(),0);
             assertTrue(test.get(0).isNum());
         }
-    }
-*/
-    @Test   //Checks for a word IN the database
-    public void checkForDuplicatesTestPass() throws Exception {
-        String test = "bhubP+hAaA43BR961elZ1vOa0PiIXYVRZvVcZZRp08i3gRjESipJxy3bSBzW2HMQNOEcwDAHC6hDqQs0lcuNPg==";
-        DatabaseInput dbi = new DatabaseInput();
-        boolean output = dbi.hasDuplicate(test);
-        assertTrue(output);
-    }
-
-    @Test   //Checks for a word NOT IN the database
-    public void checkForDuplicatesTest_2() throws Exception {
-        String test = "This_Shouldnt_Be_In_The_Database";
-        DatabaseInput dbi = new DatabaseInput();
-        boolean output = dbi.hasDuplicate(test);
-        assertFalse(output);
     }
 }
