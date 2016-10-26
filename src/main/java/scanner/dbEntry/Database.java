@@ -95,7 +95,7 @@ public class Database {
      *
      * Output is a Word object containing a hashed string with all other attributes
      */
-    public Word getWord(String word){
+    public static Word getWord(String word){
         Word found = new Word();
         word = Hasher.hashSHA(word);
 
