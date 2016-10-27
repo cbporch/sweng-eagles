@@ -85,6 +85,9 @@ public class DatabaseInput {
         wordOptions.add(numDependentBtn);
         wordOptions.add(probField);
 
+        /**
+         * set the hint text for the textfield
+         */
         wordsTextField.addFocusListener(new FocusListener() {
             public void focusGained(FocusEvent e) {
                 wordsTextField.setText("");
@@ -97,6 +100,9 @@ public class DatabaseInput {
             }
         });
 
+        /**
+         * set the hint text for the textfield
+         */
         probField.addFocusListener(new FocusListener() {
             public void focusGained(FocusEvent e) {
                 probField.setText("");
@@ -139,7 +145,9 @@ public class DatabaseInput {
         phraseProbField.setMaximumSize(new Dimension(100, 30));
         phraseProbField.setPreferredSize(new Dimension(100, 30));
 
-
+        /**
+         * set the hint text for the textfield
+         */
         phraseTextField.addFocusListener(new FocusListener() {
             public void focusGained(FocusEvent e) {
                 phraseTextField.setText("");
@@ -152,6 +160,9 @@ public class DatabaseInput {
             }
         });
 
+        /**
+         * set the hint text for the textfield
+         */
         phraseProbField.addFocusListener(new FocusListener() {
             public void focusGained(FocusEvent e) {
                 phraseProbField.setText("");
@@ -177,6 +188,9 @@ public class DatabaseInput {
         JPanel submitPanel = new JPanel();
         submitButton = new JButton("Submit");
 
+        /**
+         * When the submit button is hit, the code captures the input and processes it
+         */
         submitButton.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
@@ -283,6 +297,16 @@ public class DatabaseInput {
         pane.add(submitPanel, BorderLayout.SOUTH);
     }
 
+    /**
+     * Processes the input. Hashes the words/phrases and inserts them to the database if they aren't in there already
+     * @param words - an array of words captured in the GUI
+     * @param phrases - an array of phrases captured in the GUI
+     * @param wordProb - probability a word is used confidentially
+     * @param phraseProb - probability a phrase is used confidentially
+     * @param wordNumDep - if a word is number dependent
+     * @param phraseNumDep - if a phrase is number dependent
+     * @throws Exception
+     */
     public static void processInputSHA(String[] words, String[] phrases, double wordProb, double phraseProb, int wordNumDep, int phraseNumDep) throws Exception {
         ArrayList<String>   stemmedWords,
                             dbHashedWords,
