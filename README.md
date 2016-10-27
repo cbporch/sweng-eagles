@@ -2,6 +2,8 @@
 
 All dependencies should be pulled by Maven when you first run anything.
 Code requires Java 1.8
+Currently running from the command line results in errors being thrown relating to missing dependencies.
+(We are looking into that.)
 
 To enter confidential words into the test database, run DatabaseInput.java, in scanner.dbEntry. Currently,
 as of 10.27.16, you can enter one word and one phrase at a time, there is a radio button to mark whether or not you want
