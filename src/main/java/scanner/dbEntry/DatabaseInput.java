@@ -288,10 +288,11 @@ public class DatabaseInput {
             }
         });
 
-        successLabel = new JLabel("Test");
+        successLabel = new JLabel("");
         submitPanel.add(submitButton);
         submitPanel.add(uploadFileBtn);
         submitPanel.add(successLabel);
+
 
         pane.add(submitPanel, BorderLayout.SOUTH);
     }
@@ -411,6 +412,7 @@ public class DatabaseInput {
 
             }
             System.out.println("Processing complete");
+            successLabel.setText("Processing complete");
         } catch (IOException e) {
             e.printStackTrace();
         }
