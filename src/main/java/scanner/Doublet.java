@@ -18,11 +18,19 @@ public class Doublet
 		this.numNorm = norm;
 	}
 
+	/**
+	 * Returns the number of confidential uses of the word.
+	 * @return numConf
+	 */
 	public int getNumConf()
 	{
 		return numConf;
 	}
 
+	/**
+	 * Returns the number of normal uses of the word.
+	 * @return numNorm
+	 */
 	public int getNumNorm()
 	{
 		return numNorm;
