@@ -1,242 +1,441 @@
 package scanner.dbEntry;
 
-
-import scanner.filter.Hasher;
-import scanner.filter.StringToHash;
+import scanner.Phrase;
+import scanner.Word;
+import scanner.filtering.Hasher;
+import scanner.filtering.LuceneStemmer;
 
 import javax.swing.*;
+import java.awt.*;
+import java.awt.event.FocusEvent;
+import java.awt.event.FocusListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.io.BufferedReader;
+import java.io.FileReader;
 import java.io.IOException;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.ResultSet;
-import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 /**
  * Created by cdeck_000 on 10/5/2016.
  * Edited by cbporch on 10.13.16
+ * Launches a GUI and processes the input from the gui into the database
  */
 public class DatabaseInput {
 
-    private JPanel container;
-    private JLabel titleLabel;
-    private JLabel wordInputLabel;
-    private JTextField wordsTextField;
-    private JLabel phrasesInputLabel;
-    private JTextField phrasesTextField;
-    private JButton submitButton;
-    private JTextArea noteText2;
-    private String word;
-    private String[] words;
-    private String phrase;
-    private String[] phraseToWords;
-    private String[] phrases;
-    private final int RARITY = 10;
+
+    private static JLabel successLabel;
+    private static JButton submitButton;
+    private static Boolean phraseProbFieldFocus = false;
+    private static Boolean phraseTextFieldFocus = false;
+    private static Boolean wordProbFieldFocus = false;
+    private static Boolean wordTextFieldFocus = false;
+    private static JButton newPhraseBtn = new JButton("New Phrase");
+    private static JButton newWordBtn = new JButton("New Word");
+    private static JButton uploadFileBtn = new JButton("Upload File");
+    private static String phraseHintText = "Enter phrase here..";
+    private static String probHintText = "Enter probability..";
 
 
+    /**
+     * Empty constructor
+     */
     protected DatabaseInput() {
+    }
 
+    /**
+     * Makes the GUI
+     * @param pane - the gui reference
+     */
+    private static void addComponentsToPane(Container pane) {
+        pane.setLayout(new BoxLayout(pane, BoxLayout.Y_AXIS));
+        JPanel instructionsPanel = new JPanel();
+        JLabel instructions = new JLabel("Enter the words/phrases to be inputted below");
+        instructionsPanel.add(instructions);
+        pane.add(instructionsPanel);
+
+        // words input panel
+        JPanel wordsInputPanel = new JPanel();
+        wordsInputPanel.setBackground(Color.WHITE);
+        pane.add(wordsInputPanel, new BoxLayout(pane, BoxLayout.Y_AXIS));
+        JLabel wordsLabel = new JLabel("Words");
+        wordsLabel.setFont(new Font("Serif", Font.BOLD, 16));
+        wordsLabel.setForeground(Color.BLACK);
+        wordsInputPanel.add(wordsLabel);
+
+        //words text field and options
+        JPanel wordOptions = new JPanel();
+        wordsInputPanel.add(wordOptions, new BoxLayout(pane, BoxLayout.X_AXIS));
+        final JTextField wordsTextField = new JTextField("Enter word here...");
+        wordsTextField.setForeground(Color.LIGHT_GRAY);
+        wordsTextField.setMinimumSize(new Dimension(350, 30));
+        wordsTextField.setMaximumSize(new Dimension(350, 30));
+        wordsTextField.setPreferredSize(new Dimension(350, 30));
+        final JRadioButton synBtn = new JRadioButton("Synonyms?");
+        final JRadioButton numDependentBtn = new JRadioButton("# Dependent?");
+        final JTextField probField = new JTextField(probHintText);
+        probField.setForeground(Color.LIGHT_GRAY);
+        probField.setMinimumSize(new Dimension(100, 30));
+        probField.setMaximumSize(new Dimension(100, 30));
+        probField.setPreferredSize(new Dimension(100, 30));
+        //look into hint text
+        wordOptions.add(wordsTextField);
+        wordOptions.add(synBtn);
+        wordOptions.add(numDependentBtn);
+        wordOptions.add(probField);
+
+        /**
+         * set the hint text for the textfield
+         */
+        wordsTextField.addFocusListener(new FocusListener() {
+            public void focusGained(FocusEvent e) {
+                wordsTextField.setText("");
+                wordTextFieldFocus = true;
+                wordsTextField.setForeground(Color.BLACK);
+            }
+
+            public void focusLost(FocusEvent e) {
+                // nothing
+            }
+        });
+
+        /**
+         * set the hint text for the textfield
+         */
+        probField.addFocusListener(new FocusListener() {
+            public void focusGained(FocusEvent e) {
+                probField.setText("");
+                wordProbFieldFocus = true;
+                probField.setForeground(Color.BLACK);
+            }
+
+            public void focusLost(FocusEvent e) {
+                // nothing
+            }
+        });
+
+        JPanel newWordPanel = new JPanel();
+        newWordPanel.setBackground(Color.WHITE);
+        pane.add(newWordPanel);
+
+        // phrases input panel
+        JPanel phrasesInputPanel = new JPanel();
+        phrasesInputPanel.setBackground(Color.WHITE);
+        pane.add(phrasesInputPanel, new BoxLayout(pane, BoxLayout.Y_AXIS));
+        JLabel phrasesLabel = new JLabel("Phrases");
+        phrasesLabel.setFont(new Font("Serif", Font.BOLD, 16));
+        phrasesLabel.setForeground(Color.BLACK);
+        phrasesInputPanel.add(phrasesLabel);
+
+        //phrase text field and options
+
+        JPanel phraseOptions = new JPanel();
+        phrasesInputPanel.add(phraseOptions, new BoxLayout(pane, BoxLayout.X_AXIS));
+        final JTextField phraseTextField = new JTextField(phraseHintText);
+        phraseTextField.setForeground(Color.LIGHT_GRAY);
+        phraseTextField.setMinimumSize(new Dimension(350, 30));
+        phraseTextField.setMaximumSize(new Dimension(350, 30));
+        phraseTextField.setPreferredSize(new Dimension(350, 30));
+        final JRadioButton phraseSynBtn = new JRadioButton("Synonyms?");
+        final JRadioButton phraseNumDependentBtn = new JRadioButton("# Dependent?");
+        final JTextField phraseProbField = new JTextField(probHintText);
+        phraseProbField.setForeground(Color.LIGHT_GRAY);
+        phraseProbField.setMinimumSize(new Dimension(100, 30));
+        phraseProbField.setMaximumSize(new Dimension(100, 30));
+        phraseProbField.setPreferredSize(new Dimension(100, 30));
+
+        /**
+         * set the hint text for the textfield
+         */
+        phraseTextField.addFocusListener(new FocusListener() {
+            public void focusGained(FocusEvent e) {
+                phraseTextField.setText("");
+                phraseTextFieldFocus = true;
+                phraseTextField.setForeground(Color.BLACK);
+            }
+
+            public void focusLost(FocusEvent e) {
+                // nothing
+            }
+        });
+
+        /**
+         * set the hint text for the textfield
+         */
+        phraseProbField.addFocusListener(new FocusListener() {
+            public void focusGained(FocusEvent e) {
+                phraseProbField.setText("");
+                phraseProbFieldFocus = true;
+                phraseProbField.setForeground(Color.BLACK);
+            }
+
+            public void focusLost(FocusEvent e) {
+                // nothing
+            }
+        });
+
+        phraseOptions.add(phraseTextField);
+        phraseOptions.add(phraseSynBtn);
+        phraseOptions.add(phraseNumDependentBtn);
+        phraseOptions.add(phraseProbField);
+
+        JPanel newPhrasePanel = new JPanel();
+        newPhrasePanel.setBackground(Color.WHITE);
+        pane.add(newPhrasePanel);
+
+        //bottom label
+        JPanel submitPanel = new JPanel();
+        submitButton = new JButton("Submit");
+
+        /**
+         * When the submit button is hit, the code captures the input and processes it
+         */
         submitButton.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                //word storing and cutting off white space
-                word = wordsTextField.getText();
-                word = word.replaceAll("\\s+", "");
+                System.out.println("Trying...");
 
-                // separate the words into its own index in an array
-                words = word.split(",");
+                //set up the words
+                String word = wordsTextField.getText();
+                ArrayList<String> wordInput = new ArrayList<String>();
+                int wordSyn;
+                if(synBtn.isSelected()){
+                    wordSyn = 1;
+                }
+                else wordSyn = 0;
 
-                //phrase storing
-                phrase = phrasesTextField.getText();
+                int wordNumDep;
+                if(numDependentBtn.isSelected()) {
+                    wordNumDep = 1;
+                }
+                else {
+                    wordNumDep = 0;
+                }
+                Double wordProb;
+                if(probField.getText().equals(probHintText)) {
+                    wordProb = -1.0;
+                }
+                else {
+                    wordProb = Double.parseDouble(probField.getText());
+                }
+                System.out.println(wordProb);
 
-                //split each phrase into its own index in an array
-                phrases = phrase.split(",");
-
-                //have lucene run through the inputs to take out filler words before going into the database
-                //word with number is more confidential
+                //set up the phrase
+                String phrase = phraseTextField.getText();
+                ArrayList<String> phraseInput = new ArrayList<String>();
+                int phraseSyn;
+                if(phraseSynBtn.isSelected()){
+                    phraseSyn = 1;
+                }
+                else phraseSyn = 0;
+                int phraseNumDep;
+                if(phraseNumDependentBtn.isSelected()) {
+                   phraseNumDep = 1;
+                }
+                else {
+                    phraseNumDep = 0;
+                }
+                Double phraseProb;
+                if(phraseProbField.getText().equals(probHintText)) {
+                    phraseProb = -1.0;
+                }
+                else {
+                    phraseProb = Double.parseDouble(phraseProbField.getText());
+                }
+                System.out.println(phraseProb);
+                if(phrase.equals(phraseHintText)){
+                    //do nothing
+                }
+                else{
+                    phraseInput.add(phrase);
+                }
+                if(word.equals(phraseHintText)){
+                    //do nothing
+                }
+                else{
+                   wordInput.add(word);
+                }
                 try {
-                    // remove empty input
-                    if(phrases.length == 1 && phrases[0].equals("")){
-                        phrases = new String[0];
-                    }
-                    if(words.length == 1 && words[0].equals("")){
-                        words = new String[0];
-                    }
-                        processInput(words, phrases);
-                } catch (Exception e1) {
-                    e1.printStackTrace();
+                    String[] words = wordInput.toArray(new String[wordInput.size()]);
+                    String[] phrases = phraseInput.toArray(new String[phraseInput.size()]);
+                    processInputSHA(words, phrases, wordProb, phraseProb, wordNumDep, phraseNumDep);
+                } catch (Exception ex) {
+                    System.out.println(ex);
                 }
             }
         });
-    }
 
-    public static void main(String[] args) {
-        JFrame frame = new JFrame("DatabaseInput");
-        frame.setContentPane(new DatabaseInput().container);
-        frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-        frame.pack();
-        frame.setVisible(true);
-    }
 
-    private static Connection getConnection() throws Exception {
-        String url = "jdbc:mysql://asrcemail.cfz28h3zsskv.us-east-1.rds.amazonaws.com/asrcemail";
-        String username = "asrc";
-        String password = "rOwan!Sw3ng?";
-        return DriverManager.getConnection(url, username, password);
-        //System.out.println("Connected");
-    }
-
-    static void insertWords(String wordIn, int rarityIn) throws Exception {
-        try {
-            Connection conn = getConnection();              //get connection
-            Statement statement = conn.createStatement();   //create statement
-            String sql = String.format("insert into Words (word, rarity) Values ('%s', %2d);", wordIn, rarityIn);
-            System.out.println("\n" + sql);
-            statement.executeUpdate(sql);                   //execute the update
-        } catch (Exception e) {
-            System.out.println(e);
-        }
-    }
-
-    static void insertPhrases(String phraseIn, int rarityIn, int count) throws Exception {
-        try {
-            Connection conn = getConnection();              //get connection
-            Statement statement = conn.createStatement();   //create statement
-            String sql = String.format("insert into Phrases (phrase, rarity, count) Values ('%s', %2d, %2d);", phraseIn, rarityIn, count);
-            System.out.println("\n" + sql);
-            statement.executeUpdate(sql);                   //execute the update
-        } catch (Exception e) {
-            System.out.println(e);
-        }
-    }
-
-    static ArrayList<String> getWords() throws Exception {
-        ArrayList<String> words = new ArrayList<String>();
-
-        try {
-            Connection conn = getConnection();              //get connection
-            Statement statement = conn.createStatement();   //create statement
-            String sql = String.format("select word from Words");
-//            System.out.println(sql);
-            ResultSet rs = statement.executeQuery(sql);     //execute the select query
-            while (rs.next()) {
-                words.add(rs.getString(1));
+        newPhraseBtn.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                successLabel.setText("22");
             }
-//            System.out.println(words);
-            System.out.println("select words completed");
-            return words;
-        } catch (Exception e) {
-            System.out.println(e);
-            return null;
-        }
+        });
 
-    }
-
-    static ArrayList<String> getPhrases() throws Exception {
-        ArrayList<String> phrases = new ArrayList<String>();
-
-        try {
-            Connection conn = getConnection();              //get connection
-            Statement statement = conn.createStatement();   //create statement
-            String sql = String.format("select phrase from Phrases");
-//            System.out.println(sql);
-            ResultSet rs = statement.executeQuery(sql);     //execute the select query
-            while (rs.next()) {
-                phrases.add(rs.getString(1));
+        newWordBtn.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                successLabel.setText("11");
             }
-//            System.out.println(phrases);
-            System.out.println("select phrases completed");
-            return phrases;
-        } catch (Exception e) {
-            System.out.println(e);
-            return null;
-        }
+        });
+
+        uploadFileBtn.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                successLabel.setText("44");
+            }
+        });
+
+        successLabel = new JLabel("");
+        submitPanel.add(submitButton);
+        submitPanel.add(uploadFileBtn);
+        submitPanel.add(successLabel);
+
+
+        pane.add(submitPanel, BorderLayout.SOUTH);
     }
 
-
-    private void processInput(String[] words, String[] phrases) throws Exception {
+    /**
+     * Processes the input. Hashes the words/phrases and inserts them to the database if they aren't in there already
+     * @param words - an array of words captured in the GUI
+     * @param phrases - an array of phrases captured in the GUI
+     * @param wordProb - probability a word is used confidentially
+     * @param phraseProb - probability a phrase is used confidentially
+     * @param wordNumDep - if a word is number dependent
+     * @param phraseNumDep - if a phrase is number dependent
+     * @throws Exception
+     */
+    public static void processInputSHA(String[] words, String[] phrases, double wordProb, double phraseProb, int wordNumDep, int phraseNumDep) throws Exception {
         ArrayList<String>   stemmedWords,
-                            stemmedPhrases,
                             dbHashedWords,
                             dbHashedPhrases,
-                            unique_words = new ArrayList<String>(),
-                            unique_phrases = new ArrayList<String>();
+                            unique_words   = new ArrayList<>();
+        ArrayList<Phrase>   stemmedPhrases = new ArrayList<>(),
+                            unique_phrases = new ArrayList<>();
+        LuceneStemmer ls = new LuceneStemmer();
+
+        if(wordProb == -1.0){
+            wordProb = 1.0;
+        }
+        if(phraseProb == -1.0){
+            phraseProb = 1.0;
+        }
 
         try {
-            dbHashedWords = getWords();
-            dbHashedPhrases = getPhrases();
+            dbHashedWords = Database.getWords();
+            dbHashedPhrases = Database.getPhrases();
 
-            if(words.length != 0) {
+            // move array into ArrayList for method call
+            ArrayList<String> w = new ArrayList<>(Arrays.asList(words));
+
+            stemmedWords = ls.stemWords(w);
+
+            if(stemmedWords.size() != 0) {
                 boolean duplicate = false, empty = true;
-                int i = 0, count = 1;
+                int count = 1;
+                String hashedInputWord;
+
                 System.out.print("Checking word ");
-                for (String inputWord : words) {
+
+                for (String inputWord : stemmedWords) {
                     System.out.print(count++ + ", ");
+                    hashedInputWord = Hasher.hashSHA(inputWord);        // hash the inputted word
+                    System.out.println("Hashed word: " + hashedInputWord);
                     if (dbHashedWords != null) {
                         for(String hash: dbHashedWords) {
-                            if (!duplicate && Hasher.checkHash(inputWord, hash)) {
+                            if (!duplicate && hash.equals(hashedInputWord)) {
                                 // once a match is found, we no longer need to check each word
-                                duplicate = true; // should stop if statement from running
+                                duplicate = true; // should stop if statement from running when it hits a duplicate
                             }
                         }
                     }
 
                     if(!duplicate){ // word is not in database
-                        unique_words.add(inputWord);
+                        unique_words.add(hashedInputWord);
                         empty = false;
                     }
                     duplicate = false; // reset variable
                 }
 
                 if(!empty) {
-                    stemmedWords = StringToHash.getHashes(unique_words, false);
-                    for (String hashedWord : stemmedWords) {
-                        insertWords(hashedWord, RARITY);
+                    // hash unique words
+                    // unique_words = StringToHash.(unique_words);
+                    for (String hashedWord : unique_words) {
+                        Database.insertWords(hashedWord, wordProb, wordNumDep);
                     }
                     System.out.println("\nWords inserted");
                 }
             }
 
-            int[] counts = new int[phrases.length];
-            for (int i = 0; i < counts.length; i++){
-                counts[i] = phrases[i].split("\\s+").length;
+            // stem phrases before checking in database, maintaining word count for each phrase
+            for(String phrase: phrases){
+                stemmedPhrases.add(new Phrase(ls.stemPhrase(phrase), phrase.split("\\s+").length));
             }
 
-            if(phrases.length != 0) {
+            // find unique phrases in input
+            if(stemmedPhrases.size() != 0) {
                 boolean duplicate = false, empty = true;
-                int i = 0, count = 1;
+                int count = 1;
+                String hashedInputPhrase;
+
                 System.out.print("Checking phrase ");
-                for (String inputPhrase : phrases) {
-                    System.out.print(count++ + ", ");
+
+                for (Phrase inputPhrase : stemmedPhrases) {
+                    hashedInputPhrase = Hasher.hashSHA(inputPhrase.getPhrase());    // hash one of the inputted phrases
+                    System.out.print(count++ + ", ");                               // increment count
                     if (dbHashedPhrases != null) {
                         for(String hash : dbHashedPhrases) {
-                            if (!duplicate && Hasher.checkHash(inputPhrase, hash)) {
+                            if (!duplicate && hash.equals(hashedInputPhrase)) {
                                 duplicate = true;
                             }
                         }
                     }
+
                     if(!duplicate){
+                        // reset phrase as its hashed form and add to ArrayList
+                        inputPhrase.setPhrase(hashedInputPhrase);
                         unique_phrases.add(inputPhrase);
                         empty = false;
                     }
                 }
 
                 if(!empty) {
-                    stemmedPhrases = StringToHash.getHashes(unique_phrases, true);
-                    for (int j = 0; j< stemmedPhrases.size();j++) {
-                        insertPhrases(stemmedPhrases.get(j), RARITY, counts[j]);
+                    // hash unique phrases
+                   // unique_phrases = StringToHash.getPhraseHashes(unique_phrases);
+                    for (Phrase phrase: unique_phrases) {
+                        Database.insertPhrases(phrase.getPhrase(), phraseProb, phrase.getWordcount(), phraseNumDep);
                     }
                     System.out.println("\nPhrases inserted");
                 }
 
             }
-            System.out.println("Entry Successful");
+            System.out.println("Processing complete");
+            successLabel.setText("Processing complete");
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
 
+    /**
+     * Launches the GUI.
+     * @param args - not necessary
+     */
+    public static void main(String[] args) {
+        //Create and set up the window.
+        JFrame frame = new JFrame("Database Input");
+        frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+        frame.setLocationRelativeTo(null);
+        frame.setResizable(true);
+        frame.setMaximumSize(new Dimension(700, 500));
+        frame.setMinimumSize(new Dimension(700, 500));
+        frame.setPreferredSize(new Dimension(700, 500));
+        //Set up the content pane.
+        addComponentsToPane(frame.getContentPane());
+
+        //Display the window.
+        frame.pack();
+        frame.setVisible(true);
     }
 }
-
