@@ -20,6 +20,7 @@ import java.util.Arrays;
  * Created by cdeck_000 on 10/5/2016.
  * Edited by cbporch on 10.13.16
  * Launches a GUI and processes the input from the gui into the database
+ * Launches a GUI and processes the input from the gui into the database
  */
 public class DatabaseInput {
 
@@ -43,6 +44,10 @@ public class DatabaseInput {
     protected DatabaseInput() {
     }
 
+    /**
+     * Makes the GUI
+     * @param pane - the gui reference
+     */
     /**
      * Makes the GUI
      * @param pane - the gui reference
@@ -88,6 +93,9 @@ public class DatabaseInput {
         /**
          * set the hint text for the textfield
          */
+        /**
+         * set the hint text for the textfield
+         */
         wordsTextField.addFocusListener(new FocusListener() {
             public void focusGained(FocusEvent e) {
                 wordsTextField.setText("");
@@ -100,6 +108,9 @@ public class DatabaseInput {
             }
         });
 
+        /**
+         * set the hint text for the textfield
+         */
         /**
          * set the hint text for the textfield
          */
@@ -163,6 +174,9 @@ public class DatabaseInput {
         /**
          * set the hint text for the textfield
          */
+        /**
+         * set the hint text for the textfield
+         */
         phraseProbField.addFocusListener(new FocusListener() {
             public void focusGained(FocusEvent e) {
                 phraseProbField.setText("");
@@ -220,7 +234,6 @@ public class DatabaseInput {
                     wordProb = Double.parseDouble(probField.getText());
                 }
                 System.out.println(wordProb);
-
 
                 //set up the phrase
                 String phrase = phraseTextField.getText();
@@ -419,26 +432,70 @@ public class DatabaseInput {
 
     /**
      * This will take in a file name and it will go through it if its a CSV file and seperate it into an arraylist.
-     * You must enter either a single words only file, or a phrases only file.
+     * You must enter a single words only file for this method.
+     * @filename this is the path of the file being selected.
      */
-    public static ArrayList<String> interpretCSVFile(String filename)
+    public static ArrayList<Word> interpretCSVFile(String filename)
     {
         BufferedReader br;
-        ArrayList<String> listOfWords = new ArrayList<>(); //Returned list of all the words in this file.
+        ArrayList<Word> listOfWords = new ArrayList<>(); //Returned list of all the words in this file.
+
+        //values used to create a new Phrase
+        String word = "";   //  selected word from file
+        String rarity = ""; //  rarity associated with the word
+        String isNum = ""; //   true if this word is a number
+
         try {
             br = new BufferedReader(new FileReader(filename));
-            String line;
+            String line;    //used to read each line from the file.
+            Word newWord; // used to add a word to the listOfWords
+
             while ((line = br.readLine()) != null) {
-                String[] unsortedWords = line.split(",");
-                listOfWords = new ArrayList<>(Arrays.asList(unsortedWords));
-            }
-        }
+
+                String[] lineOfWords = line.split(","); //splits up the current line of the file.
+
+                //For loop that goes through the line and picks out the data and puts it all together into a Word.
+                for (int i = 0; i < lineOfWords.length; i++) {
+                    if (word.equals("")) {
+                        word = lineOfWords[i];
+                    }
+                    else if (rarity.equals("")) {
+                        rarity = lineOfWords[i].trim();
+                    }
+                    else if (isNum.equals("")) {
+                        isNum = lineOfWords[i].trim();
+                        i--;
+                    }
+                    else {
+                        //Cleans the data up so it can be used for Word
+                        int actualRarity = Integer.parseInt(rarity);
+                        boolean actualNumDep;
+                        if (isNum.equals("0")) {
+                            actualNumDep = false;
+                        }
+                        else {
+                            actualNumDep = true;
+                        }
+
+                        //Creates new Word and adds it to listOfWords.
+                        newWord = new Word(word,actualRarity,actualNumDep);
+                        listOfWords.add(newWord);
+
+                        //resets the values.
+                        word = "";
+                        rarity = "";
+                        isNum = "";
+                    }}}}
         catch (IOException e) {
             e.printStackTrace();
         }
         return listOfWords;
     }
 
+    /**
+     * Launches the GUI.
+     * @param args - not necessary
+     */
     /**
      * Launches the GUI.
      * @param args - not necessary

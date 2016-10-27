@@ -8,11 +8,13 @@ import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 
 /**
- * Created by Chris on 10/11/2016.
- * Wrapper class that uses jBCrypt to hash a given ArrayList of Strings
+ * Hasher class uses MessageDigest to hash a given String using SHA-512
+ *
+ * @author Chris Porch porchc0@students.rowan.edu
+ * @since 2016-10-26
  */
 public class Hasher {
-    private static final int SALTSPEED = 5;
+//    private static final int SALTSPEED = 5;
 
     /*
      * Hashes an ArrayList of strings using a salt generated using the default number of rounds
@@ -43,8 +45,10 @@ public class Hasher {
 //        return false;
 //    }
 
-    /*
-     * Hashes a given String using SHA-512, encodes it as Base64 and returns it
+    /**
+     * Hashes a given String using SHA-512, encodes it as Base64 and returns it.
+     * @param word A String.
+     * @return A SHA-512 hash
      */
     public static String hashSHA(String word) {
 
@@ -67,10 +71,14 @@ public class Hasher {
         return hashedList;
     }
 
-    /*
+    /**
      * Hashes a given word and checks it against the given hash.
      * Note: preferred way to check SHA hashes is to call hashSHA() on the word then call a .equals()
      * against the hash to be checked against
+     * @param word A String to be tested against the hash.
+     * @param hash A SHA-512 hash of a String
+     * @return true if the given word matches the given hash when it is hashed
+     * @throws NoSuchAlgorithmException
      */
     public static boolean checkSHA(String word, String hash) throws NoSuchAlgorithmException {
         return hashSHA(word).equals(hash);
