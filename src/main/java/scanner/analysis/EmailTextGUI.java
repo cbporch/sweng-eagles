@@ -28,7 +28,11 @@ public class EmailTextGUI {
         textAreaPanel.setBackground(Color.LIGHT_GRAY);
         final JTextArea textArea = new JTextArea();
         textArea.setBackground(Color.LIGHT_GRAY);
+        textArea.setMinimumSize(new Dimension(400,400));
+        textArea.setMaximumSize(new Dimension(400,400));
+        textArea.setPreferredSize(new Dimension(400,400));
         textArea.setLineWrap(true);
+        textArea.setMinimumSize(new Dimension(500, 200));
         textArea.setFont(new Font("Serif", Font.PLAIN, 16));
         textAreaPanel.add(textArea);
         pane.add(textAreaPanel, BorderLayout.CENTER);
@@ -61,7 +65,7 @@ public class EmailTextGUI {
         uploadFileBtn.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                scoreLabel.setText("65");
+                scoreLabel.setText("Feature not yet available.");
             }
         });
     }
@@ -74,9 +78,11 @@ public class EmailTextGUI {
         JFrame frame = new JFrame("EmailGUI");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setLocationRelativeTo(null);
-        frame.setPreferredSize(new Dimension(500,400));
+        frame.setPreferredSize(new Dimension(500,500));
         frame.setTitle("Email Text Input");
         frame.setResizable(true);
+        Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+        frame.setSize(screenSize.width, screenSize.height);
         //Set up the content pane.
         addComponentsToPane(frame.getContentPane());
 
