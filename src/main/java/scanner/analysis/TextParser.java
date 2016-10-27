@@ -33,6 +33,12 @@ public class TextParser {
         }
     }
 
+    /**
+     * Takes the text that was inputted in the constructor, finds any confidential words in the database,
+     * then gets the conf and norm values from each word, and passes them to CalculateEmailScore to
+     * generate a score.
+     * @return - A score of how likely the text is to be confidential.
+     */
     public double parse(){
         for(String word: text){
             Word w = findWord(word);
@@ -43,10 +49,20 @@ public class TextParser {
         return CalculateEmailScore.calculate(pairs);
     }
 
+    /**
+     * Finds a word in the database and creates a Word object for that word
+     * @param word - a word to check in the database
+     * @return - a Word object for the String word with its database attributes
+     */
     private Word findWord(String word){
         return db.getWord(word);
     }
 
+    /**
+     * Finds a word in the database and creates a Phrase object for that phrase
+     * @param phrase - a phrase to check in the database
+     * @return - a Phrase object for the String word with its database attributes
+     */
     private Phrase findPhrase(String phrase){
         return db.getPhrase(phrase);
     }
