@@ -9,8 +9,14 @@ import javax.swing.*;
  * Created by cdeck_000 on 10/19/2016.
  */
 
-
+/**
+ * Create a simple GUI to input an email to be scanned. A score for the email will be shown on screen.
+ */
 public class EmailTextGUI {
+    /**
+     * Add the components to the GUI.
+     * @param pane - the pane for the GUI
+     */
     public static void addComponentsToPane(Container pane) {
         pane.setLayout(new BorderLayout());
         JPanel instructionsPanel = new JPanel();
@@ -20,7 +26,7 @@ public class EmailTextGUI {
 
         JPanel textAreaPanel = new JPanel();
         textAreaPanel.setBackground(Color.LIGHT_GRAY);
-        JTextArea textArea = new JTextArea();
+        final JTextArea textArea = new JTextArea();
         textArea.setBackground(Color.LIGHT_GRAY);
         textArea.setLineWrap(true);
         textArea.setFont(new Font("Serif", Font.PLAIN, 16));
@@ -40,7 +46,15 @@ public class EmailTextGUI {
         evaluateButton.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                scoreLabel.setText("45");
+                try {
+                    String email = textArea.getText();
+                    TextParser textParser = new TextParser(email);
+                    double score = textParser.parse();
+                    scoreLabel.setText(score+"");
+                } catch (Exception ex) {
+                    System.out.println(ex);
+                }
+
             }
         });
 
@@ -52,10 +66,8 @@ public class EmailTextGUI {
         });
     }
 
-        /**
-     * Create the GUI and show it.  For thread safety,
-     * this method should be invoked from the
-     * event-dispatching thread.
+    /**
+     * Create the GUI and show it.
      */
     private static void createAndShowGUI() {
         //Create and set up the window.

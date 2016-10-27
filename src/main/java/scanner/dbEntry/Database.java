@@ -19,7 +19,7 @@ public class Database {
     /**
      * Gets and keeps open a connection to the database.
      * @return a connection to the database
-     * @throws Exception
+     * @throws Exception if connection cannot be made
      */
     private static Connection getConnection() throws Exception {
         String url = "jdbc:mysql://asrcemail.cfz28h3zsskv.us-east-1.rds.amazonaws.com/asrcemail";
@@ -33,13 +33,19 @@ public class Database {
      * @param wordIn - word to insert
      * @param rarityIn - rarity of that word
      * @param numDep - is the word number dependent
-     * @throws Exception
+     * @throws Exception When entry fails
      */
     static void insertWords(String wordIn, double rarityIn, int numDep) throws Exception   {
         try {
             Connection conn = getConnection();              //get connection
             Statement statement = conn.createStatement();   //create statement
-            String sql = String.format("insert into Words (word, rarity, NumDep, conf, norm) Values ('%s', '%f', '%d', '%d', '%d');", wordIn, rarityIn, numDep, CONF, NORM);
+
+            // fill with test values
+            double c,n;
+            c = 100 * rarityIn;
+            n = 100 - c;
+
+            String sql = String.format("insert into Words (word, rarity, NumDep, conf, norm) Values ('%s', '%f', '%d', '%f', '%f');", wordIn, rarityIn, numDep, c, n);
             System.out.println("\n" + sql);                 //display the update for testing
             statement.executeUpdate(sql);                   //execute the update
             conn.close();                                   //close the connection
@@ -52,15 +58,21 @@ public class Database {
      * Inserts a phrase into the database. Gets & closes a connection to the database.
      * @param phraseIn - phrase to be inserted
      * @param rarityIn - rarity for the phrase
-     * @param count
-     * @param numDep
+     * @param count - wordcount of phrase
+     * @param numDep - whether phrase is number dependant
      * @throws Exception
      */
     static void insertPhrases(String phraseIn, double rarityIn, int count, int numDep) throws Exception {
         try {
             Connection conn = getConnection();              //get connection
             Statement statement = conn.createStatement();   //create statement
-            String sql = String.format("insert into Phrases (phrase, rarity, count, NumDep) Values ('%s', '%f', '%d', '%d', '%d', '%d');", phraseIn, rarityIn, count, numDep, CONF, NORM);
+
+            // fill with test values
+            double c,n;
+            c = 100 * rarityIn;
+            n = 100 - c;
+
+            String sql = String.format("insert into Phrases (phrase, rarity, count, NumDep) Values ('%s', '%f', '%d', '%d', '%f', '%f');", phraseIn, rarityIn, count, numDep, c, n);
             System.out.println("\n" + sql);                 //testing purposes
             statement.executeUpdate(sql);                   //execute the update
             conn.close();                                   //close the connection
@@ -128,10 +140,10 @@ public class Database {
     /**
      * Hashes the given word and finds it in the database.
      * @param word - word to get from database
-     * @return
+     * @return if a word is matched, it is returned
      */
     public static Word getWord(String word){
-        Word found = new Word();        //
+        Word found = new Word();
         word = Hasher.hashSHA(word);    //hash the word
 
         try {
@@ -141,15 +153,14 @@ public class Database {
             ResultSet rs = statement.executeQuery(sql);     //execute the select query
             System.out.println(sql);
             while (rs.next()) {
-                if (rs.getString(2).equals(word)) {
+                if (rs.getString(2).equals(word)) {         //compare the word to the word in the Database
                     found.setWord(word);
                     found.setRarity(rs.getFloat(3));
                     found.setNum(rs.getBoolean(4));
-//                  found.setConf(rs.getInt(4));
-//                    found.setNorm(rs.getInt(5));
-//                    found.setNum(rs.getBoolean(6));
+                    found.setConf(rs.getInt(5));
+                    found.setNorm(rs.getInt(6));
                     System.out.println("Good! for words");
-                    conn.close();
+                    conn.close();                           //close the connection
                     return found;
                 }
             }
@@ -159,17 +170,14 @@ public class Database {
         return null;
     }
 
-    /*
-     * Method hashes a given phrase, checks for it in the database and returns it if it is found,
-     * otherwise returns null
-     *
-     * Phrase is assumed to be stemmed but not hashed before being passed in.
-     *
-     * Output is a Phrase object containing a hashed string with all other attributes
+    /**
+     * Get a phrase from the database that matches the parameter
+     * @param phrase - phrase to look for
+     * @return if a phrase is matched, it is returned
      */
     public Phrase getPhrase(String phrase){
         Phrase found = new Phrase();
-        phrase = Hasher.hashSHA(phrase);
+        phrase = Hasher.hashSHA(phrase);        //hash the phrase
 
         try {
             Connection conn = getConnection();              //get connection
@@ -183,10 +191,12 @@ public class Database {
                     found.setPhrase(phrase);
                     found.setRarity(rs.getFloat(3));
                     found.setWordcount(rs.getInt(4));
-//                    found.setConf(rs.getInt(5));
-//                    found.setNorm(rs.getInt(6));
-//                    found.setNum(rs.getBoolean(7));
+                    found.setNum(rs.getBoolean(5));
+                    found.setConf(rs.getInt(6));
+                    found.setNorm(rs.getInt(7));
+
                     System.out.println("Good for phrases!!!");
+                    conn.close();                           //close the connection
                     return found;
                 }
             }

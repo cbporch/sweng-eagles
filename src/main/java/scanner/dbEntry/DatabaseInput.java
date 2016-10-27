@@ -1,6 +1,7 @@
 package scanner.dbEntry;
 
 import scanner.Phrase;
+import scanner.Word;
 import scanner.filtering.Hasher;
 import scanner.filtering.LuceneStemmer;
 
@@ -16,34 +17,20 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 
-
 /**
  * Created by cdeck_000 on 10/5/2016.
  * Edited by cbporch on 10.13.16
+ * Launches a GUI and processes the input from the gui into the database
  */
 public class DatabaseInput {
 
-    private JPanel container;
-    private JLabel titleLabel;
-    private JLabel wordInputLabel;
-    private JTextField wordsTextField;
-    private JTextField phraseTextField;
-    private JLabel phrasesInputLabel;
-    private JTextField phrasesTextField;
-    private JTextArea noteText2;
-    private String word;
-    private String[] words;
-    private String phrase;
-    private String[] phraseToWords;
-    private String[] phrases;
+
     private static JLabel successLabel;
-    private JButton submitButton;
-    private static JButton submitButton2;
+    private static JButton submitButton;
     private static Boolean phraseProbFieldFocus = false;
     private static Boolean phraseTextFieldFocus = false;
     private static Boolean wordProbFieldFocus = false;
     private static Boolean wordTextFieldFocus = false;
-    private static final int RARITY = 10;
     private static JButton newPhraseBtn = new JButton("New Phrase");
     private static JButton newWordBtn = new JButton("New Word");
     private static JButton uploadFileBtn = new JButton("Upload File");
@@ -51,17 +38,22 @@ public class DatabaseInput {
     private static String probHintText = "Enter probability..";
 
 
+    /**
+     * Empty constructor
+     */
     protected DatabaseInput() {
-
     }
 
+    /**
+     * Makes the GUI
+     * @param pane - the gui reference
+     */
     private static void addComponentsToPane(Container pane) {
         pane.setLayout(new BoxLayout(pane, BoxLayout.Y_AXIS));
         JPanel instructionsPanel = new JPanel();
         JLabel instructions = new JLabel("Enter the words/phrases to be inputted below");
         instructionsPanel.add(instructions);
         pane.add(instructionsPanel);
-
 
         // words input panel
         JPanel wordsInputPanel = new JPanel();
@@ -93,6 +85,9 @@ public class DatabaseInput {
         wordOptions.add(numDependentBtn);
         wordOptions.add(probField);
 
+        /**
+         * set the hint text for the textfield
+         */
         wordsTextField.addFocusListener(new FocusListener() {
             public void focusGained(FocusEvent e) {
                 wordsTextField.setText("");
@@ -105,6 +100,9 @@ public class DatabaseInput {
             }
         });
 
+        /**
+         * set the hint text for the textfield
+         */
         probField.addFocusListener(new FocusListener() {
             public void focusGained(FocusEvent e) {
                 probField.setText("");
@@ -119,7 +117,6 @@ public class DatabaseInput {
 
         JPanel newWordPanel = new JPanel();
         newWordPanel.setBackground(Color.WHITE);
-        //newWordPanel.add(newWordBtn);
         pane.add(newWordPanel);
 
         // phrases input panel
@@ -148,7 +145,9 @@ public class DatabaseInput {
         phraseProbField.setMaximumSize(new Dimension(100, 30));
         phraseProbField.setPreferredSize(new Dimension(100, 30));
 
-
+        /**
+         * set the hint text for the textfield
+         */
         phraseTextField.addFocusListener(new FocusListener() {
             public void focusGained(FocusEvent e) {
                 phraseTextField.setText("");
@@ -161,6 +160,9 @@ public class DatabaseInput {
             }
         });
 
+        /**
+         * set the hint text for the textfield
+         */
         phraseProbField.addFocusListener(new FocusListener() {
             public void focusGained(FocusEvent e) {
                 phraseProbField.setText("");
@@ -173,7 +175,6 @@ public class DatabaseInput {
             }
         });
 
-        //look into hint text
         phraseOptions.add(phraseTextField);
         phraseOptions.add(phraseSynBtn);
         phraseOptions.add(phraseNumDependentBtn);
@@ -181,14 +182,16 @@ public class DatabaseInput {
 
         JPanel newPhrasePanel = new JPanel();
         newPhrasePanel.setBackground(Color.WHITE);
-        //newPhrasePanel.add(newPhraseBtn);
         pane.add(newPhrasePanel);
 
         //bottom label
         JPanel submitPanel = new JPanel();
-        submitButton2 = new JButton("Submit");
+        submitButton = new JButton("Submit");
 
-        submitButton2.addMouseListener(new MouseAdapter() {
+        /**
+         * When the submit button is hit, the code captures the input and processes it
+         */
+        submitButton.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
                 System.out.println("Trying...");
@@ -217,7 +220,6 @@ public class DatabaseInput {
                     wordProb = Double.parseDouble(probField.getText());
                 }
                 System.out.println(wordProb);
-
 
                 //set up the phrase
                 String phrase = phraseTextField.getText();
@@ -287,105 +289,23 @@ public class DatabaseInput {
         });
 
         successLabel = new JLabel("Test");
-        submitPanel.add(submitButton2);
+        submitPanel.add(submitButton);
         submitPanel.add(uploadFileBtn);
         submitPanel.add(successLabel);
 
         pane.add(submitPanel, BorderLayout.SOUTH);
     }
 
-    /*private static void processInput(String[] words, String[] phrases) throws Exception {
-        ArrayList<String>   stemmedWords,
-                dbHashedWords,
-                dbHashedPhrases,
-                unique_words = new ArrayList<>();
-        ArrayList<Phrase>   stemmedPhrases = new ArrayList<>(),
-                unique_phrases = new ArrayList<>();
-        LuceneStemmer ls = new LuceneStemmer();
-
-        try {
-            dbHashedWords = Database.getWords();
-            dbHashedPhrases = Database.getPhrases();
-
-            // move array into ArrayList for method call
-            ArrayList<String> w = new ArrayList<>(Arrays.asList(words));
-
-            stemmedWords = ls.stemWords(w);
-
-            if(stemmedWords.size() != 0) {
-                boolean duplicate = false, empty = true;
-                int count = 1;
-                System.out.print("Checking word ");
-                for (String inputWord : stemmedWords) {
-                    System.out.print(count++ + ", ");
-                    if (dbHashedWords != null) {
-                        for(String hash: dbHashedWords) {
-                            if (!duplicate && Hasher.checkHashBCrypt(inputWord, hash)) {
-                                // once a match is found, we no longer need to check each word
-                                duplicate = true; // should stop if statement from running when it hits a duplicate
-                            }
-                        }
-                    }
-
-                    if(!duplicate){ // word is not in database
-                        unique_words.add(inputWord);
-                        empty = false;
-                    }
-                    duplicate = false; // reset variable
-                }
-
-                if(!empty) {
-                    // hash unique words
-                    unique_words = StringToHash.getHashes(unique_words);
-                    for (String hashedWord : unique_words) {
-                        Database.insertWords(hashedWord, RARITY);
-                    }
-                    System.out.println("\nWords inserted");
-                }
-            }
-
-            // stem phrases before checking in database, maintaining word count for each phrase
-            for(String phrase: phrases){
-                stemmedPhrases.add(new Phrase(ls.stemPhrase(phrase), phrase.split("\\s+").length));
-            }
-
-            // find unique phrases in input
-            if(stemmedPhrases.size() != 0) {
-                boolean duplicate = false, empty = true;
-                int count = 1;
-                System.out.print("Checking phrase ");
-                for (Phrase inputPhrase : stemmedPhrases) {
-                    System.out.print(count++ + ", ");
-                    if (dbHashedPhrases != null) {
-                        for(String hash : dbHashedPhrases) {
-                            if (!duplicate && Hasher.checkHashBCrypt(inputPhrase.getPhrase(), hash)) {
-                                duplicate = true;
-                            }
-                        }
-                    }
-                    if(!duplicate){
-                        unique_phrases.add(inputPhrase);
-                        empty = false;
-                    }
-                }
-
-                if(!empty) {
-                    // hash unique phrases
-                    unique_phrases = StringToHash.getPhraseHashes(unique_phrases);
-                    for (Phrase phrase: unique_phrases) {
-                        Database.insertPhrases(phrase.getPhrase(), RARITY, phrase.getWordcount());
-                    }
-                    System.out.println("\nPhrases inserted");
-                }
-
-            }
-            System.out.println("Processing complete");
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-    }*/
-
+    /**
+     * Processes the input. Hashes the words/phrases and inserts them to the database if they aren't in there already
+     * @param words - an array of words captured in the GUI
+     * @param phrases - an array of phrases captured in the GUI
+     * @param wordProb - probability a word is used confidentially
+     * @param phraseProb - probability a phrase is used confidentially
+     * @param wordNumDep - if a word is number dependent
+     * @param phraseNumDep - if a phrase is number dependent
+     * @throws Exception
+     */
     public static void processInputSHA(String[] words, String[] phrases, double wordProb, double phraseProb, int wordNumDep, int phraseNumDep) throws Exception {
         ArrayList<String>   stemmedWords,
                             dbHashedWords,
@@ -496,18 +416,15 @@ public class DatabaseInput {
         }
     }
 
-
-
-
     /**
      * This will take in a file name and it will go through it if its a CSV file and seperate it into an arraylist.
      * You must enter a single words only file for this method.
      * @filename this is the path of the file being selected.
      */
-    public static ArrayList<scanner.Word> interpretCSVFile(String filename)
+    public static ArrayList<Word> interpretCSVFile(String filename)
     {
         BufferedReader br;
-        ArrayList<scanner.Word> listOfWords = new ArrayList<scanner.Word>(); //Returned list of all the words in this file.
+        ArrayList<Word> listOfWords = new ArrayList<>(); //Returned list of all the words in this file.
 
         //values used to create a new Phrase
         String word = "";   //  selected word from file
@@ -517,7 +434,7 @@ public class DatabaseInput {
         try {
             br = new BufferedReader(new FileReader(filename));
             String line;    //used to read each line from the file.
-            scanner.Word newWord; //used to add a word to the listOfWords
+            Word newWord; // used to add a word to the listOfWords
 
             while ((line = br.readLine()) != null) {
 
@@ -547,7 +464,7 @@ public class DatabaseInput {
                         }
 
                         //Creates new Word and adds it to listOfWords.
-                        newWord = new scanner.Word(word,actualRarity,actualNumDep);
+                        newWord = new Word(word,actualRarity,actualNumDep);
                         listOfWords.add(newWord);
 
                         //resets the values.
@@ -561,96 +478,15 @@ public class DatabaseInput {
         return listOfWords;
     }
 
-
     /**
-     * This will take in a file name and it will go through it if its a CSV file and seperate it into an arraylist.
-     * You must enter a phrase only file for this method.
-     * @filename this is the path of the file being selected.
+     * Launches the GUI.
+     * @param args - not necessary
      */
-    public static ArrayList<scanner.Phrase> interpretCSVPhraseFile(String filename)
-    {
-        BufferedReader br;
-        ArrayList<scanner.Phrase> listOfPhrases = new ArrayList<>(); //Returned list of all the words in this file.
-
-        //values used to create a new Phrase
-        String phrase = "";   //    selected phrase from file
-        String rarity = ""; //      rarity associated with the phrase
-        String count = "";  //      number of words in this phrase
-        String isNum = ""; //       true if this phrase is a number
-
-        try {
-            br = new BufferedReader(new FileReader(filename));
-            String line;    //used to read each line from the file.
-            scanner.Phrase newPhrase; //used to add a phrase to the listOfPhrases
-
-            while ((line = br.readLine()) != null) {
-
-                String[] lineOfPhrases = line.split(","); //splits up the current line of the file.
-
-                //For loop that goes through the line and picks out the data and puts it all together into a Phrase.
-                for (int i = 0; i < lineOfPhrases.length; i++) {
-                    if (phrase.equals("")) {
-                        phrase = lineOfPhrases[i];
-                    }
-                    else if (count.equals("")) {
-                        count = lineOfPhrases[i].trim();
-                    }
-                    else if (rarity.equals("")) {
-                        rarity = lineOfPhrases[i].trim();
-                    }
-                    else if (isNum.equals("")) {
-                        isNum = lineOfPhrases[i].trim();
-                        i--;
-                    }
-                    else {
-                        //Cleans the data up so it can be used for Phrase
-                        int actualRarity = Integer.parseInt(rarity);
-                        int actualCount = Integer.parseInt(count);
-                        boolean actualNumDep;
-                        if (isNum.equals("0")) {
-                            actualNumDep = false;
-                        }
-                        else {
-                            actualNumDep = true;
-                        }
-
-                        //Creates new Phrase and adds it to listOfPhrases.
-                        newPhrase = new scanner.Phrase(phrase,actualCount,actualRarity,actualNumDep);
-                        listOfPhrases.add(newPhrase);
-
-                        //resets the values.
-                        phrase = "";
-                        count = "";
-                        rarity = "";
-                        isNum = "";
-                    }}}}
-        catch (IOException e) {
-            e.printStackTrace();
-        }
-        return listOfPhrases;
-    }
-
-
-
-
-    //Objective: Create a method that checks database for duplicates
-    public boolean hasDuplicate(String input) throws Exception {
-        //Changed getWord() to static in Database
-        ArrayList<String> test = Database.getWords();
-        for (int i = 0; i < test.size(); i++) {
-            if (Hasher.hashSHA(input).equals(test.get(i))) {
-                return false;
-            }
-        }
-        return true;
-    }
-
     public static void main(String[] args) {
         //Create and set up the window.
-        JFrame frame = new JFrame("DatabaseGUI");
+        JFrame frame = new JFrame("Database Input");
         frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         frame.setLocationRelativeTo(null);
-        frame.setTitle("Database Input");
         frame.setResizable(true);
         frame.setMaximumSize(new Dimension(700, 500));
         frame.setMinimumSize(new Dimension(700, 500));
