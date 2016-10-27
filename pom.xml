@@ -7,6 +7,10 @@
     <groupId>com.swengeagles.app</groupId>
     <artifactId>sweng-eagles</artifactId>
     <version>1.0</version>
+    <packaging>jar</packaging>
+
+    <name>Email Scanner</name>
+
     <dependencies>
         <!-- https://mvnrepository.com/artifact/org.apache.lucene/lucene-core -->
         <dependency>
@@ -49,4 +53,7 @@
         <maven.compiler.target>1.7</maven.compiler.target>
     </properties>
 
+    <build>
+
+    </build>
 </project>
