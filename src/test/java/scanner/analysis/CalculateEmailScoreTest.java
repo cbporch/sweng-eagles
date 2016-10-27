@@ -10,6 +10,7 @@ import static org.junit.Assert.*;
 
 /**
  * Created by Chris on 10/24/2016.
+ *
  */
 public class CalculateEmailScoreTest {
     private static final double DELTA = 1e-10;
