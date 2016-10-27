@@ -1,4 +1,4 @@
-package scanner.filter;
+package scanner.filtering;
 
 /*
  * Copyright 2016 Christopher Porch, Christopher Deck, Steve Leonetti, Tom Miller, Dan Smith, Mike Bayruns
@@ -24,27 +24,31 @@ import java.io.StringReader;
 import java.util.ArrayList;
 
 /**
- * Created by Chris Porch on 10/10/2016.
- * Utilizes Lucene's stemming capabilities to reduce words to their respective
- * stems in an effort to reduce duplicates in the database further on.
- * <p>
- * The copyright block above is required by Apache
+ * Utilizes Apache Lucene's stemming capabilities to reduce words to their respective
+ * stems in an effort to reduce duplicates in the database further on. Primarily uses
+ * a stop word filter that also removes whitespace and the letter 's' from the ends of
+ * pluralized words.
+ *
+ * @author Chris Porch porchc0@students.rowan.edu
  */
 
 public class LuceneStemmer {
-    private static StemAnalyzer analyzer;
+    private StemAnalyzer analyzer;
 
     public LuceneStemmer() {
+        analyzer = new StemAnalyzer();
     }
 
-    /*
-     * Method reduces each String in an array to its root word
+    /**
+     * Method reduces each String in an ArrayList of Strings to their root word.
+     * @param input An ArrayList of Strings to be stemmed.
+     * @return An ArrayList of stemmed words.
+     * @throws IOException
      */
-    public static ArrayList<String> stemWords(ArrayList<String> input) throws IOException {
-        analyzer = new StemAnalyzer();
-        ArrayList<String> output = new ArrayList<String>(input.size());
+    public ArrayList<String> stemWords(ArrayList<String> input) throws IOException {
+        ArrayList<String> output = new ArrayList<>(input.size());
         for (String word : input) {
-            if (word != "") {
+            if (!word.equals("")) {
                 TokenStream ts = analyzer.tokenStream("myfield", new StringReader(word));
                 CharTermAttribute termAtt = ts.addAttribute(CharTermAttribute.class);
                 try {
@@ -61,14 +65,16 @@ public class LuceneStemmer {
         return output;
     }
 
-    /*
-     * Method reduces the words in a String to its root word, splitting by whitespace
-     * if there are more than one word, then re-concatenates them, preserving phrases
+    /**
+     * Method reduces the words in a String to their root words, splitting by whitespace
+     * if there is more than one word, then re-concatenates them, preserving phrases.
+     * @param input A String containing a phrase.
+     * @return A String containing a phrase that has been stemmed.
+     * @throws IOException
      */
-    public static String stemPhrase(String input) throws IOException {
-        analyzer = new StemAnalyzer();
+    public String stemPhrase(String input) throws IOException {
         String output = "";
-        if (input != "" && input != null) {
+        if (!input.equals("") && input != null) {
             TokenStream ts = analyzer.tokenStream("field",
                     new StringReader(input));
             CharTermAttribute termAtt = ts.addAttribute(CharTermAttribute.class);
@@ -90,5 +96,30 @@ public class LuceneStemmer {
             return output;
         }
         return null;
+    }
+
+    /**
+     * Splits a given String text into an ArrayList of stemmed Strings.
+     * @param text The text to be stemmed, contained in a String.
+     * @return An ArrayList containing each stemmed word from the passed string.
+     * @throws IOException
+     */
+    public ArrayList<String> splitText(String text) throws IOException {
+        ArrayList<String> stemmedWordList = new ArrayList<>();
+
+        TokenStream ts = analyzer.tokenStream("field",
+                new StringReader(text));
+        CharTermAttribute termAtt = ts.addAttribute(CharTermAttribute.class);
+        try {
+            ts.reset();
+            while (ts.incrementToken()) {
+                stemmedWordList.add(termAtt.toString());
+            }
+            ts.end();
+        } finally {
+            ts.close();
+        }
+
+        return stemmedWordList;
     }
 }
