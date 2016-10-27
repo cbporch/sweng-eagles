@@ -128,10 +128,10 @@ public class Database {
     /**
      * Hashes the given word and finds it in the database.
      * @param word - word to get from database
-     * @return
+     * @return if a word is matched, it is returned
      */
     public static Word getWord(String word){
-        Word found = new Word();        //
+        Word found = new Word();
         word = Hasher.hashSHA(word);    //hash the word
 
         try {
@@ -141,7 +141,7 @@ public class Database {
             ResultSet rs = statement.executeQuery(sql);     //execute the select query
             System.out.println(sql);
             while (rs.next()) {
-                if (rs.getString(2).equals(word)) {
+                if (rs.getString(2).equals(word)) {         //compare the word to the word in the Database
                     found.setWord(word);
                     found.setRarity(rs.getFloat(3));
                     found.setNum(rs.getBoolean(4));
@@ -149,7 +149,7 @@ public class Database {
 //                    found.setNorm(rs.getInt(5));
 //                    found.setNum(rs.getBoolean(6));
                     System.out.println("Good! for words");
-                    conn.close();
+                    conn.close();                           //close the connection
                     return found;
                 }
             }
@@ -159,17 +159,14 @@ public class Database {
         return null;
     }
 
-    /*
-     * Method hashes a given phrase, checks for it in the database and returns it if it is found,
-     * otherwise returns null
-     *
-     * Phrase is assumed to be stemmed but not hashed before being passed in.
-     *
-     * Output is a Phrase object containing a hashed string with all other attributes
+    /**
+     * Get a phrase from the database that matches the parameter
+     * @param phrase - phrase to look for
+     * @return if a phrase is matched, it is returned
      */
     public Phrase getPhrase(String phrase){
         Phrase found = new Phrase();
-        phrase = Hasher.hashSHA(phrase);
+        phrase = Hasher.hashSHA(phrase);        //hash the phrase
 
         try {
             Connection conn = getConnection();              //get connection
@@ -187,6 +184,7 @@ public class Database {
 //                    found.setNorm(rs.getInt(6));
 //                    found.setNum(rs.getBoolean(7));
                     System.out.println("Good for phrases!!!");
+                    conn.close();                           //close the connection
                     return found;
                 }
             }
