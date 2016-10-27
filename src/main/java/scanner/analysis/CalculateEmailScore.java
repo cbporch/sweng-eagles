@@ -4,10 +4,16 @@ import scanner.Doublet;
 
 import java.util.ArrayList;
 
+/**
+ * Calculates, using Bayes Theorem, the score of the email based on its confidential terms.
+ */
 public class CalculateEmailScore
 {
-//	static ArrayList<Doublet> termProbabilityList = new ArrayList<>();
-	
+    /**
+     * Bayes Theorem of all confidential terms is multiplied together to return a total score of the email.
+     * @param termProbabilityList ArrayList of Doublets that store each confidential term's usages of each type.
+     * @return emailScore score of the email.
+     */
 	public static double calculate(ArrayList<Doublet> termProbabilityList)
 	{
 		double emailScoreX = 1;
