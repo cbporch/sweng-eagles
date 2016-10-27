@@ -1,6 +1,7 @@
 package scanner.dbEntry;
 
 import scanner.Phrase;
+import scanner.Word;
 import scanner.filtering.Hasher;
 import scanner.filtering.LuceneStemmer;
 
@@ -19,7 +20,6 @@ import java.util.Arrays;
 /**
  * Created by cdeck_000 on 10/5/2016.
  * Edited by cbporch on 10.13.16
- * Launches a GUI and processes the input from the gui into the database
  * Launches a GUI and processes the input from the gui into the database
  */
 public class DatabaseInput {
@@ -48,17 +48,12 @@ public class DatabaseInput {
      * Makes the GUI
      * @param pane - the gui reference
      */
-    /**
-     * Makes the GUI
-     * @param pane - the gui reference
-     */
     private static void addComponentsToPane(Container pane) {
         pane.setLayout(new BoxLayout(pane, BoxLayout.Y_AXIS));
         JPanel instructionsPanel = new JPanel();
         JLabel instructions = new JLabel("Enter the words/phrases to be inputted below");
         instructionsPanel.add(instructions);
         pane.add(instructionsPanel);
-
 
         // words input panel
         JPanel wordsInputPanel = new JPanel();
@@ -93,9 +88,6 @@ public class DatabaseInput {
         /**
          * set the hint text for the textfield
          */
-        /**
-         * set the hint text for the textfield
-         */
         wordsTextField.addFocusListener(new FocusListener() {
             public void focusGained(FocusEvent e) {
                 wordsTextField.setText("");
@@ -108,9 +100,6 @@ public class DatabaseInput {
             }
         });
 
-        /**
-         * set the hint text for the textfield
-         */
         /**
          * set the hint text for the textfield
          */
@@ -171,9 +160,6 @@ public class DatabaseInput {
             }
         });
 
-        /**
-         * set the hint text for the textfield
-         */
         /**
          * set the hint text for the textfield
          */
@@ -492,10 +478,6 @@ public class DatabaseInput {
         return listOfWords;
     }
 
-    /**
-     * Launches the GUI.
-     * @param args - not necessary
-     */
     /**
      * Launches the GUI.
      * @param args - not necessary
