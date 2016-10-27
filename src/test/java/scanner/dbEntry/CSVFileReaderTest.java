@@ -23,7 +23,7 @@ public class CSVFileReaderTest {
                 +"scanner"+ File.separatorChar
                 +"dbEntry"+ File.separatorChar
                 +"test0.csv"; //First entry = dog,4,0
-        ArrayList<Word> test = DatabaseInput.interpretCSVFile(fileLocation);
+        ArrayList<Word> test = CSVFileReader.interpretCSVFile(fileLocation);
         if (test.size() > 0) {
             assertEquals("dog", test.get(0).getWord());
             assertEquals(4.0, test.get(0).getRarity(),0);
@@ -40,7 +40,7 @@ public class CSVFileReaderTest {
                 +"scanner"+ File.separatorChar
                 +"dbEntry"+ File.separatorChar
                 +"test1.csv"; //First entry = the dog is cool,4,2,1
-        ArrayList<scanner.Phrase> test = DatabaseInput.interpretCSVPhraseFile(fileLocation);
+        ArrayList<scanner.Phrase> test = CSVFileReader.interpretCSVPhraseFile(fileLocation);
         if (test.size() > 0) {
             assertEquals("the dog is cool", test.get(0).getPhrase());
             assertEquals(4, test.get(0).getWordcount());

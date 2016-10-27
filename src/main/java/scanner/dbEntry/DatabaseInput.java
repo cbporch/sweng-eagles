@@ -417,68 +417,6 @@ public class DatabaseInput {
     }
 
     /**
-     * This will take in a file name and it will go through it if its a CSV file and seperate it into an arraylist.
-     * You must enter a single words only file for this method.
-     * @filename this is the path of the file being selected.
-     */
-    public static ArrayList<Word> interpretCSVFile(String filename)
-    {
-        BufferedReader br;
-        ArrayList<Word> listOfWords = new ArrayList<>(); //Returned list of all the words in this file.
-
-        //values used to create a new Phrase
-        String word = "";   //  selected word from file
-        String rarity = ""; //  rarity associated with the word
-        String isNum = ""; //   true if this word is a number
-
-        try {
-            br = new BufferedReader(new FileReader(filename));
-            String line;    //used to read each line from the file.
-            Word newWord; // used to add a word to the listOfWords
-
-            while ((line = br.readLine()) != null) {
-
-                String[] lineOfWords = line.split(","); //splits up the current line of the file.
-
-                //For loop that goes through the line and picks out the data and puts it all together into a Word.
-                for (int i = 0; i < lineOfWords.length; i++) {
-                    if (word.equals("")) {
-                        word = lineOfWords[i];
-                    }
-                    else if (rarity.equals("")) {
-                        rarity = lineOfWords[i].trim();
-                    }
-                    else if (isNum.equals("")) {
-                        isNum = lineOfWords[i].trim();
-                        i--;
-                    }
-                    else {
-                        //Cleans the data up so it can be used for Word
-                        int actualRarity = Integer.parseInt(rarity);
-                        boolean actualNumDep;
-                        if (isNum.equals("0")) {
-                            actualNumDep = false;
-                        }
-                        else {
-                            actualNumDep = true;
-                        }
-
-                        //Creates new Word and adds it to listOfWords.
-                        newWord = new Word(word,actualRarity,actualNumDep);
-                        listOfWords.add(newWord);
-
-                        //resets the values.
-                        word = "";
-                        rarity = "";
-                        isNum = "";
-                    }}}}
-        catch (IOException e) {
-            e.printStackTrace();
-        }
-        return listOfWords;
-    }
-
-    /**
      * Launches the GUI.
      * @param args - not necessary
      */
