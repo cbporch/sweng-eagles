@@ -21,10 +21,12 @@ public class CalculateEmailScore
 			int totalConfNorm = term.getNumConf() + term.getNumNorm();
 			double wordConfProb;
 			double wordNormProb;
+
 			if (totalConfNorm == 0)
 				wordConfProb = 0.0;
 			else
 				wordConfProb = term.getNumConf() / (double) totalConfNorm;
+
 			if (totalConfNorm == 0)
 				wordNormProb = 0.0;
 			else

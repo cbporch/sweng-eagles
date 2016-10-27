@@ -20,11 +20,14 @@ public class CalculateEmailScoreTest {
 
         Assert.assertEquals(0.0, CalculateEmailScore.calculate(pairs), DELTA);
 
-        pairs.add(new Doublet(0, 0));
-        Assert.assertEquals(0.0, CalculateEmailScore.calculate(pairs), DELTA);
+        pairs.add(new Doublet(15, 1));
+        Assert.assertEquals(0.9375, CalculateEmailScore.calculate(pairs), DELTA);
 
-        pairs.add(new Doublet(2, 1));
-        Assert.assertEquals(0.6666666666666, CalculateEmailScore.calculate(pairs), DELTA);
+        pairs.add(new Doublet(1, 15));
+        Assert.assertEquals(0.5, CalculateEmailScore.calculate(pairs), DELTA);
+
+        pairs.add(new Doublet(6, 3));
+        Assert.assertEquals(2 / 3.0, CalculateEmailScore.calculate(pairs), DELTA);
     }
 
 }
