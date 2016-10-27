@@ -4,19 +4,39 @@ import scanner.Doublet;
 
 import java.util.ArrayList;
 
+/**
+ * Calculates, using Bayes Theorem, the score of the email based on its confidential terms.
+ */
 public class CalculateEmailScore
 {
-//	static ArrayList<Doublet> termProbabilityList = new ArrayList<>();
-	
+    /**
+     * Bayes Theorem of all confidential terms is multiplied together to return a total score of the email.
+     * @param termProbabilityList ArrayList of Doublets that store each confidential term's usages of each type.
+     * @return emailScore score of the email.
+     */
 	public static double calculate(ArrayList<Doublet> termProbabilityList)
 	{
 		double emailScoreX = 1;
 		double emailScoreY = 1;
-		
+
+		if (termProbabilityList.size() == 0)
+			return 0.0;
+
 		for (Doublet term : termProbabilityList)
 		{
-			double wordConfProb = term.getNumConf() / (double) term.getNumNorm();
-			double wordNormProb = term.getNumNorm() / (double) term.getNumConf();
+			int totalConfNorm = term.getNumConf() + term.getNumNorm();
+			double wordConfProb;
+			double wordNormProb;
+
+			if (totalConfNorm == 0)
+				wordConfProb = 0.0;
+			else
+				wordConfProb = term.getNumConf() / (double) totalConfNorm;
+
+			if (totalConfNorm == 0)
+				wordNormProb = 0.0;
+			else
+				wordNormProb = term.getNumNorm() / (double) totalConfNorm;
 
 			if(wordConfProb > 1.0){
 				wordConfProb = 1.0;
@@ -26,7 +46,12 @@ public class CalculateEmailScore
 				wordNormProb = 1.0;
 			}
 
-			double wordProb = wordConfProb / (wordConfProb + wordNormProb);
+			double wordProb;
+			double totalProb;
+			if ((totalProb = wordConfProb + wordNormProb) == 0)
+				wordProb = 0;
+			else
+				wordProb = wordConfProb / totalProb;
 			emailScoreX *= wordProb;
 			emailScoreY *= 1 - wordProb;
 		}
