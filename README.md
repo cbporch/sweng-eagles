@@ -15,4 +15,4 @@ a CSV file to upload, but that currently is non-functional**.
 
 To test an email for confidentiality, run EmailTextGUI in scanner.analysis. Add in some text to test,
 and press Evaluate Email. There is an Upload File button in this GUI as well, and again file selection
-has not been implemented yet.
+has not been implemented yet. Phrases are also not being checked for at this point.
