@@ -55,21 +55,21 @@ public class DatabaseInputTest {
         assertTrue(outputStream.toString().equals("select phrases completed" + System.lineSeparator()));
     }
 */
-    @Test
-    public void interpretCSVFile() throws Exception {
-        String fileLocation = "src"+ File.separatorChar
-                +"test"+ File.separatorChar
-                +"java" + File.separator
-                +"scanner"+ File.separatorChar
-                +"dbEntry"+ File.separatorChar
-                +"test0.csv"; //First entry = dog,4,0
-        ArrayList<scanner.Word> test = DatabaseInput.interpretCSVFile(fileLocation);
-        if (test.size() > 0) {
-            assertEquals("dog", test.get(0).getWord());
-            assertEquals(4.0, test.get(0).getRarity(),0);
-            assertFalse(test.get(0).isNum());
-        }
-    }
+//    @Test
+//    public void interpretCSVFile() throws Exception {
+//        String fileLocation = "src"+ File.separatorChar
+//                +"test"+ File.separatorChar
+//                +"java" + File.separator
+//                +"scanner"+ File.separatorChar
+//                +"dbEntry"+ File.separatorChar
+//                +"test0.csv"; //First entry = dog,4,0
+//        ArrayList<scanner.Word> test = DatabaseInput.interpretCSVFile(fileLocation);
+//        if (test.size() > 0) {
+//            assertEquals("dog", test.get(0).getWord());
+//            assertEquals(4.0, test.get(0).getRarity(),0);
+//            assertFalse(test.get(0).isNum());
+//        }
+//    }
 
 //    @Test
 //    public void interpretCSVPhraseFile() throws Exception {
