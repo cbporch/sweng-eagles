@@ -34,7 +34,6 @@ public class TextParser {
     }
 
     public double parse(){
-
         for(String word: text){
             Word w = findWord(word);
             if(w !=null)

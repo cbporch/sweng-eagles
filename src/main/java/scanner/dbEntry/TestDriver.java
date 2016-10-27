@@ -6,7 +6,7 @@ import scanner.filtering.LuceneStemmer;
 import java.util.ArrayList;
 
 /**
- * Created by cdeck_000 on 10/25/2016.
+ * Created by cdeck_000 on 10/25/2016
  */
 public class TestDriver {
     public static void main(String [ ] args)

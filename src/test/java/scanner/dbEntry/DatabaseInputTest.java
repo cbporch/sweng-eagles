@@ -18,7 +18,7 @@ import static org.junit.Assert.*;
  * jUnit Test for DatabaseInput class
  */
 public class DatabaseInputTest {
-
+/*
     private ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
 
     @Before
@@ -42,7 +42,7 @@ public class DatabaseInputTest {
         Database.insertPhrases(BCrypt.hashpw("testphrase", BCrypt.gensalt(10)), 10, 2);
         assertEquals(outputStream.toString().substring(0, 7), "\ninsert");
     }*/
-
+/*
     @Test
     public void getWords() throws Exception {
         Database.getWords();
@@ -54,5 +54,37 @@ public class DatabaseInputTest {
         Database.getPhrases();
         assertTrue(outputStream.toString().equals("select phrases completed" + System.lineSeparator()));
     }
+*/
+//    @Test
+//    public void interpretCSVFile() throws Exception {
+//        String fileLocation = "src"+ File.separatorChar
+//                +"test"+ File.separatorChar
+//                +"java" + File.separator
+//                +"scanner"+ File.separatorChar
+//                +"dbEntry"+ File.separatorChar
+//                +"test0.csv"; //First entry = dog,4,0
+//        ArrayList<scanner.Word> test = DatabaseInput.interpretCSVFile(fileLocation);
+//        if (test.size() > 0) {
+//            assertEquals("dog", test.get(0).getWord());
+//            assertEquals(4.0, test.get(0).getRarity(),0);
+//            assertFalse(test.get(0).isNum());
+//        }
+//    }
 
+//    @Test
+//    public void interpretCSVPhraseFile() throws Exception {
+//        String fileLocation = "src"+ File.separatorChar
+//                +"test"+ File.separatorChar
+//                +"java" + File.separator
+//                +"scanner"+ File.separatorChar
+//                +"dbEntry"+ File.separatorChar
+//                +"test1.csv"; //First entry = the dog is cool,4,2,1
+//        ArrayList<scanner.Phrase> test = DatabaseInput.interpretCSVPhraseFile(fileLocation);
+//        if (test.size() > 0) {
+//            assertEquals("the dog is cool", test.get(0).getPhrase());
+//            assertEquals(4, test.get(0).getWordcount());
+//            assertEquals(2.0, test.get(0).getRarity(),0);
+//            assertTrue(test.get(0).isNum());
+//        }
+//    }
 }
