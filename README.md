@@ -1,7 +1,15 @@
 # sweng-eagles
 
 All dependencies should be pulled by Maven when you first run anything.
+
 *Code requires Java 1.8*
+
+If you package the project in the command line using Maven like so:
+
+`mvn package`
+
+it should generate a .jar file in the target directory that should run a Driver
+class that opens the two GUIs created so far. They may generate with one window on top of the other.
 
 
 To enter confidential words into the test database, run **DatabaseInput.java**, in scanner.dbEntry. Currently,
