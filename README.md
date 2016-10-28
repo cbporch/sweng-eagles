@@ -32,7 +32,7 @@ Performance:
 Currently performance needs improvment. A test set of lorem ipsum of 521 words take ~ 3 minutes to process.
 
 Known Errors:
-Currently running from the command line results in errors being thrown relating to missing dependencies.
+~~Currently running from the command line results in errors being thrown relating to missing dependencies.~~
 
 When adding a word via the GUI, after the first word is added, when you go to add a second word, the submit button must be clicked twice.
 
