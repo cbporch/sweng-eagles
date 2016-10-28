@@ -27,9 +27,12 @@ not very useful and tend to err towards 1.0, until we adjust the values to give 
 *Upload File* button in this GUI as well, and again file selection has not been implemented yet.
 Phrases are also not being checked for at this point.
 
+Performance:
+
+Currently performance needs improvment. A test set of lorem ipsum of 521 words take ~ 3 minutes to process.
+
 Known Errors:
 Currently running from the command line results in errors being thrown relating to missing dependencies.
 
 When adding a word via the GUI, after the first word is added, when you go to add a second word, the submit button must be clicked twice.
 
-Testing the EmailTextGUI against large blocks of text currently throws a java.sql.SQLNonTransientConnectionException: Too many connections error.
