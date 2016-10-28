@@ -72,7 +72,7 @@ public class Database {
             c = 100 * rarityIn;
             n = 100 - c;
 
-            String sql = String.format("insert into Phrases (phrase, rarity, count, NumDep) Values ('%s', '%f', '%d', '%d', '%f', '%f');", phraseIn, rarityIn, count, numDep, c, n);
+            String sql = String.format("insert into Phrases (phrase, rarity, count, NumDep, conf, norm) Values ('%s', '%f', '%d', '%d', '%f', '%f');", phraseIn, rarityIn, count, numDep, c, n);
             System.out.println("\n" + sql);                 //testing purposes
             statement.executeUpdate(sql);                   //execute the update
             conn.close();                                   //close the connection
