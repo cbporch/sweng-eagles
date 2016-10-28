@@ -164,6 +164,7 @@ public class Database {
                     return found;
                 }
             }
+            conn.close();                           //close the connection
         } catch (Exception e) {
             System.out.println(e);
         }
@@ -196,13 +197,16 @@ public class Database {
                     found.setNorm(rs.getInt(7));
 
                     System.out.println("Good for phrases!!!");
-                    conn.close();                           //close the connection
+                    conn.close();                          //close the connection
                     return found;
                 }
             }
+            conn.close();
+
         } catch (Exception e) {
             System.out.println(e);
         }
+
         return null;
     }
 }
