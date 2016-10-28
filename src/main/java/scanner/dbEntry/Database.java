@@ -164,6 +164,7 @@ public class Database {
                     return found;
                 }
             }
+            conn.close();                           //close the connection
         } catch (Exception e) {
             System.out.println(e);
         }
