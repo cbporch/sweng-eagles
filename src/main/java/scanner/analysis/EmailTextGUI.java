@@ -1,5 +1,7 @@
 package scanner.analysis;
 
+import scanner.dbEntry.DatabaseInput;
+
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
@@ -39,10 +41,12 @@ public class EmailTextGUI {
 
         JPanel scoringPanel = new JPanel();
         JButton evaluateButton = new JButton("Evaluate Email");
-        final JLabel scoreLabel = new JLabel("Test");
+        final JLabel scoreLabel = new JLabel("");
         JButton uploadFileBtn = new JButton("Upload File");
+        JButton importTermsBtn = new JButton("Import Terms");
         scoringPanel.add(evaluateButton);
         scoringPanel.add(uploadFileBtn);
+        scoringPanel.add(importTermsBtn);
         scoringPanel.add(scoreLabel);
 
         pane.add(scoringPanel, BorderLayout.SOUTH);
@@ -68,6 +72,14 @@ public class EmailTextGUI {
                 scoreLabel.setText("Feature not yet available.");
             }
         });
+
+        importTermsBtn.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                DatabaseInput d = new DatabaseInput();
+                d.main(null);
+            }
+        });
     }
 
     /**
@@ -77,7 +89,7 @@ public class EmailTextGUI {
         //Create and set up the window.
         JFrame frame = new JFrame("EmailGUI");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setLocationRelativeTo(null);
+        //frame.setLocationRelativeTo(null);
         frame.setPreferredSize(new Dimension(500,500));
         frame.setTitle("Email Text Input");
         frame.setResizable(true);
