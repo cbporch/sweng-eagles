@@ -41,7 +41,7 @@ public class DatabaseInput {
     /**
      * Empty constructor
      */
-    protected DatabaseInput() {
+    public DatabaseInput() {
     }
 
     /**
