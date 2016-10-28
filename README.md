@@ -29,3 +29,5 @@ Phrases are also not being checked for at this point.
 
 Known Errors:
 Currently running from the command line results in errors being thrown relating to missing dependencies.
+
+When adding a word via the GUI, after the first word is added, when you go to add a second word, the submit button must be clicked twice.
