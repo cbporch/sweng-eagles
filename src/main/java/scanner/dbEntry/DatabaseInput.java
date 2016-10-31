@@ -63,7 +63,7 @@ public class DatabaseInput {
         wordsInputPanel.setBackground(Color.WHITE);
         pane.add(wordsInputPanel, new BoxLayout(pane, BoxLayout.Y_AXIS));
         JLabel wordsLabel = new JLabel("Words");
-        wordsLabel.setFont(new Font("Serif", Font.BOLD, 16));
+        wordsLabel.setFont(new Font("Serif", Font.BOLD, 20));
         wordsLabel.setForeground(Color.BLACK);
         wordsInputPanel.add(wordsLabel);
 
@@ -71,9 +71,9 @@ public class DatabaseInput {
         JPanel wordOptions = new JPanel();
         wordsInputPanel.add(wordOptions, new BoxLayout(pane, BoxLayout.X_AXIS));
         wordsTextField.setForeground(Color.LIGHT_GRAY);
-        wordsTextField.setMinimumSize(new Dimension(350, 30));
-        wordsTextField.setMaximumSize(new Dimension(350, 30));
-        wordsTextField.setPreferredSize(new Dimension(350, 30));
+        wordsTextField.setMinimumSize(new Dimension(300, 30));
+        wordsTextField.setMaximumSize(new Dimension(300, 30));
+        wordsTextField.setPreferredSize(new Dimension(300, 30));
         probField.setForeground(Color.LIGHT_GRAY);
         probField.setMinimumSize(new Dimension(100, 30));
         probField.setMaximumSize(new Dimension(100, 30));
