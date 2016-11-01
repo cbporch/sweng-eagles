@@ -156,7 +156,7 @@ public class Database {
                 if (rs.getString(2).equals(word)) {         //compare the word to the word in the Database
                     found.setWord(word);
                     found.setRarity(rs.getFloat(3));
-                    found.setNum(rs.getBoolean(4));
+                    found.setNum(rs.getInt(4));
                     found.setConf(rs.getInt(5));
                     found.setNorm(rs.getInt(6));
                     System.out.println("Good! for words");
