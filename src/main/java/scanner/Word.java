@@ -11,15 +11,15 @@ public class Word {
     private String word;
     private float rarity;
     private int conf, norm;
-    private boolean num;
+    private int num;
 
-    public Word(String word, int rarity, boolean num) {
+    public Word(String word, int rarity, int num) {
         this.word = word;
         this.rarity = rarity;
         this.num = num;
     }
 
-    public Word(String word, int rarity, boolean num, int conf, int norm) {
+    public Word(String word, int rarity, int num, int conf, int norm) {
         this.word = word;
         this.rarity = rarity;
         this.conf = conf;
@@ -40,7 +40,9 @@ public class Word {
     }
 
     public boolean isNum() {
-        return num;
+        if(num==1)
+            return true;
+        else return false;
     }
 
     public void setWord(String word) {
@@ -51,7 +53,7 @@ public class Word {
         this.rarity = rarity;
     }
 
-    public void setNum(boolean num) {
+    public void setNum(int num) {
         this.num = num;
     }
 
@@ -70,4 +72,9 @@ public class Word {
     public void setConf(int conf) {
         this.conf = conf;
     }
+
+    public int getNum() {
+        return num;
+    }
+
 }
