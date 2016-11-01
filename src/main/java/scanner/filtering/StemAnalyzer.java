@@ -1,12 +1,10 @@
 package scanner.filtering;
 
-import org.apache.lucene.analysis.Analyzer;
-import org.apache.lucene.analysis.CharArraySet;
-import org.apache.lucene.analysis.LowerCaseFilter;
-import org.apache.lucene.analysis.StopFilter;
+import org.apache.lucene.analysis.*;
 import org.apache.lucene.analysis.en.EnglishMinimalStemFilter;
 import org.apache.lucene.analysis.standard.StandardFilter;
 import org.apache.lucene.analysis.standard.StandardTokenizer;
+import org.apache.lucene.util.Version;
 
 import java.io.Reader;
 import java.util.Arrays;
@@ -52,6 +50,7 @@ public class StemAnalyzer extends Analyzer {
 
     public StemAnalyzer() {
         this(STOP_WORDS_SET);
+        this.setVersion(Version.LUCENE_6_2_1);
     }
 
     /**
@@ -68,14 +67,14 @@ public class StemAnalyzer extends Analyzer {
      * @param fieldname Required parameter from superclass
      * @return TokenStreamComponents used by Analyzer
      */
-    protected TokenStreamComponents createComponents(String fieldname) {
+    protected Analyzer.TokenStreamComponents createComponents(String fieldname) {
         final StandardTokenizer src = new StandardTokenizer();
         src.setMaxTokenLength(this.maxTokenLength);
         StandardFilter tok = new StandardFilter(src);
         LowerCaseFilter tok1 = new LowerCaseFilter(tok);
         StopFilter tok2 = new StopFilter(tok1, STOP_WORDS_SET);
         final EnglishMinimalStemFilter tok3 = new EnglishMinimalStemFilter(tok2); // this is the relevant part
-        return new TokenStreamComponents(src, tok3) {
+        return new Analyzer.TokenStreamComponents(src, tok3) {
             protected void setReader(Reader reader) {
                 src.setMaxTokenLength(maxTokenLength);
                 super.setReader(reader);
