@@ -11,7 +11,7 @@ public class Phrase {
     private String phrase;
     private float rarity;
     private int wordcount, conf, norm;
-    private boolean num;    // whether numbers effect the probability
+    private int num;    // whether numbers effect the probability
 
     public Phrase(String phrase) {
         this.phrase = phrase;
@@ -23,14 +23,14 @@ public class Phrase {
         this.wordcount = wordcount;
     }
 
-    public Phrase(String phrase, int wordcount, int rarity, boolean num) {
+    public Phrase(String phrase, int wordcount, int rarity, int num) {
         this.phrase = phrase;
         this.wordcount = wordcount;
         this.rarity = rarity;
         this.num = num;
     }
 
-    public Phrase(String phrase, int wordcount, int rarity, int conf, int norm, boolean num) {
+    public Phrase(String phrase, int wordcount, int rarity, int conf, int norm, int num) {
         this.phrase = phrase;
         this.wordcount = wordcount;
         this.rarity = rarity;
@@ -56,7 +56,10 @@ public class Phrase {
     }
 
     public boolean isNum() {
-        return num;
+        if(num==1){
+            return true;
+        }
+        else return false;
     }
 
     public void setPhrase(String phrase) {
@@ -71,8 +74,11 @@ public class Phrase {
         this.rarity = rarity;
     }
 
-    public void setNum(boolean num) {
+    public void setNum(int num) {
         this.num = num;
+    }
+    public int getNum(int num) {
+        return num;
     }
 
     public int getConf() {
