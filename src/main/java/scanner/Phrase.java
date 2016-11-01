@@ -77,7 +77,7 @@ public class Phrase {
     public void setNum(int num) {
         this.num = num;
     }
-    public int getNum(int num) {
+    public int getNum() {
         return num;
     }
 
