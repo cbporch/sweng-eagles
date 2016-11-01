@@ -9,6 +9,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -220,8 +221,30 @@ public class DatabaseInput {
         uploadFileBtn.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                successLabel.setText("Feature not available yet.");
-            }
+                //Handle open button action.
+                System.out.println("In action listener");
+                //Create a file chooser
+                final JFileChooser fc = new JFileChooser();
+                    if (e.getSource() == DatabaseInput.uploadFileBtn) {
+                        System.out.println("In first if");
+                        int returnVal = fc.showOpenDialog(uploadFileBtn);
+
+                        if (returnVal == JFileChooser.APPROVE_OPTION) {
+                            System.out.println("In second if");
+                            File file = fc.getSelectedFile();
+                            //This is where a real application would open the file.
+                            System.out.println("Opening: " + file.getName() + ".%n");
+                            ArrayList<Word> words = CSVFileReader.interpretCSVFile(file+"");
+                            for(Word word: words){
+                                System.out.println(word.getWord());
+                            }
+                        } else {
+                            System.out.println("Open command cancelled by user.%n");
+                        }
+
+                    }
+                }
+                //successLabel.setText("Feature not available yet.");
         });
 
         successLabel = new JLabel("");
@@ -351,6 +374,25 @@ public class DatabaseInput {
             successLabel.setText("Processing complete");
         } catch (IOException e) {
             e.printStackTrace();
+        }
+    }
+
+    /**
+     * Processes the input. Hashes the words/phrases and inserts them to the database if they aren't in there already
+     * @param words - an array of words captured in the GUI
+     * @param phrases - an array of phrases captured in the GUI
+     * @throws Exception
+     */
+    public static void processInputSHA2(Word[] words, Phrase[] phrases) throws Exception {
+            for(Word word: words){
+                if(Database.getWord(word.getWord())==null){
+                    Database.insertWords(word.getWord(), word.getRarity(), word.getNum());
+                }
+            }
+        for(Phrase phrase: phrases){
+            if(Database.getPhrase(phrase.getPhrase())==null){
+                Database.insertPhrases(phrase.getPhrase(), phrase.getRarity(), phrase.getWordcount(), phrase.getNum());
+            }
         }
     }
 
