@@ -7,10 +7,7 @@ import scanner.filtering.LuceneStemmer;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.FocusEvent;
-import java.awt.event.FocusListener;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
+import java.awt.event.*;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
@@ -26,16 +23,22 @@ public class DatabaseInput {
 
 
     private static JLabel successLabel;
-    private static JButton submitButton;
+    final private static JButton submitButton = new JButton("Submit");
     private static Boolean phraseProbFieldFocus = false;
     private static Boolean phraseTextFieldFocus = false;
     private static Boolean wordProbFieldFocus = false;
     private static Boolean wordTextFieldFocus = false;
-    private static JButton newPhraseBtn = new JButton("New Phrase");
-    private static JButton newWordBtn = new JButton("New Word");
     private static JButton uploadFileBtn = new JButton("Upload File");
     private static String phraseHintText = "Enter phrase here..";
     private static String probHintText = "Enter probability..";
+    private static String wordsHintText = "Enter word here..";
+    final private static  JTextField probField = new JTextField(probHintText);
+    final private static JTextField wordsTextField = new JTextField(wordsHintText);
+    final private static JRadioButton synBtn = new JRadioButton("Synonyms?");
+    final private static JRadioButton numDependentBtn = new JRadioButton("# Dependent?");
+    final private static JTextField phraseTextField = new JTextField(phraseHintText);
+    final private static JTextField phraseProbField = new JTextField(probHintText);
+    final private static JRadioButton phraseNumDependentBtn = new JRadioButton("# Dependent?");
 
 
     /**
@@ -60,21 +63,17 @@ public class DatabaseInput {
         wordsInputPanel.setBackground(Color.WHITE);
         pane.add(wordsInputPanel, new BoxLayout(pane, BoxLayout.Y_AXIS));
         JLabel wordsLabel = new JLabel("Words");
-        wordsLabel.setFont(new Font("Serif", Font.BOLD, 16));
+        wordsLabel.setFont(new Font("Serif", Font.BOLD, 20));
         wordsLabel.setForeground(Color.BLACK);
         wordsInputPanel.add(wordsLabel);
 
         //words text field and options
         JPanel wordOptions = new JPanel();
         wordsInputPanel.add(wordOptions, new BoxLayout(pane, BoxLayout.X_AXIS));
-        final JTextField wordsTextField = new JTextField("Enter word here...");
         wordsTextField.setForeground(Color.LIGHT_GRAY);
-        wordsTextField.setMinimumSize(new Dimension(350, 30));
-        wordsTextField.setMaximumSize(new Dimension(350, 30));
-        wordsTextField.setPreferredSize(new Dimension(350, 30));
-        final JRadioButton synBtn = new JRadioButton("Synonyms?");
-        final JRadioButton numDependentBtn = new JRadioButton("# Dependent?");
-        final JTextField probField = new JTextField(probHintText);
+        wordsTextField.setMinimumSize(new Dimension(300, 30));
+        wordsTextField.setMaximumSize(new Dimension(300, 30));
+        wordsTextField.setPreferredSize(new Dimension(300, 30));
         probField.setForeground(Color.LIGHT_GRAY);
         probField.setMinimumSize(new Dimension(100, 30));
         probField.setMaximumSize(new Dimension(100, 30));
@@ -90,13 +89,20 @@ public class DatabaseInput {
          */
         wordsTextField.addFocusListener(new FocusListener() {
             public void focusGained(FocusEvent e) {
-                wordsTextField.setText("");
-                wordTextFieldFocus = true;
-                wordsTextField.setForeground(Color.BLACK);
+                System.out.println(wordsTextField.getText());
+                if(wordsTextField.getText().equals(wordsHintText)){
+                    wordsTextField.setText("");
+                    wordTextFieldFocus = true;
+                    wordsTextField.setForeground(Color.BLACK);
+                }
             }
 
             public void focusLost(FocusEvent e) {
-                // nothing
+                if(wordsTextField.getText().equals("")){
+                    wordsTextField.setText(wordsHintText);
+                    wordsTextField.setForeground(Color.LIGHT_GRAY);
+                }
+
             }
         });
 
@@ -105,13 +111,19 @@ public class DatabaseInput {
          */
         probField.addFocusListener(new FocusListener() {
             public void focusGained(FocusEvent e) {
-                probField.setText("");
-                wordProbFieldFocus = true;
-                probField.setForeground(Color.BLACK);
+                if(probField.getText().equals(probHintText)){
+                    probField.setText("");
+                    wordProbFieldFocus = true;
+                    probField.setForeground(Color.BLACK);
+                }
             }
 
             public void focusLost(FocusEvent e) {
-                // nothing
+                if(probField.getText().equals("")){
+                    probField.setText(probHintText);
+                    probField.setForeground(Color.LIGHT_GRAY);
+                }
+
             }
         });
 
@@ -124,7 +136,7 @@ public class DatabaseInput {
         phrasesInputPanel.setBackground(Color.WHITE);
         pane.add(phrasesInputPanel, new BoxLayout(pane, BoxLayout.Y_AXIS));
         JLabel phrasesLabel = new JLabel("Phrases");
-        phrasesLabel.setFont(new Font("Serif", Font.BOLD, 16));
+        phrasesLabel.setFont(new Font("Serif", Font.BOLD, 20));
         phrasesLabel.setForeground(Color.BLACK);
         phrasesInputPanel.add(phrasesLabel);
 
@@ -132,14 +144,10 @@ public class DatabaseInput {
 
         JPanel phraseOptions = new JPanel();
         phrasesInputPanel.add(phraseOptions, new BoxLayout(pane, BoxLayout.X_AXIS));
-        final JTextField phraseTextField = new JTextField(phraseHintText);
         phraseTextField.setForeground(Color.LIGHT_GRAY);
         phraseTextField.setMinimumSize(new Dimension(350, 30));
         phraseTextField.setMaximumSize(new Dimension(350, 30));
         phraseTextField.setPreferredSize(new Dimension(350, 30));
-        final JRadioButton phraseSynBtn = new JRadioButton("Synonyms?");
-        final JRadioButton phraseNumDependentBtn = new JRadioButton("# Dependent?");
-        final JTextField phraseProbField = new JTextField(probHintText);
         phraseProbField.setForeground(Color.LIGHT_GRAY);
         phraseProbField.setMinimumSize(new Dimension(100, 30));
         phraseProbField.setMaximumSize(new Dimension(100, 30));
@@ -150,13 +158,19 @@ public class DatabaseInput {
          */
         phraseTextField.addFocusListener(new FocusListener() {
             public void focusGained(FocusEvent e) {
-                phraseTextField.setText("");
-                phraseTextFieldFocus = true;
-                phraseTextField.setForeground(Color.BLACK);
+                if(phraseTextField.getText().equals(phraseHintText)){
+                    phraseTextField.setText("");
+                    phraseTextFieldFocus = true;
+                    phraseTextField.setForeground(Color.BLACK);
+                }
             }
 
             public void focusLost(FocusEvent e) {
-                // nothing
+                if(phraseTextField.getText().equals("")){
+                    phraseTextField.setText(phraseHintText);
+                    phraseTextField.setForeground(Color.LIGHT_GRAY);
+                }
+
             }
         });
 
@@ -165,18 +179,23 @@ public class DatabaseInput {
          */
         phraseProbField.addFocusListener(new FocusListener() {
             public void focusGained(FocusEvent e) {
-                phraseProbField.setText("");
-                phraseProbFieldFocus = true;
-                phraseProbField.setForeground(Color.BLACK);
+                if(phraseProbField.getText().equals(probHintText)){
+                    phraseProbField.setText("");
+                    phraseProbFieldFocus = true;
+                    phraseProbField.setForeground(Color.BLACK);
+                }
             }
 
             public void focusLost(FocusEvent e) {
-                // nothing
+                if(phraseProbField.getText().equals("")){
+                    phraseProbField.setText(probHintText);
+                    phraseProbField.setForeground(Color.LIGHT_GRAY);
+                }
+
             }
         });
 
         phraseOptions.add(phraseTextField);
-        phraseOptions.add(phraseSynBtn);
         phraseOptions.add(phraseNumDependentBtn);
         phraseOptions.add(phraseProbField);
 
@@ -186,105 +205,22 @@ public class DatabaseInput {
 
         //bottom label
         JPanel submitPanel = new JPanel();
-        submitButton = new JButton("Submit");
 
         /**
          * When the submit button is hit, the code captures the input and processes it
          */
-        submitButton.addMouseListener(new MouseAdapter() {
+        submitButton.addActionListener(new ActionListener() {
             @Override
-            public void mouseClicked(MouseEvent e) {
-                System.out.println("Trying...");
-
-                //set up the words
-                String word = wordsTextField.getText();
-                ArrayList<String> wordInput = new ArrayList<String>();
-                int wordSyn;
-                if(synBtn.isSelected()){
-                    wordSyn = 1;
-                }
-                else wordSyn = 0;
-
-                int wordNumDep;
-                if(numDependentBtn.isSelected()) {
-                    wordNumDep = 1;
-                }
-                else {
-                    wordNumDep = 0;
-                }
-                Double wordProb;
-                if(probField.getText().equals(probHintText)) {
-                    wordProb = -1.0;
-                }
-                else {
-                    wordProb = Double.parseDouble(probField.getText());
-                }
-                System.out.println(wordProb);
-
-                //set up the phrase
-                String phrase = phraseTextField.getText();
-                ArrayList<String> phraseInput = new ArrayList<String>();
-                int phraseSyn;
-                if(phraseSynBtn.isSelected()){
-                    phraseSyn = 1;
-                }
-                else phraseSyn = 0;
-                int phraseNumDep;
-                if(phraseNumDependentBtn.isSelected()) {
-                   phraseNumDep = 1;
-                }
-                else {
-                    phraseNumDep = 0;
-                }
-                Double phraseProb;
-                if(phraseProbField.getText().equals(probHintText)) {
-                    phraseProb = -1.0;
-                }
-                else {
-                    phraseProb = Double.parseDouble(phraseProbField.getText());
-                }
-                System.out.println(phraseProb);
-                if(phrase.equals(phraseHintText)){
-                    //do nothing
-                }
-                else{
-                    phraseInput.add(phrase);
-                }
-                if(word.equals(phraseHintText)){
-                    //do nothing
-                }
-                else{
-                   wordInput.add(word);
-                }
-                try {
-                    String[] words = wordInput.toArray(new String[wordInput.size()]);
-                    String[] phrases = phraseInput.toArray(new String[phraseInput.size()]);
-                    processInputSHA(words, phrases, wordProb, phraseProb, wordNumDep, phraseNumDep);
-                } catch (Exception ex) {
-                    System.out.println(ex);
-                }
+            public void actionPerformed(ActionEvent e) {
+                acceptInput();
             }
         });
 
 
-        newPhraseBtn.addMouseListener(new MouseAdapter() {
+        uploadFileBtn.addActionListener(new ActionListener() {
             @Override
-            public void mouseClicked(MouseEvent e) {
-                successLabel.setText("22");
-            }
-        });
-
-        newWordBtn.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mouseClicked(MouseEvent e) {
-                successLabel.setText("11");
-            }
-        });
-
-        uploadFileBtn.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mouseClicked(MouseEvent e) {
-                successLabel.setText("44");
+            public void actionPerformed(ActionEvent e) {
+                successLabel.setText("Feature not available yet.");
             }
         });
 
@@ -425,8 +361,8 @@ public class DatabaseInput {
     public static void main(String[] args) {
         //Create and set up the window.
         JFrame frame = new JFrame("Database Input");
-        frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-        frame.setLocationRelativeTo(null);
+        frame.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
+        //frame.setLocationRelativeTo(null);
         frame.setResizable(true);
         frame.setMaximumSize(new Dimension(700, 500));
         frame.setMinimumSize(new Dimension(700, 500));
@@ -437,5 +373,73 @@ public class DatabaseInput {
         //Display the window.
         frame.pack();
         frame.setVisible(true);
+    }
+
+    public static void acceptInput(){
+        System.out.println("Trying...");
+
+        //set up the words
+        String word = wordsTextField.getText();
+        ArrayList<String> wordInput = new ArrayList<String>();
+        int wordSyn;
+        if(synBtn.isSelected()){
+            wordSyn = 1;
+        }
+        else wordSyn = 0;
+
+        int wordNumDep;
+        if(numDependentBtn.isSelected()) {
+            wordNumDep = 1;
+        }
+        else {
+            wordNumDep = 0;
+        }
+        Double wordProb;
+        if(probField.getText().equals(probHintText)) {
+            wordProb = -1.0;
+        }
+        else {
+            wordProb = Double.parseDouble(probField.getText());
+        }
+        System.out.println(wordProb);
+
+        //set up the phrase
+        String phrase = phraseTextField.getText();
+        ArrayList<String> phraseInput = new ArrayList<String>();
+
+        int phraseNumDep;
+        if(phraseNumDependentBtn.isSelected()) {
+            phraseNumDep = 1;
+        }
+        else {
+            phraseNumDep = 0;
+        }
+        Double phraseProb;
+        if(phraseProbField.getText().equals(probHintText)) {
+            phraseProb = -1.0;
+        }
+        else {
+            phraseProb = Double.parseDouble(phraseProbField.getText());
+        }
+        System.out.println(phraseProb);
+        if(phrase.equals(phraseHintText)){
+            //do nothing
+        }
+        else{
+            phraseInput.add(phrase);
+        }
+        if(word.equals(phraseHintText)){
+            //do nothing
+        }
+        else{
+            wordInput.add(word);
+        }
+        try {
+            String[] words = wordInput.toArray(new String[wordInput.size()]);
+            String[] phrases = phraseInput.toArray(new String[phraseInput.size()]);
+            processInputSHA(words, phrases, wordProb, phraseProb, wordNumDep, phraseNumDep);
+        } catch (Exception ex) {
+            System.out.println(ex);
+        }
     }
 }

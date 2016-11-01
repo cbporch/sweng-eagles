@@ -13,8 +13,8 @@ import java.util.ArrayList;
  */
 public class Database {
 
-    private final static int CONF = 1;   //conf is the number of confidential emails a word has appeared in
-    private final static int NORM = 1;   //norm is the number of normal emails a word has appeared in
+    private final static int CONF = 100;   //conf is the number of confidential emails a word has appeared in
+    private final static int NORM = 0;   //norm is the number of normal emails a word has appeared in
 
     /**
      * Gets and keeps open a connection to the database.

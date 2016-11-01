@@ -7,9 +7,9 @@ import scanner.dbEntry.DatabaseInput;
 public class Driver {
     public static void main(String[] args){
         EmailTextGUI e = new EmailTextGUI();
-        DatabaseInput d = new DatabaseInput();
+        //DatabaseInput d = new DatabaseInput();
         e.main(null);
-        d.main(null);
+        //d.main(null);
     }
 
 

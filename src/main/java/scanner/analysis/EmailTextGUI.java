@@ -1,9 +1,14 @@
 package scanner.analysis;
 
+import scanner.dbEntry.DatabaseInput;
+
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import javax.swing.*;
+import javax.swing.border.Border;
 
 /**
  * Created by cdeck_000 on 10/19/2016.
@@ -21,17 +26,21 @@ public class EmailTextGUI {
         pane.setLayout(new BorderLayout());
         JPanel instructionsPanel = new JPanel();
         JLabel instructions = new JLabel("Enter the email text below");
+        instructionsPanel.setBackground(Color.LIGHT_GRAY);
         instructionsPanel.add(instructions);
         pane.add(instructionsPanel, BorderLayout.NORTH);
 
         JPanel textAreaPanel = new JPanel();
         textAreaPanel.setBackground(Color.LIGHT_GRAY);
         final JTextArea textArea = new JTextArea();
-        textArea.setBackground(Color.LIGHT_GRAY);
-        textArea.setMinimumSize(new Dimension(400,400));
-        textArea.setMaximumSize(new Dimension(400,400));
-        textArea.setPreferredSize(new Dimension(400,400));
+        textArea.setBackground(Color.WHITE);
+        textArea.setMinimumSize(new Dimension(400,350));
+        textArea.setMaximumSize(new Dimension(400,350));
+        textArea.setPreferredSize(new Dimension(400,350));
         textArea.setLineWrap(true);
+        Border border = BorderFactory.createLineBorder(Color.BLACK);
+        textArea.setBorder(border);
+
         textArea.setMinimumSize(new Dimension(500, 200));
         textArea.setFont(new Font("Serif", Font.PLAIN, 16));
         textAreaPanel.add(textArea);
@@ -39,17 +48,19 @@ public class EmailTextGUI {
 
         JPanel scoringPanel = new JPanel();
         JButton evaluateButton = new JButton("Evaluate Email");
-        final JLabel scoreLabel = new JLabel("Test");
+        final JLabel scoreLabel = new JLabel("");
         JButton uploadFileBtn = new JButton("Upload File");
+        JButton importTermsBtn = new JButton("Import Terms");
         scoringPanel.add(evaluateButton);
         scoringPanel.add(uploadFileBtn);
+        scoringPanel.add(importTermsBtn);
         scoringPanel.add(scoreLabel);
 
         pane.add(scoringPanel, BorderLayout.SOUTH);
 
-        evaluateButton.addMouseListener(new MouseAdapter() {
+        evaluateButton.addActionListener(new ActionListener() {
             @Override
-            public void mouseClicked(MouseEvent e) {
+            public void actionPerformed(ActionEvent e) {
                 try {
                     String email = textArea.getText();
                     TextParser textParser = new TextParser(email);
@@ -58,14 +69,21 @@ public class EmailTextGUI {
                 } catch (Exception ex) {
                     System.out.println(ex);
                 }
-
             }
         });
 
-        uploadFileBtn.addMouseListener(new MouseAdapter() {
+        uploadFileBtn.addActionListener(new ActionListener() {
             @Override
-            public void mouseClicked(MouseEvent e) {
+            public void actionPerformed(ActionEvent e) {
                 scoreLabel.setText("Feature not yet available.");
+            }
+        });
+
+        importTermsBtn.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                DatabaseInput d = new DatabaseInput();
+                d.main(null);
             }
         });
     }
@@ -77,7 +95,7 @@ public class EmailTextGUI {
         //Create and set up the window.
         JFrame frame = new JFrame("EmailGUI");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setLocationRelativeTo(null);
+        //frame.setLocationRelativeTo(null);
         frame.setPreferredSize(new Dimension(500,500));
         frame.setTitle("Email Text Input");
         frame.setResizable(true);
