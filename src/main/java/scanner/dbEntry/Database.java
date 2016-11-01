@@ -176,7 +176,7 @@ public class Database {
      * @param phrase - phrase to look for
      * @return if a phrase is matched, it is returned
      */
-    public Phrase getPhrase(String phrase){
+    public static Phrase getPhrase(String phrase){
         Phrase found = new Phrase();
         phrase = Hasher.hashSHA(phrase);        //hash the phrase
 
