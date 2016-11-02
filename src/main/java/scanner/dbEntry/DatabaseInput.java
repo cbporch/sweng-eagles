@@ -7,7 +7,6 @@ import java.awt.*;
 import java.awt.event.*;
 import java.io.File;
 import java.io.IOException;
-import java.sql.SQLException;
 import java.util.ArrayList;
 
 /**
@@ -257,17 +256,6 @@ public class DatabaseInput {
      * @throws Exception
      */
     public static void processWordsSHA(ArrayList<Word> words) throws Exception {
-          /*  try {
-                for (Word word : words) {
-                    if (Database.getWord(word.getWord()) == null) {
-                        Database.insertWords(word.getWord(), word.getRarity(), word.getNum());
-                    }
-                }
-                System.out.println("Word Processing complete");
-            } catch (IOException e) {
-                e.printStackTrace();
-            }*/
-
           try{
               for(Word word: words) {
                   Database.insertWords(word.getWord(), word.getRarity(), word.getNum());
@@ -285,9 +273,7 @@ public class DatabaseInput {
     public static void processPhrasesSHA(ArrayList<Phrase> phrases) throws Exception {
         try {
             for (Phrase phrase : phrases) {
-                if (Database.getPhrase(phrase.getPhrase()) == null) {
                     Database.insertPhrases(phrase.getPhrase(), phrase.getRarity(), phrase.getWordcount(), phrase.getNum());
-                }
             }
             System.out.println("Phrase Processing complete");
         } catch (IOException e) {
