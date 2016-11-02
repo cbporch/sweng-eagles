@@ -50,8 +50,10 @@ public class Database {
             statement.executeUpdate(sql);                   //execute the update
             conn.close();                                   //close the connection
         } catch (Exception e) {
-            if(((SQLException) e).getErrorCode()==1062){
-
+            if(e instanceof SQLException){
+                if(((SQLException) e).getErrorCode()==1062) {
+                    //do nothing
+                }
             }
             else System.out.println(e);                     //print the exception
         }
@@ -80,8 +82,9 @@ public class Database {
             statement.executeUpdate(sql);                   //execute the update
             conn.close();                                   //close the connection
         } catch (Exception e) {
-            if(((SQLException) e).getErrorCode()==1062){
-
+            if(e instanceof SQLException) {
+                if(((SQLException) e).getErrorCode()==1062) {
+                }
             }
             else System.out.println(e);                          //display the exception
         }
