@@ -9,6 +9,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -220,8 +221,30 @@ public class DatabaseInput {
         uploadFileBtn.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                successLabel.setText("Feature not available yet.");
-            }
+                //Handle open button action.
+                System.out.println("In action listener");
+                //Create a file chooser
+                final JFileChooser fc = new JFileChooser();
+                    if (e.getSource() == DatabaseInput.uploadFileBtn) {
+                        System.out.println("In first if");
+                        int returnVal = fc.showOpenDialog(uploadFileBtn);
+
+                        if (returnVal == JFileChooser.APPROVE_OPTION) {
+                            System.out.println("In second if");
+                            File file = fc.getSelectedFile();
+                            //This is where a real application would open the file.
+                            System.out.println("Opening: " + file.getName() + ".%n");
+                            ArrayList<Word> words = CSVFileReader.interpretCSVFile(file+"");
+                            for(Word word: words){
+                                System.out.println(word.getWord());
+                            }
+                        } else {
+                            System.out.println("Open command cancelled by user.%n");
+                        }
+
+                    }
+                }
+                //successLabel.setText("Feature not available yet.");
         });
 
         successLabel = new JLabel("");
@@ -233,122 +256,38 @@ public class DatabaseInput {
         pane.add(submitPanel, BorderLayout.SOUTH);
     }
 
+
     /**
      * Processes the input. Hashes the words/phrases and inserts them to the database if they aren't in there already
      * @param words - an array of words captured in the GUI
-     * @param phrases - an array of phrases captured in the GUI
-     * @param wordProb - probability a word is used confidentially
-     * @param phraseProb - probability a phrase is used confidentially
-     * @param wordNumDep - if a word is number dependent
-     * @param phraseNumDep - if a phrase is number dependent
      * @throws Exception
      */
-    public static void processInputSHA(String[] words, String[] phrases, double wordProb, double phraseProb, int wordNumDep, int phraseNumDep) throws Exception {
-        ArrayList<String>   stemmedWords,
-                            dbHashedWords,
-                            dbHashedPhrases,
-                            unique_words   = new ArrayList<>();
-        ArrayList<Phrase>   stemmedPhrases = new ArrayList<>(),
-                            unique_phrases = new ArrayList<>();
-        LuceneStemmer ls = new LuceneStemmer();
+    public static void processWordsSHA(Word[] words) throws Exception {
+            try {
+                for (Word word : words) {
+                    if (Database.getWord(word.getWord()) == null) {
+                        Database.insertWords(word.getWord(), word.getRarity(), word.getNum());
+                    }
+                }
+                System.out.println("Word Processing complete");
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+    }
 
-        if(wordProb == -1.0){
-            wordProb = 1.0;
-        }
-        if(phraseProb == -1.0){
-            phraseProb = 1.0;
-        }
-
+    /**
+     * Processes the input. Hashes the words/phrases and inserts them to the database if they aren't in there already
+     * @param phrases - an array of phrases captured in the GUI
+     * @throws Exception
+     */
+    public static void processPhrasesSHA(Phrase[] phrases) throws Exception {
         try {
-            dbHashedWords = Database.getWords();
-            dbHashedPhrases = Database.getPhrases();
-
-            // move array into ArrayList for method call
-            ArrayList<String> w = new ArrayList<>(Arrays.asList(words));
-
-            stemmedWords = ls.stemWords(w);
-
-            if(stemmedWords.size() != 0) {
-                boolean duplicate = false, empty = true;
-                int count = 1;
-                String hashedInputWord;
-
-                System.out.print("Checking word ");
-
-                for (String inputWord : stemmedWords) {
-                    System.out.print(count++ + ", ");
-                    hashedInputWord = Hasher.hashSHA(inputWord);        // hash the inputted word
-                    System.out.println("Hashed word: " + hashedInputWord);
-                    if (dbHashedWords != null) {
-                        for(String hash: dbHashedWords) {
-                            if (!duplicate && hash.equals(hashedInputWord)) {
-                                // once a match is found, we no longer need to check each word
-                                duplicate = true; // should stop if statement from running when it hits a duplicate
-                            }
-                        }
-                    }
-
-                    if(!duplicate){ // word is not in database
-                        unique_words.add(hashedInputWord);
-                        empty = false;
-                    }
-                    duplicate = false; // reset variable
-                }
-
-                if(!empty) {
-                    // hash unique words
-                    // unique_words = StringToHash.(unique_words);
-                    for (String hashedWord : unique_words) {
-                        Database.insertWords(hashedWord, wordProb, wordNumDep);
-                    }
-                    System.out.println("\nWords inserted");
+            for (Phrase phrase : phrases) {
+                if (Database.getPhrase(phrase.getPhrase()) == null) {
+                    Database.insertPhrases(phrase.getPhrase(), phrase.getRarity(), phrase.getWordcount(), phrase.getNum());
                 }
             }
-
-            // stem phrases before checking in database, maintaining word count for each phrase
-            for(String phrase: phrases){
-                stemmedPhrases.add(new Phrase(ls.stemPhrase(phrase), phrase.split("\\s+").length));
-            }
-
-            // find unique phrases in input
-            if(stemmedPhrases.size() != 0) {
-                boolean duplicate = false, empty = true;
-                int count = 1;
-                String hashedInputPhrase;
-
-                System.out.print("Checking phrase ");
-
-                for (Phrase inputPhrase : stemmedPhrases) {
-                    hashedInputPhrase = Hasher.hashSHA(inputPhrase.getPhrase());    // hash one of the inputted phrases
-                    System.out.print(count++ + ", ");                               // increment count
-                    if (dbHashedPhrases != null) {
-                        for(String hash : dbHashedPhrases) {
-                            if (!duplicate && hash.equals(hashedInputPhrase)) {
-                                duplicate = true;
-                            }
-                        }
-                    }
-
-                    if(!duplicate){
-                        // reset phrase as its hashed form and add to ArrayList
-                        inputPhrase.setPhrase(hashedInputPhrase);
-                        unique_phrases.add(inputPhrase);
-                        empty = false;
-                    }
-                }
-
-                if(!empty) {
-                    // hash unique phrases
-                   // unique_phrases = StringToHash.getPhraseHashes(unique_phrases);
-                    for (Phrase phrase: unique_phrases) {
-                        Database.insertPhrases(phrase.getPhrase(), phraseProb, phrase.getWordcount(), phraseNumDep);
-                    }
-                    System.out.println("\nPhrases inserted");
-                }
-
-            }
-            System.out.println("Processing complete");
-            successLabel.setText("Processing complete");
+            System.out.println("Phrase Processing complete");
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -377,67 +316,58 @@ public class DatabaseInput {
 
     public static void acceptInput(){
         System.out.println("Trying...");
+        ArrayList<Word> words = new ArrayList<>();
+        ArrayList<Phrase> phrases = new ArrayList<>();
 
         //set up the words
-        String word = wordsTextField.getText();
-        ArrayList<String> wordInput = new ArrayList<String>();
-        int wordSyn;
-        if(synBtn.isSelected()){
-            wordSyn = 1;
-        }
-        else wordSyn = 0;
-
-        int wordNumDep;
-        if(numDependentBtn.isSelected()) {
-            wordNumDep = 1;
-        }
-        else {
-            wordNumDep = 0;
-        }
-        Double wordProb;
-        if(probField.getText().equals(probHintText)) {
-            wordProb = -1.0;
-        }
-        else {
-            wordProb = Double.parseDouble(probField.getText());
-        }
-        System.out.println(wordProb);
-
-        //set up the phrase
-        String phrase = phraseTextField.getText();
-        ArrayList<String> phraseInput = new ArrayList<String>();
-
-        int phraseNumDep;
-        if(phraseNumDependentBtn.isSelected()) {
-            phraseNumDep = 1;
-        }
-        else {
-            phraseNumDep = 0;
-        }
-        Double phraseProb;
-        if(phraseProbField.getText().equals(probHintText)) {
-            phraseProb = -1.0;
-        }
-        else {
-            phraseProb = Double.parseDouble(phraseProbField.getText());
-        }
-        System.out.println(phraseProb);
-        if(phrase.equals(phraseHintText)){
+        if(wordsTextField.getText().equals(wordsHintText)){
             //do nothing
         }
         else{
-            phraseInput.add(phrase);
+            Word word = new Word();
+            word.setWord(wordsTextField.getText());
+
+            if(numDependentBtn.isSelected()){
+                word.setNum(1);
+            } else word.setNum(0);
+
+            if(probField.getText().equals(probHintText)){
+                word.setRarity(1);
+            } else word.setRarity(Float.parseFloat(probField.getText()));
+
+            if(synBtn.isSelected()){
+                //insert synonyms
+            }
+            words.add(word);
         }
-        if(word.equals(phraseHintText)){
+
+        //set up the phrases
+        if(phraseTextField.getText().equals(phraseHintText)){
             //do nothing
         }
         else{
-            wordInput.add(word);
+            Phrase phrase = new Phrase();
+            phrase.setPhrase(phraseTextField.getText());
+
+            if(phraseNumDependentBtn.isSelected()){
+                phrase.setNum(1);
+            } else phrase.setNum(0);
+
+            if(phraseProbField.getText().equals(probHintText)){
+                phrase.setRarity(1);
+            } else phrase.setRarity(Float.parseFloat(phraseProbField.getText()));
+
+            int wordCount = phrase.getPhrase().split(" ").length;
+            phrase.setWordcount(wordCount);
+            phrases.add(phrase);
         }
         try {
-            String[] words = wordInput.toArray(new String[wordInput.size()]);
-            String[] phrases = phraseInput.toArray(new String[phraseInput.size()]);
-            processInputSHA(words, phrases, wordProb, phraseProb, wordNumDep, phraseNumDep);
+            Word[] wordsInput = words.toArray(new Word[words.size()]);
+            Phrase[] phrasesInput = phrases.toArray(new Phrase[phrases.size()]);
+            //processInputSHA(words, phrases, wordProb, phraseProb, wordNumDep, phraseNumDep);
+            processWordsSHA(wordsInput);
+            processPhrasesSHA(phrasesInput);
+            successLabel.setText("Processing complete");
         } catch (Exception ex) {
             System.out.println(ex);
         }

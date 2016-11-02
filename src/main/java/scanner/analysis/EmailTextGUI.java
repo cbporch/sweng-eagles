@@ -1,5 +1,7 @@
 package scanner.analysis;
 
+import scanner.Word;
+import scanner.dbEntry.CSVFileReader;
 import scanner.dbEntry.DatabaseInput;
 
 import java.awt.*;
@@ -7,6 +9,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.io.File;
+import java.util.ArrayList;
 import javax.swing.*;
 import javax.swing.border.Border;
 
@@ -18,6 +22,8 @@ import javax.swing.border.Border;
  * Create a simple GUI to input an email to be scanned. A score for the email will be shown on screen.
  */
 public class EmailTextGUI {
+
+    private static JButton uploadFileBtn = new JButton("Upload File");
     /**
      * Add the components to the GUI.
      * @param pane - the pane for the GUI
@@ -40,6 +46,7 @@ public class EmailTextGUI {
         textArea.setLineWrap(true);
         Border border = BorderFactory.createLineBorder(Color.BLACK);
         textArea.setBorder(border);
+        textArea.requestFocusInWindow();
 
         textArea.setMinimumSize(new Dimension(500, 200));
         textArea.setFont(new Font("Serif", Font.PLAIN, 16));
@@ -49,7 +56,6 @@ public class EmailTextGUI {
         JPanel scoringPanel = new JPanel();
         JButton evaluateButton = new JButton("Evaluate Email");
         final JLabel scoreLabel = new JLabel("");
-        JButton uploadFileBtn = new JButton("Upload File");
         JButton importTermsBtn = new JButton("Import Terms");
         scoringPanel.add(evaluateButton);
         scoringPanel.add(uploadFileBtn);
@@ -75,8 +81,30 @@ public class EmailTextGUI {
         uploadFileBtn.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                scoreLabel.setText("Feature not yet available.");
+                //Handle open button action.
+                //Create a file chooser
+                final JFileChooser fc = new JFileChooser();
+                System.out.println("In action listener");
+                if (e.getSource() == EmailTextGUI.uploadFileBtn) {
+                    System.out.println("In first if");
+                    int returnVal = fc.showOpenDialog(uploadFileBtn);
+
+                    if (returnVal == JFileChooser.APPROVE_OPTION) {
+                        System.out.println("In second if");
+                        File file = fc.getSelectedFile();
+                        //This is where a real application would open the file.
+                        System.out.println("Opening: " + file.getName() + ".%n");
+                        ArrayList<Word> words = CSVFileReader.interpretCSVFile(file+"");
+                        for(Word word: words){
+                            System.out.println(word.getWord());
+                        }
+                    } else {
+                        System.out.println("Open command cancelled by user.%n");
+                    }
+
+                }
             }
+            //successLabel.setText("Feature not available yet.");
         });
 
         importTermsBtn.addActionListener(new ActionListener() {
