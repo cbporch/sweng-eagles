@@ -1,5 +1,7 @@
 package scanner;
 
+import scanner.filtering.Hasher;
+
 /**
  * Created by Chris on 10/18/2016.
  * Modified on 10/22/16
@@ -14,24 +16,24 @@ public class Phrase {
     private int num;    // whether numbers effect the probability
 
     public Phrase(String phrase) {
-        this.phrase = phrase;
+        this.setPhrase(phrase);
         wordcount = phrase.split("\\s+").length;
     }
 
     public Phrase(String phrase, int wordcount) {
-        this.phrase = phrase;
+        this.setPhrase(phrase);
         this.wordcount = wordcount;
     }
 
     public Phrase(String phrase, int wordcount, int rarity, int num) {
-        this.phrase = phrase;
+        this.setPhrase(phrase);
         this.wordcount = wordcount;
         this.rarity = rarity;
         this.num = num;
     }
 
     public Phrase(String phrase, int wordcount, int rarity, int conf, int norm, int num) {
-        this.phrase = phrase;
+        this.setPhrase(phrase);
         this.wordcount = wordcount;
         this.rarity = rarity;
         this.conf = conf;
@@ -63,6 +65,7 @@ public class Phrase {
     }
 
     public void setPhrase(String phrase) {
+        phrase = Hasher.hashSHA(phrase);
         this.phrase = phrase;
     }
 

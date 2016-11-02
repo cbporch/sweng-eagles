@@ -4,6 +4,7 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import scanner.Phrase;
+import scanner.filtering.Hasher;
 
 /**
  * Created by chris on 10/18/16.
@@ -17,7 +18,7 @@ public class PhraseTest {
     private static final double DELTA = 1e-15;
     @Before
     public void setUp() throws Exception {
-        testPhrase = new Phrase("test text", 2, 1,3,4,true);
+        testPhrase = new Phrase("test text", 2, 1,3,4,1);
     }
 
     @Test
@@ -41,7 +42,7 @@ public class PhraseTest {
     @Test
     public void setNum() throws Exception {
         Phrase p = new Phrase("test", 1);
-        p.setNum(false);
+        p.setNum(0);
         Assert.assertFalse(p.isNum());
     }
 
@@ -72,13 +73,17 @@ public class PhraseTest {
     @Test
     public void setPhrase() throws Exception {
         Phrase p = new Phrase("", 0);
-        p.setPhrase("test this one");
-        Assert.assertTrue(p.getPhrase().equals("test this one"));
+        String phrase = "test this one";
+        p.setPhrase(phrase);
+        Assert.assertTrue(p.getPhrase().equals(Hasher.hashSHA(phrase)));
     }
 
     @Test
     public void getPhrase() throws Exception {
-        Assert.assertTrue(testPhrase.getPhrase().equals("test text"));
+        String test = "test text";
+        System.out.println("Phrase: " + testPhrase.getPhrase());
+        System.out.println("Returning: " + Hasher.hashSHA(test));
+        Assert.assertTrue(testPhrase.getPhrase().equals(Hasher.hashSHA(test)));
     }
 
     @Test

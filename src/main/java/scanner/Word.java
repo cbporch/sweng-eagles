@@ -1,5 +1,7 @@
 package scanner;
 
+import scanner.filtering.Hasher;
+
 /**
  * Created by chris on 10/20/16.
  * modified on 10/22/16
@@ -14,13 +16,13 @@ public class Word {
     private int num;
 
     public Word(String word, int rarity, int num) {
-        this.word = word;
+        this.setWord(word);
         this.rarity = rarity;
         this.num = num;
     }
 
     public Word(String word, int rarity, int num, int conf, int norm) {
-        this.word = word;
+        this.setWord(word);
         this.rarity = rarity;
         this.conf = conf;
         this.norm = norm;
@@ -46,6 +48,7 @@ public class Word {
     }
 
     public void setWord(String word) {
+        word = Hasher.hashSHA(word);
         this.word = word;
     }
 

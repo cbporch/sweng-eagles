@@ -144,7 +144,7 @@ public class Database {
      */
     public static Word getWord(String word){
         Word found = new Word();
-        word = Hasher.hashSHA(word);    //hash the word
+        //word = Hasher.hashSHA(word);    //hash the word
 
         try {
             Connection conn = getConnection();              //get connection
@@ -178,7 +178,7 @@ public class Database {
      */
     public static Phrase getPhrase(String phrase){
         Phrase found = new Phrase();
-        phrase = Hasher.hashSHA(phrase);        //hash the phrase
+        //phrase = Hasher.hashSHA(phrase);        //hash the phrase
 
         try {
             Connection conn = getConnection();              //get connection
@@ -192,7 +192,7 @@ public class Database {
                     found.setPhrase(phrase);
                     found.setRarity(rs.getFloat(3));
                     found.setWordcount(rs.getInt(4));
-                    found.setNum(rs.getBoolean(5));
+                    found.setNum(rs.getInt(5));
                     found.setConf(rs.getInt(6));
                     found.setNorm(rs.getInt(7));
 
