@@ -3,6 +3,7 @@
 All dependencies should be pulled by Maven when you first run anything.
 
 *Code requires Java 1.8*
+*Building code is made much easier with Maven*
 
 If you package the project in the command line using Maven like so:
 
