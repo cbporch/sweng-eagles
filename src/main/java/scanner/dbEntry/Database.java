@@ -129,7 +129,6 @@ public class Database {
         }
     }
 
-
     /**
      * Hashes the given word and finds it in the database.
      * @param word - word to get from database
