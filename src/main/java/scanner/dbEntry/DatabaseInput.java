@@ -311,10 +311,10 @@ public class DatabaseInput {
         frame.setMinimumSize(new Dimension(700, 500));
         frame.setPreferredSize(new Dimension(700, 500));
 
-        DatabaseInput stupidStatics = new DatabaseInput();
+        DatabaseInput databaseInput = new DatabaseInput();
 
         //Set up the content pane.
-        stupidStatics.addComponentsToPane(frame.getContentPane());
+        databaseInput.addComponentsToPane(frame.getContentPane());
 
         //Display the window.
         frame.pack();
