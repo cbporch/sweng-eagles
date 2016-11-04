@@ -4,7 +4,6 @@ import scanner.Doublet;
 import scanner.Phrase;
 import scanner.Word;
 import scanner.dbEntry.Database;
-import scanner.filtering.Hasher;
 import scanner.filtering.LuceneStemmer;
 
 import java.io.IOException;
@@ -43,14 +42,15 @@ public class TextParser {
      */
     public double parse(){
         int lastIndex = text.size() -1;
-        int grams[] = {0};
+        ArrayList<Integer> grams;
         //TODO: get wordlengths from Database
+        grams = db.getWordcounts();
 
         // get hashed n-grams
         for(int index = 0; index < (lastIndex); index++){
             for(int N : grams){
                 if((index + N) <= lastIndex){
-                    Phrase p = findPhrase(hashGram(index, N));
+                    Phrase p = findPhrase(NGram(index, N));
                     if(p!= null){
                         pairs.add(new Doublet(p.getConf(),p.getNorm()));
                     }
@@ -86,12 +86,12 @@ public class TextParser {
         return db.getPhrase(phrase);
     }
 
-    private String hashGram(int index, int N){
+    private String NGram(int index, int N){
         String phrase = "";
         for(int i = 0; i < N; i++){
             phrase += text.get(i + index);
         }
-        return Hasher.hashSHA(phrase);
+        return phrase;
     }
 
 }
