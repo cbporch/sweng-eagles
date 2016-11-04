@@ -4,6 +4,7 @@ import scanner.Doublet;
 import scanner.Phrase;
 import scanner.Word;
 import scanner.dbEntry.Database;
+import scanner.filtering.Hasher;
 import scanner.filtering.LuceneStemmer;
 
 import java.io.IOException;
@@ -28,6 +29,7 @@ public class TextParser {
 
         try {
             text = ls.splitText(email);
+
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -40,10 +42,26 @@ public class TextParser {
      * @return - A score of how likely the text is to be confidential.
      */
     public double parse(){
+        int lastIndex = text.size() -1;
+        int grams[] = {0};
+
+        // get hashed n-grams
+        for(int index = 0; index < (lastIndex); index++){
+            for(int N : grams){
+                if((index + N) <= lastIndex){
+                    Phrase p = findPhrase(hashGram(index, N));
+                    if(p!= null){
+                        pairs.add(new Doublet(p.getConf(),p.getNorm()));
+                    }
+                }
+            }
+        }
+
         for(String word: text){
             Word w = findWord(word);
-            if(w !=null)
+            if(w !=null) {
                 pairs.add(new Doublet(w.getConf(), w.getNorm()));
+            }
         }
 
         return CalculateEmailScore.calculate(pairs);
@@ -65,6 +83,14 @@ public class TextParser {
      */
     private Phrase findPhrase(String phrase){
         return db.getPhrase(phrase);
+    }
+
+    private String hashGram(int index, int N){
+        String phrase = "";
+        for(int i = 0; i < N; i++){
+            phrase += text.get(i + index);
+        }
+        return Hasher.hashSHA(phrase);
     }
 
 }
