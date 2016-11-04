@@ -40,19 +40,23 @@ public class DatabaseInput {
     final private static JTextField phraseTextField = new JTextField(phraseHintText);
     final private static JTextField phraseProbField = new JTextField(probHintText);
     final private static JRadioButton phraseNumDependentBtn = new JRadioButton("# Dependent?");
+    private Database Database;
 
 
     /**
      * Empty constructor
      */
     public DatabaseInput() {
+
+        Database = new Database();
+
     }
 
     /**
      * Makes the GUI
      * @param pane - the gui reference
      */
-    private static void addComponentsToPane(Container pane) {
+    private void addComponentsToPane(Container pane) {
         pane.setLayout(new BoxLayout(pane, BoxLayout.Y_AXIS));
         JPanel instructionsPanel = new JPanel();
         JLabel instructions = new JLabel("Enter the words/phrases to be inputted below");
@@ -262,7 +266,7 @@ public class DatabaseInput {
      * @param words - an array of words captured in the GUI
      * @throws Exception
      */
-    public static void processWordsSHA(Word[] words) throws Exception {
+    public void processWordsSHA(Word[] words) throws Exception {
             try {
                 for (Word word : words) {
                     if (Database.getWord(word.getWord()) == null) {
@@ -280,7 +284,7 @@ public class DatabaseInput {
      * @param phrases - an array of phrases captured in the GUI
      * @throws Exception
      */
-    public static void processPhrasesSHA(Phrase[] phrases) throws Exception {
+    public void processPhrasesSHA(Phrase[] phrases) throws Exception {
         try {
             for (Phrase phrase : phrases) {
                 if (Database.getPhrase(phrase.getPhrase(), phrase.getWordcount()) == null) {
@@ -306,15 +310,18 @@ public class DatabaseInput {
         frame.setMaximumSize(new Dimension(700, 500));
         frame.setMinimumSize(new Dimension(700, 500));
         frame.setPreferredSize(new Dimension(700, 500));
+
+        DatabaseInput stupidStatics = new DatabaseInput();
+
         //Set up the content pane.
-        addComponentsToPane(frame.getContentPane());
+        stupidStatics.addComponentsToPane(frame.getContentPane());
 
         //Display the window.
         frame.pack();
         frame.setVisible(true);
     }
 
-    public static void acceptInput(){
+    public void acceptInput(){
         System.out.println("Trying...");
         ArrayList<Word> words = new ArrayList<>();
         ArrayList<Phrase> phrases = new ArrayList<>();
