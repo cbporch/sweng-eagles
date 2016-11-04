@@ -76,7 +76,7 @@ public class EmailTextGUI {
 
                     double score = textParser.parse();
                     scoreLabel.setText(score+"");
-                    System.out.print((System.currentTimeMillis() - f)/1000);
+                    System.out.print((System.currentTimeMillis() - f));
 
                 } catch (Exception ex) {
                     System.out.println(ex);

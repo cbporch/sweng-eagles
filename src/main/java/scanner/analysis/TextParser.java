@@ -20,11 +20,10 @@ import java.util.HashSet;
 public class TextParser {
     private ArrayList<String> text;
     private LuceneStemmer ls;
-    private Database db;
     private ArrayList<Doublet> pairs;
+    private HashSet<String> unique;
 
     public TextParser(String email) throws Exception {
-        db = new Database();
         ls = new LuceneStemmer();
         pairs = new ArrayList<>();
 
@@ -45,12 +44,17 @@ public class TextParser {
     public double parse(){
         int lastIndex = text.size() - 1;
         ArrayList<Integer> grams;
-        grams = db.getWordcounts();
-        HashSet<String> unique = new HashSet<>();
-
+        grams = EmailTextGUI.db.getWordcounts();
+        unique = new HashSet<>();
         // get hashed n-grams
         for(int index = 0; index <= lastIndex; index++){
-            unique.add(text.get(index));
+            if(unique.add(text.get(index))){
+                Word w = findWord(text.get(index));
+                if(w !=null) {
+                    pairs.add(new Doublet(w.getConf(), w.getNorm()));
+                }
+            }
+
             for(int N : grams){
                 if((index + N - 1) <= lastIndex){
                     Phrase p = findPhrase(NGram(index, N), N);
@@ -62,12 +66,9 @@ public class TextParser {
             }
         }
 
-        for(String word: unique){
-            Word w = findWord(word);
-            if(w !=null) {
-                pairs.add(new Doublet(w.getConf(), w.getNorm()));
-            }
-        }
+//        for(String word: unique){
+//
+//        }
 
         return CalculateEmailScore.calculate(pairs);
     }
@@ -78,7 +79,7 @@ public class TextParser {
      * @return - a Word object for the String word with its database attributes
      */
     private Word findWord(String word){
-        return db.getWord(Hasher.hashSHA(word));
+        return EmailTextGUI.db.getWord(Hasher.hashSHA(word));
     }
 
     /**
@@ -87,7 +88,7 @@ public class TextParser {
      * @return - a Phrase object for the String word with its database attributes
      */
     private Phrase findPhrase(String phrase, int N){
-        return db.getPhrase(Hasher.hashSHA(phrase), N);
+        return EmailTextGUI.db.getPhrase(Hasher.hashSHA(phrase), N);
     }
 
     private String NGram(int index, int N){
@@ -98,4 +99,15 @@ public class TextParser {
         return phrase;
     }
 
+
+    private class wordThread implements Runnable{
+        public void run(){
+            for(String word: unique){
+                Word w = findWord(word);
+                if(w !=null) {
+                    pairs.add(new Doublet(w.getConf(), w.getNorm()));
+                }
+            }
+        }
+    }
 }

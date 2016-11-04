@@ -43,6 +43,10 @@ public class Database {
         return DriverManager.getConnection(url, username, password);
     }
 
+    public void close() throws SQLException {
+        conn.close();
+    }
+
     /**
      * Inserts a word into the database. Gets & closes a connection to the database.
      * @param wordIn - word to insert
