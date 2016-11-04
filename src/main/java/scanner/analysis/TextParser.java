@@ -20,14 +20,14 @@ import java.util.HashSet;
 public class TextParser {
     private ArrayList<String> text;
     private LuceneStemmer ls;
-    private Database db;
     private ArrayList<Doublet> pairs;
+    private HashSet<String> unique;
+    private Database db;
 
     public TextParser(String email) throws Exception {
-        db = new Database();
         ls = new LuceneStemmer();
         pairs = new ArrayList<>();
-
+        db = new Database();
         try {
             text = ls.splitText(email);
 
@@ -46,11 +46,16 @@ public class TextParser {
         int lastIndex = text.size() - 1;
         ArrayList<Integer> grams;
         grams = db.getWordcounts();
-        HashSet<String> unique = new HashSet<>();
-
+        unique = new HashSet<>();
         // get hashed n-grams
         for(int index = 0; index <= lastIndex; index++){
-            unique.add(text.get(index));
+            if(unique.add(text.get(index))){
+                Word w = findWord(text.get(index));
+                if(w !=null) {
+                    pairs.add(new Doublet(w.getConf(), w.getNorm()));
+                }
+            }
+
             for(int N : grams){
                 if((index + N - 1) <= lastIndex){
                     Phrase p = findPhrase(NGram(index, N), N);
@@ -59,13 +64,6 @@ public class TextParser {
                         pairs.add(new Doublet(p.getConf(),p.getNorm()));
                     }
                 }
-            }
-        }
-
-        for(String word: unique){
-            Word w = findWord(word);
-            if(w !=null) {
-                pairs.add(new Doublet(w.getConf(), w.getNorm()));
             }
         }
 
@@ -98,4 +96,15 @@ public class TextParser {
         return phrase;
     }
 
+
+    private class wordThread implements Runnable{
+        public void run(){
+            for(String word: unique){
+                Word w = findWord(word);
+                if(w !=null) {
+                    pairs.add(new Doublet(w.getConf(), w.getNorm()));
+                }
+            }
+        }
+    }
 }

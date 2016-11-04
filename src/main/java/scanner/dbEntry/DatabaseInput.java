@@ -40,15 +40,14 @@ public class DatabaseInput {
     final private static JTextField phraseTextField = new JTextField(phraseHintText);
     final private static JTextField phraseProbField = new JTextField(probHintText);
     final private static JRadioButton phraseNumDependentBtn = new JRadioButton("# Dependent?");
-    private Database Database;
-
+    protected static Database db;
 
     /**
      * Empty constructor
      */
     public DatabaseInput() {
 
-        Database = new Database();
+        db = new Database();
 
     }
 
@@ -269,8 +268,8 @@ public class DatabaseInput {
     public void processWordsSHA(Word[] words) throws Exception {
             try {
                 for (Word word : words) {
-                    if (Database.getWord(word.getWord()) == null) {
-                        Database.insertWords(word.getWord(), word.getRarity(), word.getNum());
+                    if (db.getWord(word.getWord()) == null) {
+                        db.insertWords(word.getWord(), word.getRarity(), word.getNum());
                     }
                 }
                 System.out.println("Word Processing complete");
@@ -287,8 +286,8 @@ public class DatabaseInput {
     public void processPhrasesSHA(Phrase[] phrases) throws Exception {
         try {
             for (Phrase phrase : phrases) {
-                if (Database.getPhrase(phrase.getPhrase(), phrase.getWordcount()) == null) {
-                    Database.insertPhrases(phrase.getPhrase(), phrase.getRarity(), phrase.getWordcount(), phrase.getNum());
+                if (db.getPhrase(phrase.getPhrase(), phrase.getWordcount()) == null) {
+                    db.insertPhrases(phrase.getPhrase(), phrase.getRarity(), phrase.getWordcount(), phrase.getNum());
                 }
             }
             System.out.println("Phrase Processing complete");
