@@ -44,6 +44,7 @@ public class TextParser {
     public double parse(){
         int lastIndex = text.size() -1;
         int grams[] = {0};
+        //TODO: get wordlengths from Database
 
         // get hashed n-grams
         for(int index = 0; index < (lastIndex); index++){
