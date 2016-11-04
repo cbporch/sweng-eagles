@@ -9,6 +9,7 @@ import scanner.filtering.LuceneStemmer;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashSet;
 
 /**
  * Created by chris on 10/22/16.
@@ -45,9 +46,11 @@ public class TextParser {
         int lastIndex = text.size() - 1;
         ArrayList<Integer> grams;
         grams = db.getWordcounts();
+        HashSet<String> unique = new HashSet<>();
 
         // get hashed n-grams
         for(int index = 0; index <= lastIndex; index++){
+            unique.add(text.get(index));
             for(int N : grams){
                 if((index + N - 1) <= lastIndex){
                     Phrase p = findPhrase(NGram(index, N), N);
@@ -59,7 +62,7 @@ public class TextParser {
             }
         }
 
-        for(String word: text){
+        for(String word: unique){
             Word w = findWord(word);
             if(w !=null) {
                 pairs.add(new Doublet(w.getConf(), w.getNorm()));
