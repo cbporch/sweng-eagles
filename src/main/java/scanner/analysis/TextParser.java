@@ -22,11 +22,12 @@ public class TextParser {
     private LuceneStemmer ls;
     private ArrayList<Doublet> pairs;
     private HashSet<String> unique;
+    private Database db;
 
     public TextParser(String email) throws Exception {
         ls = new LuceneStemmer();
         pairs = new ArrayList<>();
-
+        db = new Database();
         try {
             text = ls.splitText(email);
 
@@ -44,7 +45,7 @@ public class TextParser {
     public double parse(){
         int lastIndex = text.size() - 1;
         ArrayList<Integer> grams;
-        grams = EmailTextGUI.db.getWordcounts();
+        grams = db.getWordcounts();
         unique = new HashSet<>();
         // get hashed n-grams
         for(int index = 0; index <= lastIndex; index++){
@@ -66,10 +67,6 @@ public class TextParser {
             }
         }
 
-//        for(String word: unique){
-//
-//        }
-
         return CalculateEmailScore.calculate(pairs);
     }
 
@@ -79,7 +76,7 @@ public class TextParser {
      * @return - a Word object for the String word with its database attributes
      */
     private Word findWord(String word){
-        return EmailTextGUI.db.getWord(Hasher.hashSHA(word));
+        return db.getWord(Hasher.hashSHA(word));
     }
 
     /**
@@ -88,7 +85,7 @@ public class TextParser {
      * @return - a Phrase object for the String word with its database attributes
      */
     private Phrase findPhrase(String phrase, int N){
-        return EmailTextGUI.db.getPhrase(Hasher.hashSHA(phrase), N);
+        return db.getPhrase(Hasher.hashSHA(phrase), N);
     }
 
     private String NGram(int index, int N){
