@@ -283,7 +283,7 @@ public class DatabaseInput {
     public static void processPhrasesSHA(Phrase[] phrases) throws Exception {
         try {
             for (Phrase phrase : phrases) {
-                if (Database.getPhrase(phrase.getPhrase()) == null) {
+                if (Database.getPhrase(phrase.getPhrase(), phrase.getWordcount()) == null) {
                     Database.insertPhrases(phrase.getPhrase(), phrase.getRarity(), phrase.getWordcount(), phrase.getNum());
                 }
             }

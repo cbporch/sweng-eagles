@@ -3,11 +3,11 @@ package scanner;
 import scanner.filtering.Hasher;
 
 /**
- * Created by Chris on 10/18/2016.
- * Modified on 10/22/16
- *
  * This class models a row in the Phrases Database, to better allow passing of
  * relevant data regarding a phrase throughout the project.
+ *  Created by Chris on 10/18/2016.
+ * Modified on 10/22/16
+ *
  */
 public class Phrase {
     private String phrase;

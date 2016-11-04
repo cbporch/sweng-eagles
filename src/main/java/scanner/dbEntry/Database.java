@@ -176,14 +176,14 @@ public class Database {
      * @param phrase - phrase to look for
      * @return if a phrase is matched, it is returned
      */
-    public static Phrase getPhrase(String phrase){
+    public static Phrase getPhrase(String phrase, int N){
         Phrase found = new Phrase();
         //phrase = Hasher.hashSHA(phrase);        //hash the phrase
 
         try {
             Connection conn = getConnection();              //get connection
             Statement statement = conn.createStatement();   //create statement
-            String sql = String.format("SELECT * from Phrases WHERE phrase like '%s'", phrase);
+            String sql = String.format("SELECT * from Phrases WHERE phrase like '%s' AND count like '%d'", phrase, N);
             System.out.println(sql);
             ResultSet rs = statement.executeQuery(sql);     //execute the select query
             while (rs.next()) {
@@ -208,5 +208,25 @@ public class Database {
         }
 
         return null;
+    }
+
+    public static ArrayList<Integer> getWordcounts(){
+        ArrayList<Integer> grams = new ArrayList<>();
+        try {
+            Connection conn = getConnection();              //get connection
+            Statement statement = conn.createStatement();   //create statement
+            String sql = String.format("SELECT DISTINCT count from Phrases");
+            System.out.println(sql);
+            ResultSet rs = statement.executeQuery(sql);     //execute the select query
+            while(rs.next()){
+                grams.add(rs.getInt(1));
+            }
+            conn.close();
+
+        } catch (Exception e) {
+            System.out.println(e);
+            return null;
+        }
+        return grams;
     }
 }
