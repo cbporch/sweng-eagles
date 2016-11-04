@@ -50,7 +50,8 @@ public class TextParser {
         for(int index = 0; index <= lastIndex; index++){
             for(int N : grams){
                 if((index + N - 1) <= lastIndex){
-                    Phrase p = findPhrase(NGram(index, N));
+                    Phrase p = findPhrase(NGram(index, N), N);
+
                     if(p!= null){
                         pairs.add(new Doublet(p.getConf(),p.getNorm()));
                     }
@@ -82,8 +83,8 @@ public class TextParser {
      * @param phrase - a phrase to check in the database
      * @return - a Phrase object for the String word with its database attributes
      */
-    private Phrase findPhrase(String phrase){
-        return db.getPhrase(Hasher.hashSHA(phrase));
+    private Phrase findPhrase(String phrase, int N){
+        return db.getPhrase(Hasher.hashSHA(phrase), N);
     }
 
     private String NGram(int index, int N){
