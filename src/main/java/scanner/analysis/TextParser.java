@@ -4,6 +4,7 @@ import scanner.Doublet;
 import scanner.Phrase;
 import scanner.Word;
 import scanner.dbEntry.Database;
+import scanner.filtering.Hasher;
 import scanner.filtering.LuceneStemmer;
 
 import java.io.IOException;
@@ -41,15 +42,14 @@ public class TextParser {
      * @return - A score of how likely the text is to be confidential.
      */
     public double parse(){
-        int lastIndex = text.size() -1;
+        int lastIndex = text.size() - 1;
         ArrayList<Integer> grams;
-        //TODO: get wordlengths from Database
         grams = db.getWordcounts();
 
         // get hashed n-grams
-        for(int index = 0; index < (lastIndex); index++){
+        for(int index = 0; index <= lastIndex; index++){
             for(int N : grams){
-                if((index + N) <= lastIndex){
+                if((index + N - 1) <= lastIndex){
                     Phrase p = findPhrase(NGram(index, N));
                     if(p!= null){
                         pairs.add(new Doublet(p.getConf(),p.getNorm()));
@@ -74,7 +74,7 @@ public class TextParser {
      * @return - a Word object for the String word with its database attributes
      */
     private Word findWord(String word){
-        return db.getWord(word);
+        return db.getWord(Hasher.hashSHA(word));
     }
 
     /**
@@ -83,7 +83,7 @@ public class TextParser {
      * @return - a Phrase object for the String word with its database attributes
      */
     private Phrase findPhrase(String phrase){
-        return db.getPhrase(phrase);
+        return db.getPhrase(Hasher.hashSHA(phrase));
     }
 
     private String NGram(int index, int N){

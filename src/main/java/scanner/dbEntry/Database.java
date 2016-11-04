@@ -215,7 +215,7 @@ public class Database {
         try {
             Connection conn = getConnection();              //get connection
             Statement statement = conn.createStatement();   //create statement
-            String sql = String.format("SELECT DISTINCT(wordcount) from Phrases");
+            String sql = String.format("SELECT DISTINCT count from Phrases");
             System.out.println(sql);
             ResultSet rs = statement.executeQuery(sql);     //execute the select query
             while(rs.next()){

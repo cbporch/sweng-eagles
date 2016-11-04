@@ -70,8 +70,10 @@ public class EmailTextGUI {
                 try {
                     String email = textArea.getText();
                     TextParser textParser = new TextParser(email);
+                    long f = System.currentTimeMillis();
                     double score = textParser.parse();
                     scoreLabel.setText(score+"");
+                    System.out.print((System.currentTimeMillis() - f)/1000);
                 } catch (Exception ex) {
                     System.out.println(ex);
                 }
@@ -101,7 +103,6 @@ public class EmailTextGUI {
                     } else {
                         System.out.println("Open command cancelled by user.%n");
                     }
-
                 }
             }
             //successLabel.setText("Feature not available yet.");
