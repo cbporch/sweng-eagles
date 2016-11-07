@@ -206,6 +206,7 @@ public class DatabaseInput {
         submitButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                //launch log in screen
                 acceptInput();
             }
         });

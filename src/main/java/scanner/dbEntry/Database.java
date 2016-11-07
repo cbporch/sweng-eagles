@@ -218,4 +218,30 @@ public class Database {
 
         return null;
     }
+
+
+    public static Boolean checkLogin(String username, String password){
+        System.out.println("Username: " + username + " Password: " + password);
+        password = Hasher.hashSHA(password);
+        try {
+            Connection conn = getConnection();              //get connection
+            Statement statement = conn.createStatement();   //create statement
+            String sql = String.format("SELECT * from Logins WHERE Username like '%s'", username);
+            System.out.println(sql);
+            ResultSet rs = statement.executeQuery(sql);     //execute the select query
+            while (rs.next()) {
+                if(rs.getString(3).equals(password)){
+                    System.out.println("Login successful.");
+                    conn.close();                          //close the connection
+                    return true;
+                }
+            }
+            conn.close();
+
+        } catch (Exception e) {
+            System.out.println(e);
+        }
+        System.out.println("Login failed.");
+        return false;
+    }
 }
