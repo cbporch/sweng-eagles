@@ -16,8 +16,6 @@ import java.util.ArrayList;
  * Launches a GUI and processes the input from the gui into the database
  */
 public class DatabaseInput {
-
-
     private static JLabel successLabel;
     final private static JButton submitButton = new JButton("Submit");
     private static Boolean phraseProbFieldFocus = false;
@@ -334,15 +332,25 @@ public class DatabaseInput {
         frame.setMaximumSize(new Dimension(700, 500));
         frame.setMinimumSize(new Dimension(700, 500));
         frame.setPreferredSize(new Dimension(700, 500));
-
         DatabaseInput databaseInput = new DatabaseInput();
-
         //Set up the content pane.
         databaseInput.addComponentsToPane(frame.getContentPane());
-
         //Display the window.
         frame.pack();
         frame.setVisible(true);
+
+        frame.addWindowListener(new WindowAdapter()
+        {
+            public void windowClosing(WindowEvent e)
+            {
+                System.out.println("Frame closing...");
+                try {
+                    db.close();
+                } catch (Exception ex){
+                    System.out.println(ex);
+                }
+            }
+        });
     }
 
     public void acceptInput() {
