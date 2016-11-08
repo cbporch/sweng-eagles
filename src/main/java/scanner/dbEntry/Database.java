@@ -189,11 +189,9 @@ public class Database {
     }
 
 
-    public static Boolean checkLogin(String username, String password){
+    public Boolean checkLogin(String username, String password) throws Exception {
         System.out.println("Username: " + username + " Password: " + password);
         password = Hasher.hashSHA(password);
-        try {
-            Connection conn = getConnection();              //get connection
             Statement statement = conn.createStatement();   //create statement
             String sql = String.format("SELECT * from Logins WHERE Username like '%s'", username);
             System.out.println(sql);
@@ -205,11 +203,6 @@ public class Database {
                     return true;
                 }
             }
-            conn.close();
-
-        } catch (Exception e) {
-            System.out.println(e);
-        }
         System.out.println("Login failed.");
         return false;
     }

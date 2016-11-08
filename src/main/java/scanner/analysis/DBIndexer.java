@@ -24,6 +24,7 @@ public class DBIndexer {
     IndexWriter writer;
     IndexSearcher isearcher;
     Version v = Version.LUCENE_6_2_1;
+    Database db = new Database();
 
     public DBIndexer() throws IOException {
         analyzer = new StemAnalyzer();
@@ -35,7 +36,7 @@ public class DBIndexer {
     private void indexDB() throws IOException {
         ArrayList<String> words = null;
         try {
-            words = Database.getWords();
+            words = db.getWords();
         } catch (Exception e) {
             e.printStackTrace();
         }

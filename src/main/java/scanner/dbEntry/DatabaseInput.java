@@ -7,6 +7,7 @@ import java.awt.*;
 import java.awt.event.*;
 import java.io.File;
 import java.io.IOException;
+import java.sql.SQLException;
 import java.util.ArrayList;
 
 /**
@@ -259,13 +260,18 @@ public class DatabaseInput {
      * @param words - an array of words captured in the GUI
      * @throws Exception
      */
-    public static void processWordsSHA(ArrayList<Word> words) throws Exception {
+    public void processWordsSHA(ArrayList<Word> words) throws Exception {
           try{
               for(Word word: words) {
-                  Database.insertWords(word.getWord(), word.getRarity(), word.getNum());
+                  db.insertWords(word.getWord(), word.getRarity(), word.getNum());
               }
-          } catch (Exception ex) {
-              System.out.println(ex);
+          } catch (Exception e) {
+              if(e instanceof SQLException){
+                  if(((SQLException) e).getErrorCode()==1062) {
+                      //do nothing
+                  }
+              }
+              else System.out.println(e);                     //print the exception
           }
     }
 
@@ -277,9 +283,8 @@ public class DatabaseInput {
     public static void processPhrasesSHA(ArrayList<Phrase> phrases) throws Exception {
         try {
             for (Phrase phrase : phrases) {
-                    Database.insertPhrases(phrase.getPhrase(), phrase.getRarity(), phrase.getWordcount(), phrase.getNum());
+                   db.insertPhrases(phrase.getPhrase(), phrase.getRarity(), phrase.getWordcount(), phrase.getNum());
             }
-            System.out.println("Phrase Processing complete");
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -309,46 +314,44 @@ public class DatabaseInput {
         frame.setVisible(true);
     }
 
-    public void acceptInput(){
+    public void acceptInput() {
         System.out.println("Trying...");
         ArrayList<Word> words = new ArrayList<>();
         ArrayList<Phrase> phrases = new ArrayList<>();
 
         //set up the words
-        if(wordsTextField.getText().equals(wordsHintText)){
+        if (wordsTextField.getText().equals(wordsHintText)) {
             //do nothing
-        }
-        else{
+        } else {
             Word word = new Word();
             word.setWord(wordsTextField.getText());
 
-            if(numDependentBtn.isSelected()){
+            if (numDependentBtn.isSelected()) {
                 word.setNum(1);
             } else word.setNum(0);
 
-            if(probField.getText().equals(probHintText)){
+            if (probField.getText().equals(probHintText)) {
                 word.setRarity(1);
             } else word.setRarity(Float.parseFloat(probField.getText()));
 
-            if(synBtn.isSelected()){
+            if (synBtn.isSelected()) {
                 //insert synonyms
             }
             words.add(word);
         }
 
         //set up the phrases
-        if(phraseTextField.getText().equals(phraseHintText)){
+        if (phraseTextField.getText().equals(phraseHintText)) {
             //do nothing
-        }
-        else{
+        } else {
             Phrase phrase = new Phrase();
             phrase.setPhrase(phraseTextField.getText());
 
-            if(phraseNumDependentBtn.isSelected()){
+            if (phraseNumDependentBtn.isSelected()) {
                 phrase.setNum(1);
             } else phrase.setNum(0);
 
-            if(phraseProbField.getText().equals(probHintText)){
+            if (phraseProbField.getText().equals(probHintText)) {
                 phrase.setRarity(1);
             } else phrase.setRarity(Float.parseFloat(phraseProbField.getText()));
 
@@ -359,9 +362,14 @@ public class DatabaseInput {
             processWordsSHA(words);
             System.out.println("Words Processing Complete");
             processPhrasesSHA(phrases);
-            successLabel.setText("Processing complete");
-        } catch (Exception ex) {
-            System.out.println(ex);
+            System.out.println("Phrase Processing Complete");
+        } catch (Exception e) {
+            if (e instanceof SQLException) {
+                if (((SQLException) e).getErrorCode() == 1062) {
+                    //do nothing
+                }
+            } else System.out.println(e);                     //print the exception
         }
+        successLabel.setText("Processing complete");
     }
 }
