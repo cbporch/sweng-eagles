@@ -103,34 +103,25 @@ public class Database {
      */
     public ArrayList<String> getPhrases() throws Exception {
         ArrayList<String> phrases = new ArrayList<>();
-
-        try {
-            Statement statement = conn.createStatement();   //create statement
-            String sql = String.format("select phrase from Phrases");   //select on phrase column
-//            System.out.println(sql);
-            ResultSet rs = statement.executeQuery(sql);     //execute the select query
-            while (rs.next()) {
-                phrases.add(rs.getString(1));               //add the phrase to the arraylist
-            }
-//            System.out.println(phrases);
-            System.out.println("select phrases completed");
-            return phrases;
-        } catch (Exception e) {
-            System.out.println(e);                          //display exception
-            return null;
+        Statement statement = conn.createStatement();   //create statement
+        String sql = String.format("select phrase from Phrases");   //select on phrase column
+        ResultSet rs = statement.executeQuery(sql);     //execute the select query
+        while (rs.next()) {
+            phrases.add(rs.getString(1));               //add the phrase to the arraylist
         }
+        System.out.println("select phrases completed");
+        return phrases;
     }
+
 
     /**
      * Hashes the given word and finds it in the database.
      * @param word - word to get from database
      * @return if a word is matched, it is returned
      */
-    public Word getWord(String word){
+    public Word getWord(String word) throws Exception{
         Word found = new Word();
         //word = Hasher.hashSHA(word);    //hash the word
-
-        try {
             Statement statement = conn.createStatement();   //create statement
             String sql = String.format("SELECT * from Words WHERE word like '%s'", word);
             ResultSet rs = statement.executeQuery(sql);     //execute the select query
@@ -146,9 +137,6 @@ public class Database {
                     return found;
                 }
             }
-        } catch (Exception e) {
-            System.out.println(e);
-        }
         return null;
     }
 
@@ -157,11 +145,10 @@ public class Database {
      * @param phrase - phrase to look for
      * @return if a phrase is matched, it is returned
      */
-    public Phrase getPhrase(String phrase, int N){
+    public Phrase getPhrase(String phrase, int N) throws Exception{
         Phrase found = new Phrase();
         //phrase = Hasher.hashSHA(phrase);        //hash the phrase
 
-        try {
             Statement statement = conn.createStatement();   //create statement
             String sql = String.format("SELECT * from Phrases WHERE phrase like '%s' AND count like '%d'", phrase, N);
             System.out.println(sql);
@@ -180,11 +167,6 @@ public class Database {
                     return found;
                 }
             }
-
-        } catch (Exception e) {
-            System.out.println(e);
-        }
-
         return null;
     }
 
@@ -207,9 +189,8 @@ public class Database {
         return false;
     }
 
-    public ArrayList<Integer> getWordcounts(){
+    public ArrayList<Integer> getWordcounts() throws Exception{
         ArrayList<Integer> grams = new ArrayList<>();
-        try {
             Statement statement = conn.createStatement();   //create statement
             String sql = String.format("SELECT DISTINCT count from Phrases");
             System.out.println(sql);
@@ -217,11 +198,6 @@ public class Database {
             while(rs.next()){
                 grams.add(rs.getInt(1));
             }
-
-        } catch (Exception e) {
-            System.out.println(e);
-            return null;
-        }
         return grams;
     }
 }
