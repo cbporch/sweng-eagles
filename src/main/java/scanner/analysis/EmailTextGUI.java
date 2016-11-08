@@ -1,5 +1,6 @@
 package scanner.analysis;
 
+import scanner.LoginGUI;
 import scanner.Word;
 import scanner.dbEntry.CSVFileReader;
 import scanner.dbEntry.Database;
@@ -115,8 +116,8 @@ public class EmailTextGUI {
         importTermsBtn.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                DatabaseInput d = new DatabaseInput();
-                d.main(null);
+                LoginGUI loginGUI = new LoginGUI();
+                loginGUI.main(null);
             }
         });
     }

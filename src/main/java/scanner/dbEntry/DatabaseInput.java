@@ -2,18 +2,12 @@ package scanner.dbEntry;
 
 import scanner.Phrase;
 import scanner.Word;
-import scanner.filtering.Hasher;
-import scanner.filtering.LuceneStemmer;
-
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
-import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
 
 /**
  * Created by cdeck_000 on 10/5/2016.
@@ -93,7 +87,6 @@ public class DatabaseInput {
          */
         wordsTextField.addFocusListener(new FocusListener() {
             public void focusGained(FocusEvent e) {
-                System.out.println(wordsTextField.getText());
                 if(wordsTextField.getText().equals(wordsHintText)){
                     wordsTextField.setText("");
                     wordTextFieldFocus = true;
@@ -216,6 +209,7 @@ public class DatabaseInput {
         submitButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                //launch log in screen
                 acceptInput();
             }
         });
@@ -265,17 +259,14 @@ public class DatabaseInput {
      * @param words - an array of words captured in the GUI
      * @throws Exception
      */
-    public void processWordsSHA(Word[] words) throws Exception {
-            try {
-                for (Word word : words) {
-                    if (db.getWord(word.getWord()) == null) {
-                        db.insertWords(word.getWord(), word.getRarity(), word.getNum());
-                    }
-                }
-                System.out.println("Word Processing complete");
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+    public static void processWordsSHA(ArrayList<Word> words) throws Exception {
+          try{
+              for(Word word: words) {
+                  Database.insertWords(word.getWord(), word.getRarity(), word.getNum());
+              }
+          } catch (Exception ex) {
+              System.out.println(ex);
+          }
     }
 
     /**
@@ -283,12 +274,10 @@ public class DatabaseInput {
      * @param phrases - an array of phrases captured in the GUI
      * @throws Exception
      */
-    public void processPhrasesSHA(Phrase[] phrases) throws Exception {
+    public static void processPhrasesSHA(ArrayList<Phrase> phrases) throws Exception {
         try {
             for (Phrase phrase : phrases) {
-                if (db.getPhrase(phrase.getPhrase(), phrase.getWordcount()) == null) {
-                    db.insertPhrases(phrase.getPhrase(), phrase.getRarity(), phrase.getWordcount(), phrase.getNum());
-                }
+                    Database.insertPhrases(phrase.getPhrase(), phrase.getRarity(), phrase.getWordcount(), phrase.getNum());
             }
             System.out.println("Phrase Processing complete");
         } catch (IOException e) {
@@ -363,16 +352,13 @@ public class DatabaseInput {
                 phrase.setRarity(1);
             } else phrase.setRarity(Float.parseFloat(phraseProbField.getText()));
 
-            int wordCount = phrase.getPhrase().split(" ").length;
-            phrase.setWordcount(wordCount);
+            phrase.setWordcount(phraseTextField.getText().split("\\s+").length);
             phrases.add(phrase);
         }
         try {
-            Word[] wordsInput = words.toArray(new Word[words.size()]);
-            Phrase[] phrasesInput = phrases.toArray(new Phrase[phrases.size()]);
-            //processInputSHA(words, phrases, wordProb, phraseProb, wordNumDep, phraseNumDep);
-            processWordsSHA(wordsInput);
-            processPhrasesSHA(phrasesInput);
+            processWordsSHA(words);
+            System.out.println("Words Processing Complete");
+            processPhrasesSHA(phrases);
             successLabel.setText("Processing complete");
         } catch (Exception ex) {
             System.out.println(ex);
