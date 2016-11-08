@@ -3,11 +3,12 @@ package scanner;
 import scanner.filtering.Hasher;
 
 /**
+ * This class models a row in the Words Database, to better allow passing of
+ * relevant data regarding a word throughout the project.
+ *
  * Created by chris on 10/20/16.
  * modified on 10/22/16
  *
- * This class models a row in the Words Database, to better allow passing of
- * relevant data regarding a word throughout the project.
  */
 public class Word {
     private String word;

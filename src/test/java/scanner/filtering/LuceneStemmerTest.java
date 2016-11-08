@@ -23,7 +23,6 @@ public class LuceneStemmerTest {
     public void testStemWords() throws IOException {
         ArrayList<String> input = new ArrayList<>();
         input.add("runs");
-
         ArrayList<String> output = ls.stemWords(input);
         assertEquals("run", output.get(0));
     }

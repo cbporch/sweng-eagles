@@ -34,19 +34,22 @@ public class DatabaseInput {
     final private static JTextField phraseTextField = new JTextField(phraseHintText);
     final private static JTextField phraseProbField = new JTextField(probHintText);
     final private static JRadioButton phraseNumDependentBtn = new JRadioButton("# Dependent?");
-
+    protected static Database db;
 
     /**
      * Empty constructor
      */
     public DatabaseInput() {
+
+        db = new Database();
+
     }
 
     /**
      * Makes the GUI
      * @param pane - the gui reference
      */
-    private static void addComponentsToPane(Container pane) {
+    private void addComponentsToPane(Container pane) {
         pane.setLayout(new BoxLayout(pane, BoxLayout.Y_AXIS));
         JPanel instructionsPanel = new JPanel();
         JLabel instructions = new JLabel("Enter the words/phrases to be inputted below");
@@ -295,15 +298,18 @@ public class DatabaseInput {
         frame.setMaximumSize(new Dimension(700, 500));
         frame.setMinimumSize(new Dimension(700, 500));
         frame.setPreferredSize(new Dimension(700, 500));
+
+        DatabaseInput databaseInput = new DatabaseInput();
+
         //Set up the content pane.
-        addComponentsToPane(frame.getContentPane());
+        databaseInput.addComponentsToPane(frame.getContentPane());
 
         //Display the window.
         frame.pack();
         frame.setVisible(true);
     }
 
-    public static void acceptInput(){
+    public void acceptInput(){
         System.out.println("Trying...");
         ArrayList<Word> words = new ArrayList<>();
         ArrayList<Phrase> phrases = new ArrayList<>();
