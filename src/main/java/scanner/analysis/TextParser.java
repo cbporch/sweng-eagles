@@ -76,7 +76,12 @@ public class TextParser {
      * @return - a Word object for the String word with its database attributes
      */
     private Word findWord(String word){
-        return db.getWord(Hasher.hashSHA(word));
+        try {
+            return db.getWord(Hasher.hashSHA(word));
+        } catch (Exception e) {
+           System.out.println(e);
+        }
+       return null;
     }
 
     /**
@@ -85,7 +90,12 @@ public class TextParser {
      * @return - a Phrase object for the String word with its database attributes
      */
     private Phrase findPhrase(String phrase, int N){
-        return db.getPhrase(Hasher.hashSHA(phrase), N);
+        try {
+            return db.getPhrase(Hasher.hashSHA(phrase), N);
+        } catch (Exception ex) {
+            System.out.println(ex);
+        }
+        return null;
     }
 
     private String NGram(int index, int N){
