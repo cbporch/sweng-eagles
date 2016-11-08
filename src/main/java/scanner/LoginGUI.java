@@ -9,6 +9,7 @@ import javax.swing.border.Border;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.sql.SQLException;
 
 
 /**
@@ -92,7 +93,7 @@ public class LoginGUI {
                             databaseInput.main(null);
                         }
                     } catch (Exception ex) {
-                        System.out.println(ex);
+                        System.out.println(e);                     //print the exception
                     }
                 }
             });
