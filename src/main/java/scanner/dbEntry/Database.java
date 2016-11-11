@@ -1,5 +1,7 @@
 package scanner.dbEntry;
 
+import org.apache.batik.gvt.filter.BackgroundRable8Bit;
+import org.mindrot.jbcrypt.BCrypt;
 import scanner.Phrase;
 import scanner.Word;
 import scanner.filtering.Hasher;
@@ -176,13 +178,12 @@ public class Database {
 
     public Boolean checkLogin(String username, String password) throws Exception {
         System.out.println("Username: " + username + " Password: " + password);
-        password = Hasher.hashSHA(password);
         Statement statement = conn.createStatement();   //create statement
         String sql = String.format("SELECT * from Logins WHERE Username like '%s'", username);
         System.out.println(sql);
         ResultSet rs = statement.executeQuery(sql);     //execute the select query
         while (rs.next()) {
-            if (rs.getString(3).equals(password)) {
+            if (BCrypt.checkpw(password, rs.getString(3))) {
                 System.out.println("Login successful.");
                 conn.close();                          //close the connection
                 return true;

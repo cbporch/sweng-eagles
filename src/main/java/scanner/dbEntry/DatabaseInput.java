@@ -344,6 +344,10 @@ public class DatabaseInput {
             public void windowClosing(WindowEvent e)
             {
                 System.out.println("Frame closing...");
+                wordsTextField.setText(wordsHintText);
+                phraseTextField.setText(phraseHintText);
+                probField.setText(probHintText);
+                phraseProbField.setText(probHintText);
                 try {
                     db.close();
                 } catch (Exception ex){
