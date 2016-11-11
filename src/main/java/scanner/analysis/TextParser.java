@@ -8,10 +8,8 @@ import scanner.filtering.Hasher;
 import scanner.filtering.LuceneStemmer;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Queue;
+import java.util.*;
+import java.util.concurrent.PriorityBlockingQueue;
 
 /**
  * Created by chris on 10/22/16.
@@ -26,12 +24,20 @@ public class TextParser {
     private HashSet<String> unique;
     private Database db;
     private boolean threadDone, parsingComplete;
-    private Queue<String> wordsToFind;
-    private Queue<NPhrase> phraseToFind;
+    private PriorityBlockingQueue<String> wordsToFind;
+    private PriorityBlockingQueue<NPhrase> phraseToFind;
 
     public TextParser(String email) throws Exception {
-        threadDone = false;
-        parsingComplete = false;
+
+        Comparator<NPhrase> comparator = new Comparator<NPhrase>() {
+            @Override
+            public int compare(NPhrase n1, NPhrase n2) {
+                return n1.phrase.compareTo(n2.phrase);
+            }
+        };
+
+        wordsToFind = new PriorityBlockingQueue<String>(10);
+        phraseToFind = new PriorityBlockingQueue<NPhrase>(10, comparator);
         ls = new LuceneStemmer();
         pairs = new ArrayList<>();
         db = new Database();
@@ -50,6 +56,8 @@ public class TextParser {
      * @return - A score of how likely the text is to be confidential.
      */
     public double parse(){
+        threadDone = false;
+        parsingComplete = false;
         int lastIndex = text.size() - 1;
         ArrayList<Integer> grams;
         grams = db.getWordcounts();
@@ -57,7 +65,7 @@ public class TextParser {
         // get hashed n-grams
 
         wordThread wThread = new wordThread();
-        wThread.run();
+
 
         for(int index = 0; index <= lastIndex; index++){
             if(unique.add(text.get(index))){
@@ -80,9 +88,12 @@ public class TextParser {
                     np.phrase = NGram(index, N);
                     phraseToFind.add(np);
                 }
+
             }
+            wThread.run();
         }
         parsingComplete = true;
+
         while(!threadDone){
             // wait for thread to finish, if needed
         }
@@ -132,7 +143,8 @@ public class TextParser {
      */
     private class wordThread implements Runnable{
         public void run(){
-            while(!parsingComplete || !wordsToFind.isEmpty() || !phraseToFind.isEmpty()){
+            threadDone = false;
+            if(!parsingComplete || !wordsToFind.isEmpty() || !phraseToFind.isEmpty()){
                 if(!wordsToFind.isEmpty()){
                     Word w = findWord(wordsToFind.remove());
                     if(w !=null) {
@@ -158,5 +170,6 @@ public class TextParser {
     public class NPhrase{
         protected String phrase;
         protected int num;
+
     }
 }
