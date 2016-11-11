@@ -9,7 +9,9 @@ import scanner.filtering.LuceneStemmer;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Queue;
 
 /**
  * Created by chris on 10/22/16.
@@ -23,8 +25,13 @@ public class TextParser {
     private ArrayList<Doublet> pairs;
     private HashSet<String> unique;
     private Database db;
+    private boolean threadDone, parsingComplete;
+    private Queue<String> wordsToFind;
+    private Queue<NPhrase> phraseToFind;
 
     public TextParser(String email) throws Exception {
+        threadDone = false;
+        parsingComplete = false;
         ls = new LuceneStemmer();
         pairs = new ArrayList<>();
         db = new Database();
@@ -48,23 +55,36 @@ public class TextParser {
         grams = db.getWordcounts();
         unique = new HashSet<>();
         // get hashed n-grams
+
+        wordThread wThread = new wordThread();
+        wThread.run();
+
         for(int index = 0; index <= lastIndex; index++){
             if(unique.add(text.get(index))){
-                Word w = findWord(text.get(index));
-                if(w !=null) {
-                    pairs.add(new Doublet(w.getConf(), w.getNorm()));
-                }
+//                Word w = findWord(text.get(index));
+//                if(w !=null) {
+//                    pairs.add(new Doublet(w.getConf(), w.getNorm()));
+//                }
+                wordsToFind.add(text.get(index));
+
             }
 
             for(int N : grams){
                 if((index + N - 1) <= lastIndex){
-                    Phrase p = findPhrase(NGram(index, N), N);
-
-                    if(p!= null){
-                        pairs.add(new Doublet(p.getConf(),p.getNorm()));
-                    }
+//                    Phrase p = findPhrase(NGram(index, N), N);
+//                    if(p!= null){
+//                        pairs.add(new Doublet(p.getConf(),p.getNorm()));
+//                    }
+                    NPhrase np = new NPhrase();
+                    np.num = N;
+                    np.phrase = NGram(index, N);
+                    phraseToFind.add(np);
                 }
             }
+        }
+        parsingComplete = true;
+        while(!threadDone){
+            // wait for thread to finish, if needed
         }
 
         return CalculateEmailScore.calculate(pairs);
@@ -106,15 +126,37 @@ public class TextParser {
         return phrase;
     }
 
-
+    /*
+     * The goal of this thread is to handle the lookups for each string
+     * and to add them to the pairs ArrayList
+     */
     private class wordThread implements Runnable{
         public void run(){
-            for(String word: unique){
-                Word w = findWord(word);
-                if(w !=null) {
-                    pairs.add(new Doublet(w.getConf(), w.getNorm()));
+            while(!parsingComplete || !wordsToFind.isEmpty() || !phraseToFind.isEmpty()){
+                if(!wordsToFind.isEmpty()){
+                    Word w = findWord(wordsToFind.remove());
+                    if(w !=null) {
+                        pairs.add(new Doublet(w.getConf(), w.getNorm()));
+                    }
+                }
+                if(!phraseToFind.isEmpty()){
+                    NPhrase np = phraseToFind.remove();
+                    Phrase p = findPhrase(np.phrase, np.num);
+                    if(p!= null){
+                        pairs.add(new Doublet(p.getConf(),p.getNorm()));
+                    }
                 }
             }
+            threadDone = true;
         }
+    }
+
+    /*
+     * Struct-like nested class to hold a phrase and its number of words
+     * This exists in order to facilitate threading more easily
+     */
+    public class NPhrase{
+        protected String phrase;
+        protected int num;
     }
 }
