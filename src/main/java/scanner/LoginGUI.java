@@ -19,8 +19,6 @@ public class LoginGUI {
 /**
  * Created by cdeck_000 on 10/19/2016.
  */
-
-        private static JButton uploadFileBtn = new JButton("Upload File");
         private static JLabel usernameLabel = new JLabel("Username");
         private static JLabel passwordLabel = new JLabel("Password");
         private static JTextField usernameField = new JTextField("");
