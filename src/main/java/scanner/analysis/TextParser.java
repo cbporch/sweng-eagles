@@ -43,9 +43,8 @@ public class TextParser {
         db = new Database();
         try {
             text = ls.splitText(email);
-
         } catch (IOException e) {
-            e.printStackTrace();
+            //e.printStackTrace();
         }
     }
 
@@ -58,46 +57,33 @@ public class TextParser {
     public double parse(){
         threadDone = false;
         parsingComplete = false;
-        int lastIndex = text.size() - 1;
-        ArrayList<Integer> grams;
-        grams = db.getWordcounts();
         unique = new HashSet<>();
-        // get hashed n-grams
 
         wordThread wThread = new wordThread();
 
-
-        for(int index = 0; index <= lastIndex; index++){
-            if(unique.add(text.get(index))){
-//                Word w = findWord(text.get(index));
-//                if(w !=null) {
-//                    pairs.add(new Doublet(w.getConf(), w.getNorm()));
-//                }
-                wordsToFind.add(text.get(index));
-
-            }
-
-            for(int N : grams){
-                if((index + N - 1) <= lastIndex){
-//                    Phrase p = findPhrase(NGram(index, N), N);
-//                    if(p!= null){
-//                        pairs.add(new Doublet(p.getConf(),p.getNorm()));
-//                    }
-                    NPhrase np = new NPhrase();
-                    np.num = N;
-                    np.phrase = NGram(index, N);
-                    phraseToFind.add(np);
+        while(wThread.isAlive()){
+            if(!wordsToFind.isEmpty() || !phraseToFind.isEmpty()) {
+                if (!wordsToFind.isEmpty()) {
+                    Word w = findWord(wordsToFind.remove());
+                    if (w != null) {
+                        pairs.add(new Doublet(w.getConf(), w.getNorm()));
+                    }
                 }
-
+                if (!phraseToFind.isEmpty()) {
+                    NPhrase np = phraseToFind.remove();
+                    Phrase p = findPhrase(np.phrase, np.num);
+                    if (p != null) {
+                        pairs.add(new Doublet(p.getConf(), p.getNorm()));
+                    }
+                }
             }
-            wThread.run();
         }
+
         parsingComplete = true;
-
-        while(!threadDone){
-            // wait for thread to finish, if needed
+        while(wThread.isAlive()){
+            if(wordsToFind.isEmpty() && phraseToFind.isEmpty() && parsingComplete)
+                wThread.interrupt();
         }
-
         return CalculateEmailScore.calculate(pairs);
     }
 
@@ -141,30 +127,40 @@ public class TextParser {
      * The goal of this thread is to handle the lookups for each string
      * and to add them to the pairs ArrayList
      */
-    private class wordThread implements Runnable{
+    private class wordThread extends Thread{
+
+        wordThread(){
+            super("wordThread");
+            start();
+        }
+
         public void run(){
-            threadDone = false;
-            if(!parsingComplete || !wordsToFind.isEmpty() || !phraseToFind.isEmpty()){
-                if(!wordsToFind.isEmpty()){
-                    Word w = findWord(wordsToFind.remove());
-                    if(w !=null) {
-                        pairs.add(new Doublet(w.getConf(), w.getNorm()));
+            ArrayList<Integer> grams = db.getWordcounts();
+            int lastIndex = text.size() - 1;
+            for(int index = 0; index <= lastIndex; index++){
+                if(unique.add(text.get(index))){
+                    wordsToFind.add(text.get(index));
+                }
+
+                for(int N : grams){
+                    if((index + N - 1) <= lastIndex){
+                        NPhrase np = new NPhrase();
+                        np.num = N;
+                        np.phrase = NGram(index, N);
+                        phraseToFind.add(np);
                     }
                 }
-                if(!phraseToFind.isEmpty()){
-                    NPhrase np = phraseToFind.remove();
-                    Phrase p = findPhrase(np.phrase, np.num);
-                    if(p!= null){
-                        pairs.add(new Doublet(p.getConf(),p.getNorm()));
-                    }
+                try {
+                    Thread.sleep(10);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
                 }
             }
-            threadDone = true;
         }
     }
 
     /*
-     * Struct-like nested class to hold a phrase and its number of words
+     * Struct-like inner class to hold a phrase and its number of words
      * This exists in order to facilitate threading more easily
      */
     public class NPhrase{
