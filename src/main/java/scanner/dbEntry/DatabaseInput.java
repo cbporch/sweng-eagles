@@ -2,18 +2,13 @@ package scanner.dbEntry;
 
 import scanner.Phrase;
 import scanner.Word;
-import scanner.filtering.Hasher;
-import scanner.filtering.LuceneStemmer;
-
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
-import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileReader;
 import java.io.IOException;
+import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Arrays;
 
 /**
  * Created by cdeck_000 on 10/5/2016.
@@ -21,15 +16,14 @@ import java.util.Arrays;
  * Launches a GUI and processes the input from the gui into the database
  */
 public class DatabaseInput {
-
-
     private static JLabel successLabel;
     final private static JButton submitButton = new JButton("Submit");
     private static Boolean phraseProbFieldFocus = false;
     private static Boolean phraseTextFieldFocus = false;
     private static Boolean wordProbFieldFocus = false;
     private static Boolean wordTextFieldFocus = false;
-    private static JButton uploadFileBtn = new JButton("Upload File");
+    private static JButton uploadWordsFileBtn = new JButton("Import Words");
+    private static JButton uploadPhrasesFileBtn = new JButton("Import Phrases");
     private static String phraseHintText = "Enter phrase here..";
     private static String probHintText = "Enter probability..";
     private static String wordsHintText = "Enter word here..";
@@ -40,19 +34,22 @@ public class DatabaseInput {
     final private static JTextField phraseTextField = new JTextField(phraseHintText);
     final private static JTextField phraseProbField = new JTextField(probHintText);
     final private static JRadioButton phraseNumDependentBtn = new JRadioButton("# Dependent?");
-
+    protected static Database db;
 
     /**
      * Empty constructor
      */
     public DatabaseInput() {
+
+        db = new Database();
+
     }
 
     /**
      * Makes the GUI
      * @param pane - the gui reference
      */
-    private static void addComponentsToPane(Container pane) {
+    private void addComponentsToPane(Container pane) {
         pane.setLayout(new BoxLayout(pane, BoxLayout.Y_AXIS));
         JPanel instructionsPanel = new JPanel();
         JLabel instructions = new JLabel("Enter the words/phrases to be inputted below");
@@ -90,7 +87,6 @@ public class DatabaseInput {
          */
         wordsTextField.addFocusListener(new FocusListener() {
             public void focusGained(FocusEvent e) {
-                System.out.println(wordsTextField.getText());
                 if(wordsTextField.getText().equals(wordsHintText)){
                     wordsTextField.setText("");
                     wordTextFieldFocus = true;
@@ -213,21 +209,22 @@ public class DatabaseInput {
         submitButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                //launch log in screen
                 acceptInput();
             }
         });
 
 
-        uploadFileBtn.addActionListener(new ActionListener() {
+        uploadWordsFileBtn.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 //Handle open button action.
                 System.out.println("In action listener");
                 //Create a file chooser
                 final JFileChooser fc = new JFileChooser();
-                    if (e.getSource() == DatabaseInput.uploadFileBtn) {
+                    if (e.getSource() == DatabaseInput.uploadWordsFileBtn) {
                         System.out.println("In first if");
-                        int returnVal = fc.showOpenDialog(uploadFileBtn);
+                        int returnVal = fc.showOpenDialog(uploadWordsFileBtn);
 
                         if (returnVal == JFileChooser.APPROVE_OPTION) {
                             System.out.println("In second if");
@@ -247,9 +244,39 @@ public class DatabaseInput {
                 //successLabel.setText("Feature not available yet.");
         });
 
+        uploadPhrasesFileBtn.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                //Handle open button action.
+                System.out.println("In action listener");
+                //Create a file chooser
+                final JFileChooser fc = new JFileChooser();
+                if (e.getSource() == DatabaseInput.uploadPhrasesFileBtn) {
+                    System.out.println("In first if");
+                    int returnVal = fc.showOpenDialog(uploadPhrasesFileBtn);
+
+                    if (returnVal == JFileChooser.APPROVE_OPTION) {
+                        System.out.println("In second if");
+                        File file = fc.getSelectedFile();
+                        //This is where a real application would open the file.
+                        System.out.println("Opening: " + file.getName() + ".%n");
+                        ArrayList<Phrase> phrases = CSVFileReader.interpretCSVPhraseFile(file+"");
+                        for(Phrase phrase: phrases){
+                            System.out.println(phrase.getPhrase());
+                        }
+                    } else {
+                        System.out.println("Open command cancelled by user.%n");
+                    }
+
+                }
+            }
+            //successLabel.setText("Feature not available yet.");
+        });
+
         successLabel = new JLabel("");
         submitPanel.add(submitButton);
-        submitPanel.add(uploadFileBtn);
+        submitPanel.add(uploadWordsFileBtn);
+        submitPanel.add(uploadPhrasesFileBtn);
         submitPanel.add(successLabel);
 
 
@@ -262,17 +289,19 @@ public class DatabaseInput {
      * @param words - an array of words captured in the GUI
      * @throws Exception
      */
-    public static void processWordsSHA(Word[] words) throws Exception {
-            try {
-                for (Word word : words) {
-                    if (Database.getWord(word.getWord()) == null) {
-                        Database.insertWords(word.getWord(), word.getRarity(), word.getNum());
-                    }
-                }
-                System.out.println("Word Processing complete");
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+    public void processWordsSHA(ArrayList<Word> words) throws Exception {
+          try{
+              for(Word word: words) {
+                  db.insertWords(word.getWord(), word.getRarity(), word.getNum());
+              }
+          } catch (Exception e) {
+              if(e instanceof SQLException){
+                  if(((SQLException) e).getErrorCode()==1062) {
+                      //do nothing
+                  }
+              }
+              else System.out.println(e);                     //print the exception
+          }
     }
 
     /**
@@ -280,14 +309,11 @@ public class DatabaseInput {
      * @param phrases - an array of phrases captured in the GUI
      * @throws Exception
      */
-    public static void processPhrasesSHA(Phrase[] phrases) throws Exception {
+    public static void processPhrasesSHA(ArrayList<Phrase> phrases) throws Exception {
         try {
             for (Phrase phrase : phrases) {
-                if (Database.getPhrase(phrase.getPhrase()) == null) {
-                    Database.insertPhrases(phrase.getPhrase(), phrase.getRarity(), phrase.getWordcount(), phrase.getNum());
-                }
+                   db.insertPhrases(phrase.getPhrase(), phrase.getRarity(), phrase.getWordcount(), phrase.getNum());
             }
-            System.out.println("Phrase Processing complete");
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -306,70 +332,87 @@ public class DatabaseInput {
         frame.setMaximumSize(new Dimension(700, 500));
         frame.setMinimumSize(new Dimension(700, 500));
         frame.setPreferredSize(new Dimension(700, 500));
+        DatabaseInput databaseInput = new DatabaseInput();
         //Set up the content pane.
-        addComponentsToPane(frame.getContentPane());
-
+        databaseInput.addComponentsToPane(frame.getContentPane());
         //Display the window.
         frame.pack();
         frame.setVisible(true);
+
+        frame.addWindowListener(new WindowAdapter()
+        {
+            public void windowClosing(WindowEvent e)
+            {
+                System.out.println("Frame closing...");
+                wordsTextField.setText(wordsHintText);
+                phraseTextField.setText(phraseHintText);
+                probField.setText(probHintText);
+                phraseProbField.setText(probHintText);
+                try {
+                    db.close();
+                } catch (Exception ex){
+                    System.out.println(ex);
+                }
+            }
+        });
     }
 
-    public static void acceptInput(){
+    public void acceptInput() {
         System.out.println("Trying...");
         ArrayList<Word> words = new ArrayList<>();
         ArrayList<Phrase> phrases = new ArrayList<>();
 
         //set up the words
-        if(wordsTextField.getText().equals(wordsHintText)){
+        if (wordsTextField.getText().equals(wordsHintText)) {
             //do nothing
-        }
-        else{
+        } else {
             Word word = new Word();
             word.setWord(wordsTextField.getText());
 
-            if(numDependentBtn.isSelected()){
+            if (numDependentBtn.isSelected()) {
                 word.setNum(1);
             } else word.setNum(0);
 
-            if(probField.getText().equals(probHintText)){
+            if (probField.getText().equals(probHintText)) {
                 word.setRarity(1);
             } else word.setRarity(Float.parseFloat(probField.getText()));
 
-            if(synBtn.isSelected()){
+            if (synBtn.isSelected()) {
                 //insert synonyms
             }
             words.add(word);
         }
 
         //set up the phrases
-        if(phraseTextField.getText().equals(phraseHintText)){
+        if (phraseTextField.getText().equals(phraseHintText)) {
             //do nothing
-        }
-        else{
+        } else {
             Phrase phrase = new Phrase();
             phrase.setPhrase(phraseTextField.getText());
 
-            if(phraseNumDependentBtn.isSelected()){
+            if (phraseNumDependentBtn.isSelected()) {
                 phrase.setNum(1);
             } else phrase.setNum(0);
 
-            if(phraseProbField.getText().equals(probHintText)){
+            if (phraseProbField.getText().equals(probHintText)) {
                 phrase.setRarity(1);
             } else phrase.setRarity(Float.parseFloat(phraseProbField.getText()));
 
-            int wordCount = phrase.getPhrase().split(" ").length;
-            phrase.setWordcount(wordCount);
+            phrase.setWordcount(phraseTextField.getText().split("\\s+").length);
             phrases.add(phrase);
         }
         try {
-            Word[] wordsInput = words.toArray(new Word[words.size()]);
-            Phrase[] phrasesInput = phrases.toArray(new Phrase[phrases.size()]);
-            //processInputSHA(words, phrases, wordProb, phraseProb, wordNumDep, phraseNumDep);
-            processWordsSHA(wordsInput);
-            processPhrasesSHA(phrasesInput);
-            successLabel.setText("Processing complete");
-        } catch (Exception ex) {
-            System.out.println(ex);
+            processWordsSHA(words);
+            System.out.println("Words Processing Complete");
+            processPhrasesSHA(phrases);
+            System.out.println("Phrase Processing Complete");
+        } catch (Exception e) {
+            if (e instanceof SQLException) {
+                if (((SQLException) e).getErrorCode() == 1062) {
+                    //do nothing
+                }
+            } else System.out.println(e);                     //print the exception
         }
+        successLabel.setText("Processing complete");
     }
 }

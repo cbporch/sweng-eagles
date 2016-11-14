@@ -1,14 +1,13 @@
 package scanner.analysis;
 
+import scanner.LoginGUI;
 import scanner.Word;
 import scanner.dbEntry.CSVFileReader;
+import scanner.dbEntry.Database;
 import scanner.dbEntry.DatabaseInput;
 
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
+import java.awt.event.*;
 import java.io.File;
 import java.util.ArrayList;
 import javax.swing.*;
@@ -22,6 +21,7 @@ import javax.swing.border.Border;
  * Create a simple GUI to input an email to be scanned. A score for the email will be shown on screen.
  */
 public class EmailTextGUI {
+    protected static Database db;
 
     private static JButton uploadFileBtn = new JButton("Upload File");
     /**
@@ -70,8 +70,12 @@ public class EmailTextGUI {
                 try {
                     String email = textArea.getText();
                     TextParser textParser = new TextParser(email);
+                    long f = System.currentTimeMillis();
+
                     double score = textParser.parse();
                     scoreLabel.setText(score+"");
+                    System.out.print((System.currentTimeMillis() - f));
+
                 } catch (Exception ex) {
                     System.out.println(ex);
                 }
@@ -101,7 +105,6 @@ public class EmailTextGUI {
                     } else {
                         System.out.println("Open command cancelled by user.%n");
                     }
-
                 }
             }
             //successLabel.setText("Feature not available yet.");
@@ -110,8 +113,8 @@ public class EmailTextGUI {
         importTermsBtn.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                DatabaseInput d = new DatabaseInput();
-                d.main(null);
+                LoginGUI loginGUI = new LoginGUI();
+                loginGUI.main(null);
             }
         });
     }
@@ -135,6 +138,19 @@ public class EmailTextGUI {
         //Display the window.
         frame.pack();
         frame.setVisible(true);
+
+        frame.addWindowListener(new WindowAdapter()
+        {
+            public void windowClosing(WindowEvent e)
+            {
+                System.out.println("Frame closing...");
+                try {
+                    db.close();
+                } catch (Exception ex){
+                    System.out.println(ex);
+                }
+            }
+        });
     }
 
     public static void main(String[] args) {
@@ -143,6 +159,7 @@ public class EmailTextGUI {
         javax.swing.SwingUtilities.invokeLater(new Runnable() {
             public void run() {
                 createAndShowGUI();
+                db = new Database();
             }
         });
     }
