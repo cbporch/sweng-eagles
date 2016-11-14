@@ -2,28 +2,25 @@ package scanner;
 
 import scanner.dbEntry.Database;
 import scanner.dbEntry.DatabaseInput;
-import scanner.filtering.Hasher;
-
 import javax.swing.*;
 import javax.swing.border.Border;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.sql.SQLException;
 
 
 /**
  * Created by cdeck_000 on 11/2/2016.
  */
-public class LoginGUI {
+public class LoginGUI extends JFrame{
 /**
  * Created by cdeck_000 on 10/19/2016.
  */
-        private static JLabel usernameLabel = new JLabel("Username");
-        private static JLabel passwordLabel = new JLabel("Password");
-        private static JTextField usernameField = new JTextField("");
-        private static JPasswordField passwordField = new JPasswordField(15);
-        private static JFrame frame = new JFrame("LoginGUI");
+    private static JLabel usernameLabel = new JLabel("Username");
+    private static JLabel passwordLabel = new JLabel("Password");
+    private static JTextField usernameField = new JTextField("");
+    private static JPasswordField passwordField = new JPasswordField(15);
+    private static JFrame frame = new JFrame("LoginGUI");
 
         /**
          * Add the components to the GUI.
