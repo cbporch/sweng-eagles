@@ -34,6 +34,9 @@ public class CalculateEmailScore
 			else
 				wordConfProb = term.getNumConf() / (double) totalConfNorm;
 
+			if (greatestConfProb < wordConfProb)
+				greatestConfProb = wordConfProb;
+
 			if (totalConfNorm == 0)
 				wordNormProb = 0.0;
 			else
@@ -56,6 +59,11 @@ public class CalculateEmailScore
 			emailScoreX *= wordProb;
 			emailScoreY *= 1 - wordProb;
 		}
-		return (emailScoreX / (emailScoreX + emailScoreY));
+
+		double result = emailScoreX / (emailScoreX + emailScoreY);
+
+		if (greatestConfProb > result)
+			return greatestConfProb;
+		return result;
 	}
 }

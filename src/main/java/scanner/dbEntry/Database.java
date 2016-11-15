@@ -1,6 +1,6 @@
 package scanner.dbEntry;
 
-import org.apache.batik.gvt.filter.BackgroundRable8Bit;
+//import org.apache.batik.gvt.filter.BackgroundRable8Bit;
 import org.mindrot.jbcrypt.BCrypt;
 import scanner.Phrase;
 import scanner.Word;
