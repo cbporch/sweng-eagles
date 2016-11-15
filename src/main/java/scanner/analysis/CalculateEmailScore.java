@@ -16,6 +16,7 @@ public class CalculateEmailScore
      */
 	public static double calculate(ArrayList<Doublet> termProbabilityList)
 	{
+		double greatestConfProb = 0;
 		double emailScoreX = 1;
 		double emailScoreY = 1;
 
