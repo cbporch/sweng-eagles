@@ -49,16 +49,16 @@ public class CSVFileReader {
                     else {
                         //Cleans the data up so it can be used for Word
                         int actualRarity = Integer.parseInt(rarity);
-                        boolean actualNumDep;
+                        /*boolean actualNumDep;
                         if (numDep.equals("0")) {
                             actualNumDep = false;
                         }
                         else {
                             actualNumDep = true;
-                        }
+                        }*/
 
                         //Creates new Word and adds it to listOfWords.
-                        newWord = new scanner.Word(word,actualRarity,actualNumDep);
+                        newWord = new scanner.Word(word,actualRarity,Integer.parseInt(numDep));
                         listOfWords.add(newWord);
 
                         //resets the values.
@@ -115,16 +115,16 @@ public class CSVFileReader {
                         //Cleans the data up so it can be used for Phrase
                         int actualRarity = Integer.parseInt(rarity);
                         int actualCount = Integer.parseInt(count);
-                        boolean actualNumDep;
+                       /* boolean actualNumDep;
                         if (numDep.equals("0")) {
                             actualNumDep = false;
                         }
                         else {
                             actualNumDep = true;
-                        }
+                        }*/
 
                         //Creates new Phrase and adds it to listOfPhrases.
-                        newPhrase = new scanner.Phrase(phrase,actualCount,actualRarity,actualNumDep);
+                        newPhrase = new scanner.Phrase(phrase,actualCount,actualRarity,Integer.parseInt(numDep));
                         listOfPhrases.add(newPhrase);
 
                         //resets the values.

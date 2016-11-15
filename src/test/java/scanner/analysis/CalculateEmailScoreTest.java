@@ -10,6 +10,7 @@ import static org.junit.Assert.*;
 
 /**
  * Created by Chris on 10/24/2016.
+ *
  */
 public class CalculateEmailScoreTest {
     private static final double DELTA = 1e-10;
@@ -17,10 +18,17 @@ public class CalculateEmailScoreTest {
     @Test
     public void calculate() throws Exception {
         ArrayList<Doublet> pairs = new ArrayList<>();
-        pairs.add(new Doublet(2,1));
 
-        Assert.assertEquals(0.6666666666666666, CalculateEmailScore.calculate(pairs), DELTA);
+        Assert.assertEquals(0.0, CalculateEmailScore.calculate(pairs), DELTA);
 
+        pairs.add(new Doublet(15, 1));
+        Assert.assertEquals(0.9375, CalculateEmailScore.calculate(pairs), DELTA);
+
+        pairs.add(new Doublet(1, 15));
+        Assert.assertEquals(0.5, CalculateEmailScore.calculate(pairs), DELTA);
+
+        pairs.add(new Doublet(6, 3));
+        Assert.assertEquals(0.666666666666666666, CalculateEmailScore.calculate(pairs), DELTA);
     }
 
 }
