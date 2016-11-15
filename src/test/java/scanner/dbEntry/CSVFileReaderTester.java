@@ -14,7 +14,7 @@ import static org.junit.Assert.assertTrue;
 /**
  * Created by Tom on 10/27/16.
  */
-public class CSVFileReaderTest {
+public class CSVFileReaderTester {
 
     @Test
     public void interpretCSVFile() throws Exception {
