@@ -1,5 +1,6 @@
 package scanner.analysis;
 
+import com.intellij.ide.ui.AppearanceOptionsTopHitProvider;
 import scanner.LoginGUI;
 import scanner.Word;
 import scanner.dbEntry.CSVFileReader;
@@ -10,6 +11,7 @@ import java.awt.*;
 import java.awt.event.*;
 import java.io.File;
 import java.util.ArrayList;
+import javax.imageio.ImageIO;
 import javax.swing.*;
 import javax.swing.border.Border;
 
@@ -132,6 +134,12 @@ public class EmailTextGUI {
         frame.setResizable(true);
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
         frame.setSize(screenSize.width, screenSize.height);
+        try {
+            ImageIcon icon = new ImageIcon(ImageIO.read(new File("red_team.jpeg")));
+            frame.setIconImage(icon.getImage());
+        } catch(Exception e) {
+            System.out.println(e);
+        }
         //Set up the content pane.
         addComponentsToPane(frame.getContentPane());
 

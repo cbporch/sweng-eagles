@@ -2,6 +2,8 @@ package scanner.dbEntry;
 
 import scanner.Phrase;
 import scanner.Word;
+
+import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
@@ -333,6 +335,12 @@ public class DatabaseInput {
         frame.setMinimumSize(new Dimension(700, 500));
         frame.setPreferredSize(new Dimension(700, 500));
         DatabaseInput databaseInput = new DatabaseInput();
+        try {
+            ImageIcon icon = new ImageIcon(ImageIO.read(new File("red_team.jpeg")));
+            frame.setIconImage(icon.getImage());
+        } catch(Exception e) {
+            System.out.println(e);
+        }
         //Set up the content pane.
         databaseInput.addComponentsToPane(frame.getContentPane());
         //Display the window.
