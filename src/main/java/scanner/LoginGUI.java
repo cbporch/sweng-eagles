@@ -3,11 +3,15 @@ package scanner;
 import org.apache.log4j.Logger;
 import scanner.dbEntry.Database;
 import scanner.dbEntry.DatabaseInput;
+
+import javax.imageio.ImageIO;
 import javax.swing.*;
 import javax.swing.border.Border;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.File;
+import java.net.URL;
 
 
 /**
@@ -117,6 +121,12 @@ public class LoginGUI extends JFrame{
             frame.setResizable(true);
             Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
             frame.setSize(screenSize.width, screenSize.height);
+            try {
+                ImageIcon icon = new ImageIcon(ImageIO.read(new File("red_team.jpeg")));
+                frame.setIconImage(icon.getImage());
+            } catch(Exception e) {
+                System.out.println(e);
+            }
             //Set up the content pane.
             addComponentsToPane(frame.getContentPane());
 
@@ -130,6 +140,8 @@ public class LoginGUI extends JFrame{
             //creating and showing this application's GUI.
             javax.swing.SwingUtilities.invokeLater(new Runnable() {
                 public void run() {
+                    //URL iconURL = getClass().getResource("C:\\Users\\cdeck_000\\Pictures\\red_team");
+                    // iconURL is null when not found
                     createAndShowGUI();
                 }
             });
