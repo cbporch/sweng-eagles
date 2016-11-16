@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE log SYSTEM "logger.dtd">
+<log>
+<record>
+  <date>2016-11-16T17:21:30</date>
+  <millis>1479334890035</millis>
+  <sequence>0</sequence>
+  <logger>scanner.LoginGUI</logger>
+  <level>WARNING</level>
+  <class>scanner.LoginGUI$1</class>
+  <method>actionPerformed</method>
+  <thread>15</thread>
+  <message>Login FAILED for username : admin</message>
+</record>
+</log>
+Nov 16, 2016 5:28:46 PM scanner.LoginGUI$1 actionPerformed
+INFO: Login successful for username: admin
+Nov 16, 2016 5:32:48 PM scanner.LoginGUI$1 actionPerformed
+INFO: Login successful for username: admin
+Nov 16, 2016 5:33:08 PM scanner.LoginGUI$3 windowClosing
+INFO: Frame closing...Attempting to close loggers.
+Nov 16, 2016 5:33:38 PM scanner.LoginGUI$1 actionPerformed
+WARNING: Login FAILED for username : admin

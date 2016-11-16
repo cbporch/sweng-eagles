@@ -1,6 +1,7 @@
 package scanner;
 
 import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import scanner.dbEntry.Database;
 import scanner.dbEntry.DatabaseInput;
 
@@ -10,6 +11,10 @@ import javax.swing.border.Border;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+import java.io.IOException;
+import java.util.logging.*;
 import java.io.File;
 import java.net.URL;
 
@@ -26,8 +31,7 @@ public class LoginGUI extends JFrame{
     private static JTextField usernameField = new JTextField("");
     private static JPasswordField passwordField = new JPasswordField(15);
     private static JFrame frame = new JFrame("LoginGUI");
-    final static Logger logger = Logger.getLogger(LoginGUI.class);
-
+    private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(LoginGUI.class.getName());
         /**
          * Add the components to the GUI.
          * @param pane - the pane for the GUI
@@ -90,13 +94,15 @@ public class LoginGUI extends JFrame{
                         String passwordString = new String(password);
                         Database b = new Database();
                         if(b.checkLogin(username, passwordString)){
-                            logger.info("Login successful for username: " + username);
+                            logger.log(Level.INFO, "Login successful for username: " + username);
                             DatabaseInput databaseInput = new DatabaseInput();
                             databaseInput.main(null);
                         }
+                        else {
+                            logger.log(Level.WARNING, "Login FAILED for username : " + username);
+                        }
                     } catch (Exception ex) {
-                        logger.error("Login failed for username: " + usernameField.getText() + ". Message: " + ex.getMessage());
-                        System.out.println(e);                     //print the exception
+                        logger.log(Level.SEVERE, "Login failed for username: " + usernameField.getText() + ". Message: " + ex.getMessage());
                     }
                 }
             });
@@ -105,6 +111,22 @@ public class LoginGUI extends JFrame{
                 @Override
                 public void actionPerformed(ActionEvent e) {
                     frame.dispose();
+                }
+            });
+
+            frame.addWindowListener(new WindowAdapter()
+            {
+                public void windowClosing(WindowEvent e)
+                {
+                    logger.log(Level.INFO, "Frame closing...Attempting to close loggers.");
+                    try {
+                        for(Handler h:logger.getHandlers())
+                        {
+                            h.close();   //must call h.close or a .LCK file will remain.
+                        }
+                    } catch (Exception ex){
+                       logger.log(Level.SEVERE, "Error: + " + ex.getMessage());
+                    }
                 }
             });
         }
@@ -140,8 +162,15 @@ public class LoginGUI extends JFrame{
             //creating and showing this application's GUI.
             javax.swing.SwingUtilities.invokeLater(new Runnable() {
                 public void run() {
-                    //URL iconURL = getClass().getResource("C:\\Users\\cdeck_000\\Pictures\\red_team");
-                    // iconURL is null when not found
+                    try {
+                        // Create a file handler that write log record to a file called my.log
+                        FileHandler handler = new FileHandler("my.log", true);
+                        handler.setFormatter(new SimpleFormatter());
+                        // Add to the desired logger
+                        logger.addHandler(handler);
+                    } catch (Exception e) {
+                        logger.log(Level.WARNING, "Error creating log file handler. Message: " + e.getMessage());
+                    }
                     createAndShowGUI();
                 }
             });
