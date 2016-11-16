@@ -73,7 +73,7 @@ public class EmailTextGUI {
 
                     double score = textParser.parse();
 
-                    if (score >= 0.7)
+                    if (score >= 0.75)
                         scoreLabel.setText("red");
                     else if (score < 0.01)
                         scoreLabel.setText("green");
