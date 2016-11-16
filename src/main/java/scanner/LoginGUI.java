@@ -1,5 +1,6 @@
 package scanner;
 
+import org.apache.log4j.Logger;
 import scanner.dbEntry.Database;
 import scanner.dbEntry.DatabaseInput;
 import javax.swing.*;
@@ -21,6 +22,7 @@ public class LoginGUI extends JFrame{
     private static JTextField usernameField = new JTextField("");
     private static JPasswordField passwordField = new JPasswordField(15);
     private static JFrame frame = new JFrame("LoginGUI");
+    final static Logger logger = Logger.getLogger(LoginGUI.class);
 
         /**
          * Add the components to the GUI.
@@ -41,7 +43,7 @@ public class LoginGUI extends JFrame{
             pane.add(loginPanel, BorderLayout.CENTER);
 
             //add username fields
-            JPanel usernamePanel = new JPanel();
+            final JPanel usernamePanel = new JPanel();
             usernamePanel.setBackground(Color.LIGHT_GRAY);
             usernamePanel.add(usernameLabel);
             usernamePanel.add(usernameField);
@@ -84,10 +86,12 @@ public class LoginGUI extends JFrame{
                         String passwordString = new String(password);
                         Database b = new Database();
                         if(b.checkLogin(username, passwordString)){
+                            logger.info("Login successful for username: " + username);
                             DatabaseInput databaseInput = new DatabaseInput();
                             databaseInput.main(null);
                         }
                     } catch (Exception ex) {
+                        logger.error("Login failed for username: " + usernameField.getText() + ". Message: " + ex.getMessage());
                         System.out.println(e);                     //print the exception
                     }
                 }
