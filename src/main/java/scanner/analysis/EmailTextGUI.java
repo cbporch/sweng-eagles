@@ -1,5 +1,6 @@
 package scanner.analysis;
 
+import com.intellij.ide.ui.AppearanceOptionsTopHitProvider;
 import scanner.LoginGUI;
 import scanner.Word;
 import scanner.dbEntry.CSVFileReader;
@@ -9,6 +10,7 @@ import java.awt.*;
 import java.awt.event.*;
 import java.io.File;
 import java.util.ArrayList;
+import javax.imageio.ImageIO;
 import javax.swing.*;
 import javax.swing.border.Border;
 
@@ -72,7 +74,14 @@ public class EmailTextGUI {
                     long f = System.currentTimeMillis();
 
                     double score = textParser.parse();
-                    scoreLabel.setText(score+"");
+
+                    if (score >= 0.75)
+                        scoreLabel.setText("red");
+                    else if (score < 0.01)
+                        scoreLabel.setText("green");
+                    else
+                        scoreLabel.setText("yellow");
+
                     System.out.print((System.currentTimeMillis() - f));
 
                 } catch (Exception ex) {
@@ -131,6 +140,12 @@ public class EmailTextGUI {
         frame.setResizable(true);
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
         frame.setSize(screenSize.width, screenSize.height);
+        try {
+            ImageIcon icon = new ImageIcon(ImageIO.read(new File("red_team.jpeg")));
+            frame.setIconImage(icon.getImage());
+        } catch(Exception e) {
+            System.out.println(e);
+        }
         //Set up the content pane.
         addComponentsToPane(frame.getContentPane());
 

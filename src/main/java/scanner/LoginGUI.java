@@ -4,6 +4,8 @@ import org.apache.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
 import scanner.dbEntry.Database;
 import scanner.dbEntry.DatabaseInput;
+
+import javax.imageio.ImageIO;
 import javax.swing.*;
 import javax.swing.border.Border;
 import java.awt.*;
@@ -13,6 +15,8 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.IOException;
 import java.util.logging.*;
+import java.io.File;
+import java.net.URL;
 
 
 /**
@@ -139,6 +143,12 @@ public class LoginGUI extends JFrame{
             frame.setResizable(true);
             Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
             frame.setSize(screenSize.width, screenSize.height);
+            try {
+                ImageIcon icon = new ImageIcon(ImageIO.read(new File("red_team.jpeg")));
+                frame.setIconImage(icon.getImage());
+            } catch(Exception e) {
+                System.out.println(e);
+            }
             //Set up the content pane.
             addComponentsToPane(frame.getContentPane());
 
