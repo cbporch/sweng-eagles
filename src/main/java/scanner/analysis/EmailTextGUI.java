@@ -4,7 +4,6 @@ import scanner.LoginGUI;
 import scanner.Word;
 import scanner.dbEntry.CSVFileReader;
 import scanner.dbEntry.Database;
-import scanner.dbEntry.DatabaseInput;
 
 import java.awt.*;
 import java.awt.event.*;
