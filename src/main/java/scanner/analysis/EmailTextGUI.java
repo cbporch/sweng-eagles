@@ -72,7 +72,14 @@ public class EmailTextGUI {
                     long f = System.currentTimeMillis();
 
                     double score = textParser.parse();
-                    scoreLabel.setText(score+"");
+
+                    if (score >= 0.7)
+                        scoreLabel.setText("red");
+                    else if (score < 0.01)
+                        scoreLabel.setText("green");
+                    else
+                        scoreLabel.setText("yellow");
+
                     System.out.print((System.currentTimeMillis() - f));
 
                 } catch (Exception ex) {
