@@ -1,5 +1,6 @@
 package scanner.dbEntry;
 
+import org.junit.Test;
 import scanner.Word;
 import scanner.filtering.Hasher;
 
@@ -9,43 +10,47 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 
+import static org.junit.Assert.assertEquals;
+
 /**
  * Created by Tom on 10/27/16.
  */
 public class CSVFileReaderTester {
 
+    @Test
+    public void CSVFileReaderTest() {
 
-    public CSVFileReader()
-    {
-        String fileLocation = "src"+ File.separatorChar
-                +"test"+ File.separatorChar
-                +"java" + File.separator
-                +"scanner"+ File.separatorChar
-                +"dbEntry"+ File.separatorChar
-                +"test0.csv"; //First entry = dog,4,0
+        String fileLocation = "src" + File.separatorChar
+                + "test" + File.separatorChar
+                + "java" + File.separator
+                + "scanner" + File.separatorChar
+                + "dbEntry" + File.separatorChar
+                + "test0.csv"; //First entry = dog,4,0
         ArrayList<Word> test = CSVFileReader.interpretCSVFile(fileLocation);
         if (test.size() > 0) {
             assertEquals(Hasher.hashSHA("dog"), test.get(0).getWord());
-            assertEquals(4.0, test.get(0).getRarity(),0);
-            assertFalse(test.get(0).isNum());
+            assertEquals(4.0, test.get(0).getRarity(), 0);
+            assertEquals(test.get(0).isNum(), false);
         }
     }
 
     @Test
     public void interpretCSVPhraseFile() throws Exception {
         CSVFileReader csvfr = new CSVFileReader();
-        String fileLocation = "src"+ File.separatorChar
-                +"test"+ File.separatorChar
-                +"java" + File.separator
-                +"scanner"+ File.separatorChar
-                +"dbEntry"+ File.separatorChar
-                +"test1.csv"; //First entry = the dog is cool,4,2,1
+        String fileLocation = "src" + File.separatorChar
+                + "test" + File.separatorChar
+                + "java" + File.separator
+                + "scanner" + File.separatorChar
+                + "dbEntry" + File.separatorChar
+                + "test1.csv"; //First entry = the dog is cool,4,2,1
         ArrayList<scanner.Phrase> test = CSVFileReader.interpretCSVPhraseFile(fileLocation);
         if (test.size() > 0) {
             assertEquals(Hasher.hashSHA("the dog is cool"), test.get(0).getPhrase());
             assertEquals(4, test.get(0).getWordcount());
-            assertEquals(2.0, test.get(0).getRarity(),0);
-            assertTrue(test.get(0).isNum());
+            assertEquals(2.0, test.get(0).getRarity(), 0);
+            assertEquals(test.get(0).isNum(), true);
+        }
+    }
     /**
      * This is the method for processing and inserting CSV files into the database.
      * It takes in a filepath and then reads through that file. It seperates it into two lists, Words and Phrases.
@@ -88,7 +93,7 @@ public class CSVFileReaderTester {
                             //Cleans the data up so it can be used for Word
                             int actualRarity = Integer.parseInt(rarity);
                             //Creates new Word and adds it to listOfWords.
-                            newWord = new scanner.Word(item, actualRarity, Boolean.parseBoolean(numDep));
+                            newWord = new scanner.Word(item, actualRarity, Integer.parseInt(numDep));
                             listOfWords.add(newWord);
                         }}}
                 else if (lineOfItems.length == 4) //This is a Phrase
@@ -106,7 +111,7 @@ public class CSVFileReaderTester {
                             int actualRarity = Integer.parseInt(rarity);
                             int actualCount = Integer.parseInt(count);
                             //Creates new Phrase and adds it to listOfPhrases.
-                            newPhrase = new scanner.Phrase(item,actualCount,actualRarity,Boolean.parseBoolean(numDep));
+                            newPhrase = new scanner.Phrase(item,actualCount,actualRarity, Integer.parseInt(numDep));
                             listOfPhrases.add(newPhrase);
                         }}}
                 //For loop that goes through the line and picks out the data and puts it all together into a Word.
