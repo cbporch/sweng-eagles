@@ -24,8 +24,7 @@ public class DatabaseInput {
     private static Boolean phraseTextFieldFocus = false;
     private static Boolean wordProbFieldFocus = false;
     private static Boolean wordTextFieldFocus = false;
-    private static JButton uploadWordsFileBtn = new JButton("Import Words");
-    private static JButton uploadPhrasesFileBtn = new JButton("Import Phrases");
+    private static JButton uploadFileBtn = new JButton("Import CSV File");
     private static String phraseHintText = "Enter phrase here..";
     private static String probHintText = "Enter probability..";
     private static String wordsHintText = "Enter word here..";
@@ -217,7 +216,7 @@ public class DatabaseInput {
         });
 
 
-        uploadWordsFileBtn.addActionListener(new ActionListener() {
+       /* uploadWordsFileBtn.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 //Handle open button action.
@@ -245,27 +244,27 @@ public class DatabaseInput {
                 }
                 //successLabel.setText("Feature not available yet.");
         });
-
-        uploadPhrasesFileBtn.addActionListener(new ActionListener() {
+*/
+        uploadFileBtn.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 //Handle open button action.
                 System.out.println("In action listener");
                 //Create a file chooser
                 final JFileChooser fc = new JFileChooser();
-                if (e.getSource() == DatabaseInput.uploadPhrasesFileBtn) {
+                if (e.getSource() == DatabaseInput.uploadFileBtn) {
                     System.out.println("In first if");
-                    int returnVal = fc.showOpenDialog(uploadPhrasesFileBtn);
+                    int returnVal = fc.showOpenDialog(uploadFileBtn);
 
                     if (returnVal == JFileChooser.APPROVE_OPTION) {
                         System.out.println("In second if");
                         File file = fc.getSelectedFile();
                         //This is where a real application would open the file.
                         System.out.println("Opening: " + file.getName() + ".%n");
-                        ArrayList<Phrase> phrases = CSVFileReader.interpretCSVPhraseFile(file+"");
-                        for(Phrase phrase: phrases){
+                        CSVFileReader.interpretCSVFile(file + "");
+                        /*for(Phrase phrase: phrases){
                             System.out.println(phrase.getPhrase());
-                        }
+                        }*/
                     } else {
                         System.out.println("Open command cancelled by user.%n");
                     }
@@ -277,8 +276,7 @@ public class DatabaseInput {
 
         successLabel = new JLabel("");
         submitPanel.add(submitButton);
-        submitPanel.add(uploadWordsFileBtn);
-        submitPanel.add(uploadPhrasesFileBtn);
+        submitPanel.add(uploadFileBtn);
         submitPanel.add(successLabel);
 
 
