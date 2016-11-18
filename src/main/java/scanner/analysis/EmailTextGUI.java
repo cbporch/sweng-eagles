@@ -1,6 +1,5 @@
 package scanner.analysis;
 
-import com.intellij.ide.ui.AppearanceOptionsTopHitProvider;
 import scanner.LoginGUI;
 import scanner.Word;
 import scanner.dbEntry.CSVFileReader;
