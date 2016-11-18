@@ -1,26 +1,29 @@
 package scanner;
 
+import scanner.filtering.Hasher;
+
 /**
+ * This class models a row in the Words Database, to better allow passing of
+ * relevant data regarding a word throughout the project.
+ *
  * Created by chris on 10/20/16.
  * modified on 10/22/16
  *
- * This class models a row in the Words Database, to better allow passing of
- * relevant data regarding a word throughout the project.
  */
 public class Word {
     private String word;
     private float rarity;
     private int conf, norm;
-    private boolean num;
+    private int num;
 
-    public Word(String word, int rarity, boolean num) {
-        this.word = word;
+    public Word(String word, int rarity, int num) {
+        this.setWord(word);
         this.rarity = rarity;
         this.num = num;
     }
 
-    public Word(String word, int rarity, boolean num, int conf, int norm) {
-        this.word = word;
+    public Word(String word, int rarity, int num, int conf, int norm) {
+        this.setWord(word);
         this.rarity = rarity;
         this.conf = conf;
         this.norm = norm;
@@ -40,10 +43,13 @@ public class Word {
     }
 
     public boolean isNum() {
-        return num;
+        if(num==1)
+            return true;
+        else return false;
     }
 
     public void setWord(String word) {
+        word = Hasher.hashSHA(word);
         this.word = word;
     }
 
@@ -51,7 +57,7 @@ public class Word {
         this.rarity = rarity;
     }
 
-    public void setNum(boolean num) {
+    public void setNum(int num) {
         this.num = num;
     }
 
@@ -70,4 +76,9 @@ public class Word {
     public void setConf(int conf) {
         this.conf = conf;
     }
+
+    public int getNum() {
+        return num;
+    }
+
 }

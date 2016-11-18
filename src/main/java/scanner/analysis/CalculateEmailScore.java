@@ -16,9 +16,10 @@ public class CalculateEmailScore
      */
 	public static double calculate(ArrayList<Doublet> termProbabilityList)
 	{
+		double greatestConfProb = 0;
 		double emailScoreX = 1;
 		double emailScoreY = 1;
-		double totalScore = 0;
+
 		if (termProbabilityList.size() == 0)
 			return 0.0;
 
@@ -33,6 +34,9 @@ public class CalculateEmailScore
 			else
 				wordConfProb = term.getNumConf() / (double) totalConfNorm;
 
+			if (greatestConfProb < wordConfProb)
+				greatestConfProb = wordConfProb;
+
 			if (totalConfNorm == 0)
 				wordNormProb = 0.0;
 			else
@@ -46,9 +50,6 @@ public class CalculateEmailScore
 				wordNormProb = 1.0;
 			}
 
-			// sum up the confidential probability
-			totalScore += wordConfProb;
-
 			double wordProb;
 			double totalProb;
 			if ((totalProb = wordConfProb + wordNormProb) == 0)
@@ -58,18 +59,11 @@ public class CalculateEmailScore
 			emailScoreX *= wordProb;
 			emailScoreY *= 1 - wordProb;
 		}
-		double bayes = (emailScoreX / (emailScoreX + emailScoreY));
 
-		if(totalScore > 1.0){
-			totalScore = 1.0;
-		}
+		double result = emailScoreX / (emailScoreX + emailScoreY);
 
-		if(totalScore >= 1.0){
-			return 1.0;
-		}else if((bayes < 0.1)&&(totalScore > 0.1)) {
-			return totalScore;
-		}else{
-			return totalScore;
-		}
+		if (greatestConfProb > result)
+			return greatestConfProb;
+		return result;
 	}
 }
