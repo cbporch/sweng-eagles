@@ -1,6 +1,5 @@
 package scanner;
 
-import org.apache.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
 import scanner.dbEntry.Database;
 import scanner.dbEntry.DatabaseInput;
