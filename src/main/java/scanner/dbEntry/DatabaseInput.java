@@ -215,56 +215,18 @@ public class DatabaseInput {
             }
         });
 
-
-       /* uploadWordsFileBtn.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                //Handle open button action.
-                System.out.println("In action listener");
-                //Create a file chooser
-                final JFileChooser fc = new JFileChooser();
-                    if (e.getSource() == DatabaseInput.uploadWordsFileBtn) {
-                        System.out.println("In first if");
-                        int returnVal = fc.showOpenDialog(uploadWordsFileBtn);
-
-                        if (returnVal == JFileChooser.APPROVE_OPTION) {
-                            System.out.println("In second if");
-                            File file = fc.getSelectedFile();
-                            //This is where a real application would open the file.
-                            System.out.println("Opening: " + file.getName() + ".%n");
-                            ArrayList<Word> words = CSVFileReader.interpretCSVFile(file+"");
-                            for(Word word: words){
-                                System.out.println(word.getWord());
-                            }
-                        } else {
-                            System.out.println("Open command cancelled by user.%n");
-                        }
-
-                    }
-                }
-                //successLabel.setText("Feature not available yet.");
-        });
-*/
         uploadFileBtn.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                //Handle open button action.
-                System.out.println("In action listener");
                 //Create a file chooser
                 final JFileChooser fc = new JFileChooser();
                 if (e.getSource() == DatabaseInput.uploadFileBtn) {
-                    System.out.println("In first if");
                     int returnVal = fc.showOpenDialog(uploadFileBtn);
 
                     if (returnVal == JFileChooser.APPROVE_OPTION) {
-                        System.out.println("In second if");
                         File file = fc.getSelectedFile();
-                        //This is where a real application would open the file.
                         System.out.println("Opening: " + file.getName() + ".%n");
                         CSVFileReader.interpretCSVFile(file + "");
-                        /*for(Phrase phrase: phrases){
-                            System.out.println(phrase.getPhrase());
-                        }*/
                     } else {
                         System.out.println("Open command cancelled by user.%n");
                     }
@@ -278,8 +240,6 @@ public class DatabaseInput {
         submitPanel.add(submitButton);
         submitPanel.add(uploadFileBtn);
         submitPanel.add(successLabel);
-
-
         pane.add(submitPanel, BorderLayout.SOUTH);
     }
 
