@@ -51,7 +51,7 @@ public class Database {
         n = 100 - c;
 
         String sql = String.format("insert into Words (word, rarity, NumDep, conf, norm) Values ('%s', '%f', '%d', '%f', '%f');", wordIn, rarityIn, numDep, c, n);
-        System.out.println("\n" + sql);                 //display the update for testing
+        //System.out.println("\n" + sql);                 //display the update for testing
         statement.executeUpdate(sql);                   //execute the update
     }
 
@@ -73,7 +73,7 @@ public class Database {
         n = 100 - c;
 
         String sql = String.format("insert into Phrases (phrase, rarity, count, NumDep, conf, norm) Values ('%s', '%f', '%d', '%d', '%f', '%f');", phraseIn, rarityIn, count, numDep, c, n);
-        System.out.println("\n" + sql);                 //testing purposes
+        //System.out.println("\n" + sql);                 //testing purposes
         statement.executeUpdate(sql);                   //execute the update
     }
 
@@ -129,7 +129,7 @@ public class Database {
         Statement statement = conn.createStatement();   //create statement
         String sql = String.format("SELECT * from Words WHERE word like '%s'", word);
         ResultSet rs = statement.executeQuery(sql);     //execute the select query
-        System.out.println(sql);
+        //System.out.println(sql);
         while (rs.next()) {
             if (rs.getString(2).equals(word)) {         //compare the word to the word in the Database
                 found.setWord(word);
@@ -156,7 +156,7 @@ public class Database {
 
         Statement statement = conn.createStatement();   //create statement
         String sql = String.format("SELECT * from Phrases WHERE phrase like '%s' AND count like '%d'", phrase, N);
-        System.out.println(sql);
+        //System.out.println(sql);
         ResultSet rs = statement.executeQuery(sql);     //execute the select query
         while (rs.next()) {
             if (rs.getString(2).equals(phrase)) {
@@ -198,7 +198,7 @@ public class Database {
             ArrayList<Integer> grams = new ArrayList<>();
             Statement statement = conn.createStatement();   //create statement
             String sql = String.format("SELECT DISTINCT count from Phrases");
-            System.out.println(sql);
+            //System.out.println(sql);
             ResultSet rs = statement.executeQuery(sql);     //execute the select query
             while (rs.next()) {
                 grams.add(rs.getInt(1));
