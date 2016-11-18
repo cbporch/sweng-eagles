@@ -8,8 +8,8 @@ import scanner.filtering.Hasher;
 import scanner.filtering.LuceneStemmer;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashSet;
+import java.util.*;
+import java.util.concurrent.PriorityBlockingQueue;
 
 /**
  * Created by chris on 10/22/16.
@@ -23,16 +23,28 @@ public class TextParser {
     private ArrayList<Doublet> pairs;
     private HashSet<String> unique;
     private Database db;
+    private boolean threadDone, parsingComplete;
+    private PriorityBlockingQueue<String> wordsToFind;
+    private PriorityBlockingQueue<NPhrase> phraseToFind;
 
     public TextParser(String email) throws Exception {
+
+        Comparator<NPhrase> comparator = new Comparator<NPhrase>() {
+            @Override
+            public int compare(NPhrase n1, NPhrase n2) {
+                return n1.phrase.compareTo(n2.phrase);
+            }
+        };
+
+        wordsToFind = new PriorityBlockingQueue<String>(10);
+        phraseToFind = new PriorityBlockingQueue<NPhrase>(10, comparator);
         ls = new LuceneStemmer();
         pairs = new ArrayList<>();
         db = new Database();
         try {
             text = ls.splitText(email);
-
         } catch (IOException e) {
-            e.printStackTrace();
+            //e.printStackTrace();
         }
     }
 
@@ -43,30 +55,35 @@ public class TextParser {
      * @return - A score of how likely the text is to be confidential.
      */
     public double parse(){
-        int lastIndex = text.size() - 1;
-        ArrayList<Integer> grams;
-        grams = db.getWordcounts();
+        threadDone = false;
+        parsingComplete = false;
         unique = new HashSet<>();
-        // get hashed n-grams
-        for(int index = 0; index <= lastIndex; index++){
-            if(unique.add(text.get(index))){
-                Word w = findWord(text.get(index));
-                if(w !=null) {
-                    pairs.add(new Doublet(w.getConf(), w.getNorm()));
+
+        wordThread wThread = new wordThread();
+
+        while(wThread.isAlive()){
+            if(!wordsToFind.isEmpty() || !phraseToFind.isEmpty()) {
+                if (!wordsToFind.isEmpty()) {
+                    Word w = findWord(wordsToFind.remove());
+                    if (w != null) {
+                        pairs.add(new Doublet(w.getConf(), w.getNorm()));
+                    }
                 }
-            }
-
-            for(int N : grams){
-                if((index + N - 1) <= lastIndex){
-                    Phrase p = findPhrase(NGram(index, N), N);
-
-                    if(p!= null){
-                        pairs.add(new Doublet(p.getConf(),p.getNorm()));
+                if (!phraseToFind.isEmpty()) {
+                    NPhrase np = phraseToFind.remove();
+                    Phrase p = findPhrase(np.phrase, np.num);
+                    if (p != null) {
+                        pairs.add(new Doublet(p.getConf(), p.getNorm()));
                     }
                 }
             }
         }
 
+        parsingComplete = true;
+        while(wThread.isAlive()){
+            if(wordsToFind.isEmpty() && phraseToFind.isEmpty() && parsingComplete)
+                wThread.interrupt();
+        }
         return CalculateEmailScore.calculate(pairs);
     }
 
@@ -106,15 +123,49 @@ public class TextParser {
         return phrase;
     }
 
+    /*
+     * The goal of this thread is to handle the lookups for each string
+     * and to add them to the pairs ArrayList
+     */
+    private class wordThread extends Thread{
 
-    private class wordThread implements Runnable{
+        wordThread(){
+            super("wordThread");
+            start();
+        }
+
         public void run(){
-            for(String word: unique){
-                Word w = findWord(word);
-                if(w !=null) {
-                    pairs.add(new Doublet(w.getConf(), w.getNorm()));
+            ArrayList<Integer> grams = db.getWordcounts();
+            int lastIndex = text.size() - 1;
+            for(int index = 0; index <= lastIndex; index++){
+                if(unique.add(text.get(index))){
+                    wordsToFind.add(text.get(index));
+                }
+
+                for(int N : grams){
+                    if((index + N - 1) <= lastIndex){
+                        NPhrase np = new NPhrase();
+                        np.num = N;
+                        np.phrase = NGram(index, N);
+                        phraseToFind.add(np);
+                    }
+                }
+                try {
+                    Thread.sleep(10);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
                 }
             }
         }
+    }
+
+    /*
+     * Struct-like inner class to hold a phrase and its number of words
+     * This exists in order to facilitate threading more easily
+     */
+    public class NPhrase{
+        protected String phrase;
+        protected int num;
+
     }
 }

@@ -16,6 +16,7 @@ public class CalculateEmailScore
      */
 	public static double calculate(ArrayList<Doublet> termProbabilityList)
 	{
+		double greatestConfProb = 0;
 		double emailScoreX = 1;
 		double emailScoreY = 1;
 
@@ -32,6 +33,9 @@ public class CalculateEmailScore
 				wordConfProb = 0.0;
 			else
 				wordConfProb = term.getNumConf() / (double) totalConfNorm;
+
+			if (greatestConfProb < wordConfProb)
+				greatestConfProb = wordConfProb;
 
 			if (totalConfNorm == 0)
 				wordNormProb = 0.0;
@@ -55,6 +59,11 @@ public class CalculateEmailScore
 			emailScoreX *= wordProb;
 			emailScoreY *= 1 - wordProb;
 		}
-		return (emailScoreX / (emailScoreX + emailScoreY));
+
+		double result = emailScoreX / (emailScoreX + emailScoreY);
+
+		if (greatestConfProb > result)
+			return greatestConfProb;
+		return result;
 	}
 }

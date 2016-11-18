@@ -21,10 +21,10 @@ public class CalculateEmailScoreTest {
 
         Assert.assertEquals(0.0, CalculateEmailScore.calculate(pairs), DELTA);
 
-        pairs.add(new Doublet(15, 1));
-        Assert.assertEquals(0.9375, CalculateEmailScore.calculate(pairs), DELTA);
+        pairs.add(new Doublet(90, 10));
+        Assert.assertEquals(0.9, CalculateEmailScore.calculate(pairs), DELTA);
 
-        pairs.add(new Doublet(1, 15));
+        pairs.add(new Doublet(1, 99));
         Assert.assertEquals(0.5, CalculateEmailScore.calculate(pairs), DELTA);
 
         pairs.add(new Doublet(6, 3));
