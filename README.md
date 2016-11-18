@@ -20,7 +20,7 @@ more confidential (# Dependent), and the probability that a word is confidential
 a CSV file to upload. The probability field defaults to 1.0.
 
 (The number dependent radio button stores a value in the database, but is currently not used in score processing.)
-(Code has been written to upload .csv files, *and now been implemented.*)
+(Code has been written to upload .csv files, *and now been implemented.* To read more about the CSV file structure, read the **CSV-readme** in the **docs/** directory)
 
 To test an email for confidentiality, run
 **sweng-eagles-1.0.jar**. Add in some text to test,
