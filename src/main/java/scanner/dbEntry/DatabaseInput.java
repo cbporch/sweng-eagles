@@ -20,10 +20,6 @@ import java.util.ArrayList;
 public class DatabaseInput {
     private static JLabel successLabel;
     final private static JButton submitButton = new JButton("Submit");
-    private static Boolean phraseProbFieldFocus = false;
-    private static Boolean phraseTextFieldFocus = false;
-    private static Boolean wordProbFieldFocus = false;
-    private static Boolean wordTextFieldFocus = false;
     private static JButton uploadFileBtn = new JButton("Import CSV File");
     private static String phraseHintText = "Enter phrase here..";
     private static String probHintText = "Enter probability..";
@@ -90,7 +86,6 @@ public class DatabaseInput {
             public void focusGained(FocusEvent e) {
                 if(wordsTextField.getText().equals(wordsHintText)){
                     wordsTextField.setText("");
-                    wordTextFieldFocus = true;
                     wordsTextField.setForeground(Color.BLACK);
                 }
             }
@@ -111,7 +106,6 @@ public class DatabaseInput {
             public void focusGained(FocusEvent e) {
                 if(probField.getText().equals(probHintText)){
                     probField.setText("");
-                    wordProbFieldFocus = true;
                     probField.setForeground(Color.BLACK);
                 }
             }
@@ -158,7 +152,6 @@ public class DatabaseInput {
             public void focusGained(FocusEvent e) {
                 if(phraseTextField.getText().equals(phraseHintText)){
                     phraseTextField.setText("");
-                    phraseTextFieldFocus = true;
                     phraseTextField.setForeground(Color.BLACK);
                 }
             }
@@ -179,7 +172,6 @@ public class DatabaseInput {
             public void focusGained(FocusEvent e) {
                 if(phraseProbField.getText().equals(probHintText)){
                     phraseProbField.setText("");
-                    phraseProbFieldFocus = true;
                     phraseProbField.setForeground(Color.BLACK);
                 }
             }
