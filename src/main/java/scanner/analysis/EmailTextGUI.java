@@ -55,9 +55,11 @@ public class EmailTextGUI {
 
         JPanel scoringPanel = new JPanel();
         JButton evaluateButton = new JButton("Evaluate Email");
+        JButton saveEmailButton = new JButton("Save Email");
         final JLabel scoreLabel = new JLabel("");
         JButton importTermsBtn = new JButton("Import Terms");
         scoringPanel.add(evaluateButton);
+        scoringPanel.add(saveEmailButton);
         scoringPanel.add(uploadFileBtn);
         scoringPanel.add(importTermsBtn);
         scoringPanel.add(scoreLabel);
@@ -88,6 +90,19 @@ public class EmailTextGUI {
                 }
             }
         });
+
+        saveEmailButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                try {
+                    //send email to database
+                    System.out.println("Saving Email...");
+                } catch (Exception ex) {
+                    System.out.println(ex);
+                }
+            }
+        });
+
 
         uploadFileBtn.addActionListener(new ActionListener() {
             @Override
