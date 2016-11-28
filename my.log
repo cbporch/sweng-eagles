@@ -37,3 +37,5 @@ Nov 18, 2016 4:02:28 PM scanner.LoginGUI$1 actionPerformed
 WARNING: Login FAILED for username : admin
 Nov 18, 2016 4:15:44 PM scanner.LoginGUI$3 windowClosing
 INFO: Frame closing...Attempting to close loggers.
+Nov 18, 2016 5:17:28 PM scanner.LoginGUI$1 actionPerformed
+INFO: Login successful for username: admin
