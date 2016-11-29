@@ -1,7 +1,9 @@
 package scanner.dbEntry;
 
 //import org.apache.batik.gvt.filter.BackgroundRable8Bit;
+import com.intellij.ide.ui.AppearanceOptionsTopHitProvider;
 import org.mindrot.jbcrypt.BCrypt;
+import scanner.Email;
 import scanner.Phrase;
 import scanner.Word;
 import scanner.filtering.Hasher;
@@ -217,15 +219,16 @@ public class Database {
         statement.executeUpdate(sql);     //execute the select query
     }
 
-    public String getEmail(String emailText) throws Exception{
-        String found;
+    public Email getEmail(String emailText) throws Exception{
+        Email found = new Email();
         Statement statement = conn.createStatement();   //create statement
         String sql = String.format("SELECT * from UntrainedEmails WHERE EmailText like '%s'", emailText);
         ResultSet rs = statement.executeQuery(sql);     //execute the select query
         System.out.println(sql);
         while (rs.next()) {
             if (rs.getString(2).equals(emailText)) {         //compare the word to the word in the Database
-                found = rs.getString(2);
+                found.setEmailText(rs.getString(2));
+                found.setId(rs.getInt(1));
                 return found;
             }
         }
@@ -242,7 +245,7 @@ public class Database {
 
     public boolean removeEmailByText(String emailText) throws Exception{
         Statement statement = conn.createStatement();   //create statement
-        String sql = String.format("DELETE FROM UntrainedEmails WHERE EmailText = '%d'", emailText);
+        String sql = String.format("DELETE FROM UntrainedEmails WHERE EmailText = '%s'", emailText);
         statement.executeUpdate(sql);     //execute the select query
         System.out.println(sql);
         return true;
@@ -267,7 +270,21 @@ public class Database {
         statement.executeUpdate(sql);     //execute the select query
     }
 
-    public void incrementPhraseConf(String hashedPhrase){
+    public void incrementPhraseConf(String hashedPhrase, int N) throws Exception{
+        Phrase phrase = getPhrase(hashedPhrase, N);
+        int conf = phrase.getConf() + 1;
+        Statement statement = conn.createStatement();   //create statement
+        String sql = String.format("UPDATE Phrases SET Conf = '%d' Where phrase = '%s'", conf, hashedPhrase);
+        System.out.println(sql);
+        statement.executeUpdate(sql);     //execute the select query
+    }
 
+    public void incrementPhraseNorm(String hashedPhrase, int N) throws Exception{
+        Phrase phrase = getPhrase(hashedPhrase, N);
+        int norm = phrase.getNorm() + 1;
+        Statement statement = conn.createStatement();   //create statement
+        String sql = String.format("UPDATE Phrases SET Norm = '%d' Where phrase = '%s'", norm, hashedPhrase);
+        System.out.println(sql);
+        statement.executeUpdate(sql);     //execute the select query
     }
 }
