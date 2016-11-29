@@ -209,4 +209,65 @@ public class Database {
         }
         return null;
     }
+
+    public void insertEmail(String emailText) throws Exception{
+        Statement statement = conn.createStatement();   //create statement
+        String sql = String.format("INSERT into UntrainedEmails (EmailText, Author) VALUES ('%s', 'Null')", emailText);
+        System.out.println(sql);
+        statement.executeUpdate(sql);     //execute the select query
+    }
+
+    public String getEmail(String emailText) throws Exception{
+        String found;
+        Statement statement = conn.createStatement();   //create statement
+        String sql = String.format("SELECT * from UntrainedEmails WHERE EmailText like '%s'", emailText);
+        ResultSet rs = statement.executeQuery(sql);     //execute the select query
+        System.out.println(sql);
+        while (rs.next()) {
+            if (rs.getString(2).equals(emailText)) {         //compare the word to the word in the Database
+                found = rs.getString(2);
+                return found;
+            }
+        }
+        return null;
+    }
+
+    public boolean removeEmailById(int id) throws Exception{
+        Statement statement = conn.createStatement();   //create statement
+        String sql = String.format("DELETE FROM UntrainedEmails WHERE id = '%d'", id);
+        statement.executeUpdate(sql);     //execute the select query
+        System.out.println(sql);
+        return true;
+    }
+
+    public boolean removeEmailByText(String emailText) throws Exception{
+        Statement statement = conn.createStatement();   //create statement
+        String sql = String.format("DELETE FROM UntrainedEmails WHERE EmailText = '%d'", emailText);
+        statement.executeUpdate(sql);     //execute the select query
+        System.out.println(sql);
+        return true;
+    }
+
+
+    public void incrementWordConf(String hashedWord) throws Exception{
+        Word word = getWord(hashedWord);
+        int conf = word.getConf() + 1;
+        Statement statement = conn.createStatement();   //create statement
+        String sql = String.format("UPDATE Words SET Conf = '%d' Where word = '%s'", conf, hashedWord);
+        System.out.println(sql);
+        statement.executeUpdate(sql);     //execute the select query
+    }
+
+    public void incrementWordNorm(String hashedWord) throws Exception{
+        Word word = getWord(hashedWord);
+        int norm = word.getNorm() + 1;
+        Statement statement = conn.createStatement();   //create statement
+        String sql = String.format("UPDATE Words SET Norm = '%d' Where word = '%s'", norm, hashedWord);
+        System.out.println(sql);
+        statement.executeUpdate(sql);     //execute the select query
+    }
+
+    public void incrementPhraseConf(String hashedPhrase){
+
+    }
 }

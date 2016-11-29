@@ -97,6 +97,7 @@ public class EmailTextGUI {
                 try {
                     //send email to database
                     System.out.println("Saving Email...");
+                    db.insertEmail(textArea.getText());
                 } catch (Exception ex) {
                     System.out.println(ex);
                 }
