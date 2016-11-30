@@ -1,13 +1,9 @@
 package scanner.dbEntry;
 
-//import org.apache.batik.gvt.filter.BackgroundRable8Bit;
-import com.intellij.ide.ui.AppearanceOptionsTopHitProvider;
 import org.mindrot.jbcrypt.BCrypt;
 import scanner.Email;
 import scanner.Phrase;
 import scanner.Word;
-import scanner.filtering.Hasher;
-
 import java.sql.*;
 import java.util.ArrayList;
 
