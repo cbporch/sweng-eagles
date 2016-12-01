@@ -105,10 +105,10 @@ public class EmailTextGUI {
                         File file = fc.getSelectedFile();
                         //This is where a real application would open the file.
                         System.out.println("Opening: " + file.getName() + ".%n");
-                        ArrayList<Word> words = CSVFileReader.interpretCSVFile(file+"");
-                        for(Word word: words){
-                            System.out.println(word.getWord());
-                        }
+                        //ArrayList<Word> words = CSVFileReader.interpretCSVFile(file+"");
+//                        for(Word word: words){
+//                            System.out.println(word.getWord());
+//                        }
                     } else {
                         System.out.println("Open command cancelled by user.%n");
                     }
