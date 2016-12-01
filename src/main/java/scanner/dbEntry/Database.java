@@ -237,6 +237,7 @@ public class Database {
         while (rs.next()) {
             found.setEmailText(rs.getString(2));
             found.setId(rs.getInt(1));
+            found.setConfidential(false);
             return found;
         }
         return null;

@@ -19,7 +19,7 @@ public class SqlTests {
 
     Database db = new Database();
 
-    @Test
+   /* @Test
     public void getEmail() throws Exception {
         //not been updated
         Random rand = new Random();
@@ -39,7 +39,7 @@ public class SqlTests {
         db.insertEmail(emailText);
         Email email = db.getEmail(emailText);
         assertEquals(email.getEmailText(), emailText);
-    }
+    }*/
 
     @Test
     public void testInsertEmail() throws Exception {
