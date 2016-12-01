@@ -120,8 +120,12 @@ public class AdminEmailTestWindow extends JFrame
 //import scanner.dbEntry.CSVFileReader;
 //import scanner.dbEntry.Database;
 
+import scanner.Email;
+import scanner.dbEntry.Database;
+
 import java.awt.*;
 import java.awt.event.*;
+import java.util.HashSet;
 import javax.swing.*;
 import javax.swing.border.Border;
 
@@ -137,7 +141,7 @@ public class AdminEmailTestWindow
     //protected static Database db;
 
     Email[] historyBuffer = new Email[3];
-    Email currentEmail = new Email("", "");
+    Email currentEmail = new Email();
 
     /**
      * Add the components to the GUI.
@@ -272,19 +276,55 @@ public class AdminEmailTestWindow
             historyBuffer[2] = e;
 
             if (email.isConfidential())
-                incrementConfidentialColumn(email.getBody());
+                incrementConfidentialColumn(email.getEmailText());
             else
-                incrementNormalColumn(email.getBody());
+                incrementNormalColumn(email.getEmailText());
         }
     }
 
     protected void incrementConfidentialColumn(String body)
     {
         // Call lucene here, this is where the body of the email is sent to increase the corresponding words' conf value
+        try {
+            Database db = new Database();
+            TextParser tepa = new TextParser(body);
+            tepa.parse();
+
+            HashSet<String> w = tepa.getUniqueWords();
+            HashSet<String> p = tepa.getUniquePhrases();
+
+            for(String word : w){
+               db.incrementWordConf(word);
+            }
+
+            for(String phrase : p){
+                db.incrementPhraseConf(phrase, phrase.split("\\s+").length);
+            }
+        } catch (Exception e) {
+
+        }
     }
 
     protected void incrementNormalColumn(String body)
     {
         // Same but opposite :)
+        try {
+            Database db = new Database();
+            TextParser tepa = new TextParser(body);
+            tepa.parse();
+
+            HashSet<String> w = tepa.getUniqueWords();
+            HashSet<String> p = tepa.getUniquePhrases();
+
+            for(String word : w){
+                db.incrementWordNorm(word);
+            }
+
+            for(String phrase : p){
+                db.incrementPhraseNorm(phrase, phrase.split("\\s+").length);
+            }
+        } catch (Exception e) {
+
+        }
     }
 }
