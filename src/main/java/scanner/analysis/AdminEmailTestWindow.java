@@ -120,6 +120,8 @@ public class AdminEmailTestWindow extends JFrame
 //import scanner.dbEntry.CSVFileReader;
 //import scanner.dbEntry.Database;
 
+import scanner.Email;
+
 import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
@@ -137,7 +139,7 @@ public class AdminEmailTestWindow
     //protected static Database db;
 
     Email[] historyBuffer = new Email[3];
-    Email currentEmail = new Email("", "");
+    Email currentEmail = new Email();
 
     /**
      * Add the components to the GUI.
@@ -272,9 +274,9 @@ public class AdminEmailTestWindow
             historyBuffer[2] = e;
 
             if (email.isConfidential())
-                incrementConfidentialColumn(email.getBody());
+                incrementConfidentialColumn(email.getEmailText());
             else
-                incrementNormalColumn(email.getBody());
+                incrementNormalColumn(email.getEmailText());
         }
     }
 

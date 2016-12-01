@@ -9,7 +9,7 @@ public class Email {
 
     private int id;
     private String emailText;
-
+    private boolean confidential;
 
     public Email(String emailText) {
         this.setEmailText(emailText);
@@ -40,4 +40,11 @@ public class Email {
         this.id = idIn;
     }
 
+    public boolean isConfidential() {
+        return confidential;
+    }
+
+    public void setConfidential(boolean confidential) {
+        this.confidential = confidential;
+    }
 }
