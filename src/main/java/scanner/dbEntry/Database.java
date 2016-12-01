@@ -228,6 +228,20 @@ public class Database {
         return null;
     }
 
+    public Email getNextEmail() throws Exception{
+        Email found = new Email();
+        Statement statement = conn.createStatement();   //create statement
+        String sql = String.format("SELECT * from UntrainedEmails LIMIT 1");
+        ResultSet rs = statement.executeQuery(sql);     //execute the select query
+        //System.out.println(sql);
+        while (rs.next()) {
+            found.setEmailText(rs.getString(2));
+            found.setId(rs.getInt(1));
+            return found;
+        }
+        return null;
+    }
+
     public boolean removeEmailById(int id) throws Exception{
         Statement statement = conn.createStatement();   //create statement
         String sql = String.format("DELETE FROM UntrainedEmails WHERE id = '%d'", id);

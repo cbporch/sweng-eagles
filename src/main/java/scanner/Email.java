@@ -9,6 +9,7 @@ public class Email {
 
     private int id;
     private String emailText;
+    private boolean confidential;
 
 
     public Email(String emailText) {
@@ -18,6 +19,12 @@ public class Email {
     public Email(String emailText, int id) {
         this.setEmailText(emailText);
         this.setId(id);
+    }
+
+    public Email(String emailText, int id, boolean confidential) {
+        this.setEmailText(emailText);
+        this.setId(id);
+        this.setConfidential(confidential);
     }
 
     public Email() {
@@ -38,6 +45,14 @@ public class Email {
 
     public void setId(int idIn) {
         this.id = idIn;
+    }
+
+    public boolean getConfidential() {
+        return confidential;
+    }
+
+    public void setConfidential(boolean confidentialIn) {
+        this.confidential = confidentialIn;
     }
 
 }
