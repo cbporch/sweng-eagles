@@ -21,7 +21,7 @@ public class TextParser {
     private ArrayList<String> text;
     private LuceneStemmer ls;
     private ArrayList<Doublet> pairs;
-    private HashSet<String> unique;
+    private HashSet<String> uniqueWords, uniquePhrases;
     private Database db;
     private boolean parsingComplete;
     private PriorityBlockingQueue<String> wordsToFind;
@@ -41,6 +41,8 @@ public class TextParser {
         ls = new LuceneStemmer();
         pairs = new ArrayList<>();
         db = new Database();
+        uniqueWords = new HashSet<>();
+        uniquePhrases = new HashSet<>();
         try {
             text = ls.splitText(email);
         } catch (IOException e) {
@@ -56,7 +58,6 @@ public class TextParser {
      */
     public double parse(){
         parsingComplete = false;
-        unique = new HashSet<>();
 
         wordThread wThread = new wordThread();
 
@@ -114,11 +115,40 @@ public class TextParser {
         return null;
     }
 
+    public HashSet<String> getUniqueWords(){
+        if(uniqueWords != null){
+            return uniqueWords;
+        }else{
+            // if text has not been parsed
+            try{
+                parse();
+                return uniqueWords;
+            }catch (Exception e){
+                return null;
+            }
+        }
+    }
+
+    public HashSet<String> getUniquePhrases(){
+        if(uniquePhrases != null){
+            return uniquePhrases;
+        }else{
+            // if text has not been parsed
+            try{
+                parse();
+                return uniquePhrases;
+            }catch (Exception e){
+                return null;
+            }
+        }
+    }
+
     private String NGram(int index, int N){
         String phrase = "";
         for(int i = 0; i < N; i++){
             phrase += text.get(i + index);
         }
+        //uniquePhrases.add(phrase);
         return phrase;
     }
 
@@ -137,7 +167,7 @@ public class TextParser {
             ArrayList<Integer> grams = db.getWordcounts();
             int lastIndex = text.size() - 1;
             for(int index = 0; index <= lastIndex; index++){
-                if(unique.add(text.get(index))){
+                if(uniqueWords.add(text.get(index))){
                     wordsToFind.add(text.get(index));
                 }
 

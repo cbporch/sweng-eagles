@@ -1,6 +1,6 @@
 package scanner.training;
 
-import com.intellij.vcs.log.Hash;
+//import com.intellij.vcs.log.Hash;
 import org.junit.Test;
 import scanner.Email;
 import scanner.Phrase;
