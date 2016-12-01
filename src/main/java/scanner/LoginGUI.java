@@ -1,6 +1,7 @@
 package scanner;
 
 import org.apache.logging.log4j.LogManager;
+import scanner.analysis.EmailTextGUI;
 import scanner.dbEntry.Database;
 import scanner.dbEntry.DatabaseInput;
 
@@ -94,8 +95,9 @@ public class LoginGUI extends JFrame{
                         Database b = new Database();
                         if(b.checkLogin(username, passwordString)){
                             logger.log(Level.INFO, "Login successful for username: " + username);
-                            DatabaseInput databaseInput = new DatabaseInput();
-                            databaseInput.main(null);
+                            EmailTextGUI gui = new EmailTextGUI();
+                            gui.main(null);
+                            frame.dispose();
                         }
                         else {
                             logger.log(Level.WARNING, "Login FAILED for username : " + username);

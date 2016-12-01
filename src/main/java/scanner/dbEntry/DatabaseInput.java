@@ -316,7 +316,7 @@ public class DatabaseInput {
     }
 
     public void acceptInput() {
-        System.out.println("Trying...");
+        //System.out.println("Trying...");
         ArrayList<Word> words = new ArrayList<>();
         ArrayList<Phrase> phrases = new ArrayList<>();
 
@@ -361,9 +361,9 @@ public class DatabaseInput {
         }
         try {
             processWordsSHA(words);
-            System.out.println("Words Processing Complete");
+            //System.out.println("Words Processing Complete");
             processPhrasesSHA(phrases);
-            System.out.println("Phrase Processing Complete");
+            //System.out.println("Phrase Processing Complete");
         } catch (Exception e) {
             if (e instanceof SQLException) {
                 if (((SQLException) e).getErrorCode() == 1062) {

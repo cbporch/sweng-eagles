@@ -1,4 +1,5 @@
 import org.mindrot.jbcrypt.BCrypt;
+import scanner.LoginGUI;
 import scanner.analysis.EmailTextGUI;
 import scanner.dbEntry.DatabaseInput;
 import scanner.filtering.Hasher;
@@ -8,8 +9,8 @@ import scanner.filtering.Hasher;
  */
 public class Driver {
     public static void main(String[] args){
-        EmailTextGUI e = new EmailTextGUI();
-        e.main(null);
+        LoginGUI loginGUI = new LoginGUI();
+        loginGUI.main(null);
     }
 
 

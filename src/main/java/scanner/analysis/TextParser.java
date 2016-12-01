@@ -21,9 +21,9 @@ public class TextParser {
     private ArrayList<String> text;
     private LuceneStemmer ls;
     private ArrayList<Doublet> pairs;
-    private HashSet<String> unique;
+    private HashSet<String> uniqueWords, uniquePhrases;
     private Database db;
-    private boolean threadDone, parsingComplete;
+    private boolean parsingComplete;
     private PriorityBlockingQueue<String> wordsToFind;
     private PriorityBlockingQueue<NPhrase> phraseToFind;
 
@@ -36,11 +36,13 @@ public class TextParser {
             }
         };
 
-        wordsToFind = new PriorityBlockingQueue<String>(10);
-        phraseToFind = new PriorityBlockingQueue<NPhrase>(10, comparator);
+        wordsToFind = new PriorityBlockingQueue<>(10);
+        phraseToFind = new PriorityBlockingQueue<>(10, comparator);
         ls = new LuceneStemmer();
         pairs = new ArrayList<>();
         db = new Database();
+        uniqueWords = new HashSet<>();
+        uniquePhrases = new HashSet<>();
         try {
             text = ls.splitText(email);
         } catch (IOException e) {
@@ -55,9 +57,7 @@ public class TextParser {
      * @return - A score of how likely the text is to be confidential.
      */
     public double parse(){
-        threadDone = false;
         parsingComplete = false;
-        unique = new HashSet<>();
 
         wordThread wThread = new wordThread();
 
@@ -115,11 +115,40 @@ public class TextParser {
         return null;
     }
 
+    public HashSet<String> getUniqueWords(){
+        if(uniqueWords != null){
+            return uniqueWords;
+        }else{
+            // if text has not been parsed
+            try{
+                parse();
+                return uniqueWords;
+            }catch (Exception e){
+                return null;
+            }
+        }
+    }
+
+    public HashSet<String> getUniquePhrases(){
+        if(uniquePhrases != null){
+            return uniquePhrases;
+        }else{
+            // if text has not been parsed
+            try{
+                parse();
+                return uniquePhrases;
+            }catch (Exception e){
+                return null;
+            }
+        }
+    }
+
     private String NGram(int index, int N){
         String phrase = "";
         for(int i = 0; i < N; i++){
             phrase += text.get(i + index);
         }
+        //uniquePhrases.add(phrase);
         return phrase;
     }
 
@@ -138,7 +167,7 @@ public class TextParser {
             ArrayList<Integer> grams = db.getWordcounts();
             int lastIndex = text.size() - 1;
             for(int index = 0; index <= lastIndex; index++){
-                if(unique.add(text.get(index))){
+                if(uniqueWords.add(text.get(index))){
                     wordsToFind.add(text.get(index));
                 }
 
@@ -151,11 +180,12 @@ public class TextParser {
                     }
                 }
                 try {
-                    Thread.sleep(10);
+                    Thread.sleep(1);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
             }
+            System.out.println("Done.");
         }
     }
 
