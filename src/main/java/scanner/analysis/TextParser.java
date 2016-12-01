@@ -23,7 +23,7 @@ public class TextParser {
     private ArrayList<Doublet> pairs;
     private HashSet<String> unique;
     private Database db;
-    private boolean threadDone, parsingComplete;
+    private boolean parsingComplete;
     private PriorityBlockingQueue<String> wordsToFind;
     private PriorityBlockingQueue<NPhrase> phraseToFind;
 
@@ -36,8 +36,8 @@ public class TextParser {
             }
         };
 
-        wordsToFind = new PriorityBlockingQueue<String>(10);
-        phraseToFind = new PriorityBlockingQueue<NPhrase>(10, comparator);
+        wordsToFind = new PriorityBlockingQueue<>(10);
+        phraseToFind = new PriorityBlockingQueue<>(10, comparator);
         ls = new LuceneStemmer();
         pairs = new ArrayList<>();
         db = new Database();
@@ -55,7 +55,6 @@ public class TextParser {
      * @return - A score of how likely the text is to be confidential.
      */
     public double parse(){
-        threadDone = false;
         parsingComplete = false;
         unique = new HashSet<>();
 
@@ -151,11 +150,12 @@ public class TextParser {
                     }
                 }
                 try {
-                    Thread.sleep(10);
+                    Thread.sleep(1);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
             }
+            System.out.println("Done.");
         }
     }
 
