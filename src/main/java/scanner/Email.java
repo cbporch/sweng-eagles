@@ -11,6 +11,7 @@ public class Email {
     private String emailText;
     private boolean confidential;
 
+
     public Email(String emailText) {
         this.setEmailText(emailText);
     }
@@ -18,6 +19,12 @@ public class Email {
     public Email(String emailText, int id) {
         this.setEmailText(emailText);
         this.setId(id);
+    }
+
+    public Email(String emailText, int id, boolean confidential) {
+        this.setEmailText(emailText);
+        this.setId(id);
+        this.setConfidential(confidential);
     }
 
     public Email() {
