@@ -218,7 +218,8 @@ public class DatabaseInput {
                     if (returnVal == JFileChooser.APPROVE_OPTION) {
                         File file = fc.getSelectedFile();
                         System.out.println("Opening: " + file.getName() + ".%n");
-                        //CSVFileReader.interpretCSVFile(file + "");
+                        CSVFileReader csvfr = new CSVFileReader();
+                        csvfr.interpretCSVFile(file + "");
                     } else {
                         System.out.println("Open command cancelled by user.%n");
                     }
