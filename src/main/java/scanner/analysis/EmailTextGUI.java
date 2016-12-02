@@ -76,7 +76,7 @@ public class EmailTextGUI {
                     long f = System.currentTimeMillis();
 
                     double score = textParser.parse();
-
+                    System.out.println(score);
                     if (score >= 0.75)
                         scoreLabel.setText("red");
                     else if (score < 0.01)
