@@ -231,13 +231,17 @@ public class Database {
     public Email getNextEmail() throws Exception{
         Email found = new Email();
         Statement statement = conn.createStatement();   //create statement
-        String sql = String.format("SELECT * from UntrainedEmails LIMIT 1");
+        String sql = String.format("SELECT * from UntrainedEmails WHERE Loaded = 0 LIMIT 1");
         ResultSet rs = statement.executeQuery(sql);     //execute the select query
         //System.out.println(sql);
         while (rs.next()) {
             found.setEmailText(rs.getString(2));
             found.setId(rs.getInt(1));
             found.setConfidential(false);
+            found.setLoaded(1);
+            Statement statement2 = conn.createStatement();   //create statement
+            String sql2 = String.format("Update UntrainedEmails SET Loaded = 1 WHERE id = '%d'");
+            statement2.executeUpdate(sql2);     //execute the select query
             return found;
         }
         return null;
