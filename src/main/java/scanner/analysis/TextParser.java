@@ -22,7 +22,7 @@ public class TextParser {
     private LuceneStemmer ls;
     private ArrayList<Doublet> p;
     private HashSet<String> uniqueWords, uniquePhrases;
-    private Database db;
+    private Database wordDB, phraseDB;
     //private boolean parsingComplete;
     private PriorityBlockingQueue<String> wordsToFind;
     private PriorityBlockingQueue<NPhrase> phraseToFind;
@@ -49,7 +49,8 @@ public class TextParser {
         ls = new LuceneStemmer();
         pairs = new PriorityBlockingQueue<>(10, comparator1);
         p = new ArrayList<Doublet>();
-        db = new Database();
+        wordDB = new Database();
+        phraseDB = new Database();
         uniqueWords = new HashSet<>();
         uniquePhrases = new HashSet<>();
         try {
@@ -110,7 +111,7 @@ public class TextParser {
      */
     private Word findWord(String word){
         try {
-            return db.getWord(Hasher.hashSHA(word));
+            return wordDB.getWord(Hasher.hashSHA(word));
         } catch (Exception e) {
            System.out.println(e);
         }
@@ -124,7 +125,7 @@ public class TextParser {
      */
     private Phrase findPhrase(String phrase, int N){
         try {
-            return db.getPhrase(Hasher.hashSHA(phrase), N);
+            return phraseDB.getPhrase(Hasher.hashSHA(phrase), N);
         } catch (Exception ex) {
             System.out.println(ex);
         }
@@ -182,7 +183,7 @@ public class TextParser {
         public void run(){
             pThreadDone = false;
             System.out.println(1);
-            ArrayList<Integer> grams = db.getWordcounts();
+            ArrayList<Integer> grams = wordDB.getWordcounts();
             int lastIndex = text.size() - 1;
             for(int index = 0; index <= lastIndex; index++){
                 if(uniqueWords.add(text.get(index))){
