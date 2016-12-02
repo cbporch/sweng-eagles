@@ -3,6 +3,7 @@ package scanner.dbEntry;
 import scanner.Word;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -12,131 +13,113 @@ import java.util.ArrayList;
  */
 public class CSVFileReader {
 
-    /**
-     * This will take in a file name and it will go through it if its a CSV file and seperate it into an arraylist.
-     * You must enter a single words only file
-     */
-    public static ArrayList<Word> interpretCSVFile(String filename)
-    {
-        BufferedReader br;
-        ArrayList<scanner.Word> listOfWords = new ArrayList<scanner.Word>(); //Returned list of all the words in this file.
+    protected  ArrayList<scanner.Word> wordTestList = new ArrayList<>(); //List of all the words for testing.
+    protected  ArrayList<scanner.Phrase> phraseTestList = new ArrayList<>(); //List of phrases for testing.
 
-        String word = "";   //
-        String rarity = ""; //values used to create a new Word
-        String numDep = ""; //
+    public CSVFileReader(){
+    }
+
+    /**
+     * This is the method for processing and inserting CSV files into the database.
+     * It takes in a filepath and then reads through that file. It seperates it into two lists, Words and Phrases.
+     * Then it takes these lists and adds all of the terms to the database.
+     * @param filename = the filepath for the CSV file.
+     *  NOTE: Maybe include exceptions for things like if the file has the wrong format.
+     *      EX: wrong amout of numbers, or more than one word on a line.
+     */
+    public void interpretCSVFile(String filename) {
+        Database db = new Database();
+        BufferedReader br;
+        ArrayList<scanner.Word> listOfWords = new ArrayList<>(); //List of all the words in this file.
+        ArrayList<scanner.Phrase> listOfPhrases = new ArrayList<>(); //List of all the phrases in this file.
+
+        String item = "";   //The word, or the phrase being added.
+        String count = "";  //Number of words in phrases.
+        String rarity = ""; //The level of secure this item is.
+        String numDep = ""; //Determines if the word/phrase has secure numbers used.
 
         try {
             br = new BufferedReader(new FileReader(filename));
-            String line;    //used to read each line from the file.
-            scanner.Word newWord; //used to add a word to the listOfWords
+            String line;    //Represents one line at a time for the file, while reading.
 
-            while ((line = br.readLine()) != null) {
+            scanner.Word newWord; //Represents a word to be added to the database.
+            scanner.Phrase newPhrase; //Represents a phrase to be added to the database.
 
-                String[] lineOfWords = line.split(","); //splits up the current line of the file.
+            while ((line = br.readLine()) != null) {    //This loop will go through every line in the given file.
 
+                String[] lineOfItems = line.split(","); //splits up the current line of the file.
+
+                if (lineOfItems.length == 3) //This is a Word.
+                {
+                    for (int i = 0; i < lineOfItems.length; i++) {
+                        if (item.equals("")) {  //First item on a line is the word itself.
+                            item = lineOfItems[i];
+                        } else if (rarity.equals("")) { //Second item on a line is the rarity of the word.
+                            rarity = lineOfItems[i].trim();
+                        } else  {
+                            numDep = lineOfItems[i].trim();  //This line must be the number dependent info.
+
+                            //Formats the data up so it can be used for Word
+                            int intRarity = Integer.parseInt(rarity);
+
+                            //Creates new Word and adds it to listOfWords.
+                            newWord = new scanner.Word(item, intRarity, Integer.parseInt(numDep));
+                            listOfWords.add(newWord);
+                        }}}
+                else if (lineOfItems.length == 4) //This is a Phrase
+                {
+                    for (int i = 0; i < lineOfItems.length; i++) {
+                        if (item.equals("")) {      //First item on a line is the phrase itself.
+                            item = lineOfItems[i];
+                        } else if (count.equals("")) {      //Second item on a line is the count of the phrase.
+                            count = lineOfItems[i].trim();
+                        } else if (rarity.equals("")) {     //Third item on a line is the rarity of the phrase.
+                            rarity = lineOfItems[i].trim();
+                        } else {
+                            numDep = lineOfItems[i].trim(); //Fourth item must be the number dependency.
+
+                            //Formats the data up so it can be used for Phrase
+                            int intRarity = Integer.parseInt(rarity);
+                            int intCount = Integer.parseInt(count);
+
+                            //Creates new Phrase and adds it to listOfPhrases.
+                            newPhrase = new scanner.Phrase(item,intCount,intRarity,Integer.parseInt(numDep));
+                            listOfPhrases.add(newPhrase);
+                        }}}
                 //For loop that goes through the line and picks out the data and puts it all together into a Word.
-                for (int i = 0; i < lineOfWords.length; i++) {
-                    if (word.equals("")) {
-                        word = lineOfWords[i];
-                    }
-                    else if (rarity.equals("")) {
-                        rarity = lineOfWords[i].trim();
-                    }
-                    else if (numDep.equals("")) {
-                        numDep = lineOfWords[i].trim();
-                        i--;
-                    }
-                    else {
-                        //Cleans the data up so it can be used for Word
-                        int actualRarity = Integer.parseInt(rarity);
-                        /*boolean actualNumDep;
-                        if (numDep.equals("0")) {
-                            actualNumDep = false;
-                        }
-                        else {
-                            actualNumDep = true;
-                        }*/
 
-                        //Creates new Word and adds it to listOfWords.
-                        newWord = new scanner.Word(word,actualRarity,Integer.parseInt(numDep));
-                        listOfWords.add(newWord);
-
-                        //resets the values.
-                        word = "";
-                        rarity = "";
-                        numDep = "";
-                    }}}}
+                //resets the values for the next line in the file.
+                item = "";
+                count = "";
+                rarity = "";
+            }}
         catch (IOException e) {
             e.printStackTrace();
         }
-        return listOfWords;
-    }
 
+        //Used for testing only
+        wordTestList = listOfWords;
+        phraseTestList = listOfPhrases;
+        //End of testing area
 
-    /**
-     * This will take in a file name and it will go through it if its a CSV file and seperate it into an arraylist.
-     * You must enter a phrase only file
-     */
-    public static ArrayList<scanner.Phrase> interpretCSVPhraseFile(String filename)
-    {
-        BufferedReader br;
-        ArrayList<scanner.Phrase> listOfPhrases = new ArrayList<>(); //Returned list of all the words in this file.
-
-        String phrase = "";   //
-        String rarity = ""; //values used to create a new Phrase
-        String count = "";  //
-        String numDep = ""; //
-
-        try {
-            br = new BufferedReader(new FileReader(filename));
-            String line;    //used to read each line from the file.
-            scanner.Phrase newPhrase; //used to add a phrase to the listOfPhrases
-
-            while ((line = br.readLine()) != null) {
-
-                String[] lineOfPhrases = line.split(","); //splits up the current line of the file.
-
-                //For loop that goes through the line and picks out the data and puts it all together into a Phrase.
-                for (int i = 0; i < lineOfPhrases.length; i++) {
-                    if (phrase.equals("")) {
-                        phrase = lineOfPhrases[i];
-                    }
-                    else if (count.equals("")) {
-                        count = lineOfPhrases[i].trim();
-                    }
-                    else if (rarity.equals("")) {
-                        rarity = lineOfPhrases[i].trim();
-                    }
-                    else if (numDep.equals("")) {
-                        numDep = lineOfPhrases[i].trim();
-                        i--;
-                    }
-                    else {
-                        //Cleans the data up so it can be used for Phrase
-                        int actualRarity = Integer.parseInt(rarity);
-                        int actualCount = Integer.parseInt(count);
-                       /* boolean actualNumDep;
-                        if (numDep.equals("0")) {
-                            actualNumDep = false;
-                        }
-                        else {
-                            actualNumDep = true;
-                        }*/
-
-                        //Creates new Phrase and adds it to listOfPhrases.
-                        newPhrase = new scanner.Phrase(phrase,actualCount,actualRarity,Integer.parseInt(numDep));
-                        listOfPhrases.add(newPhrase);
-
-                        //resets the values.
-                        phrase = "";
-                        count = "";
-                        rarity = "";
-                        numDep = "";
-                    }}}}
-        catch (IOException e) {
-            e.printStackTrace();
+        //These loops add the words and phrases to the database.
+        for (int i = 0; i < listOfWords.size(); i++)
+        {
+            try {
+                System.out.println(listOfWords.get(i).getWord() + " " + listOfWords.get(i).getRarity() + " " + listOfWords.get(i).getNum());
+                //db.insertWords(listOfWords.get(i).getWord(), listOfWords.get(i).getRarity(), listOfWords.get(i).getNum());
+            } catch (Exception e) {
+                //e.printStackTrace();
+            }
         }
-        return listOfPhrases;
+        for (int i = 0; i < listOfPhrases.size(); i++)
+        {
+            try {
+                System.out.println(listOfPhrases.get(i).getPhrase() + " " + listOfPhrases.get(i).getRarity() + " " + listOfPhrases.get(i).getWordcount() + " " + listOfPhrases.get(i).getNum());
+                //db.insertPhrases(listOfPhrases.get(i).getPhrase(), listOfPhrases.get(i).getRarity(), listOfPhrases.get(i).getWordcount(), listOfPhrases.get(i).getNum());
+            } catch (Exception e) {
+                //e.printStackTrace();
+            }
+        }
     }
-
 }

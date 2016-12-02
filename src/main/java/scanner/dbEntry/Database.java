@@ -1,11 +1,9 @@
 package scanner.dbEntry;
 
-//import org.apache.batik.gvt.filter.BackgroundRable8Bit;
 import org.mindrot.jbcrypt.BCrypt;
+import scanner.Email;
 import scanner.Phrase;
 import scanner.Word;
-import scanner.filtering.Hasher;
-
 import java.sql.*;
 import java.util.ArrayList;
 
@@ -51,7 +49,7 @@ public class Database {
         n = 100 - c;
 
         String sql = String.format("insert into Words (word, rarity, NumDep, conf, norm) Values ('%s', '%f', '%d', '%f', '%f');", wordIn, rarityIn, numDep, c, n);
-        System.out.println("\n" + sql);                 //display the update for testing
+        //System.out.println("\n" + sql);                 //display the update for testing
         statement.executeUpdate(sql);                   //execute the update
     }
 
@@ -73,7 +71,7 @@ public class Database {
         n = 100 - c;
 
         String sql = String.format("insert into Phrases (phrase, rarity, count, NumDep, conf, norm) Values ('%s', '%f', '%d', '%d', '%f', '%f');", phraseIn, rarityIn, count, numDep, c, n);
-        System.out.println("\n" + sql);                 //testing purposes
+        //System.out.println("\n" + sql);                 //testing purposes
         statement.executeUpdate(sql);                   //execute the update
     }
 
@@ -93,7 +91,7 @@ public class Database {
             words.add(rs.getString(1));                 //add the word to the arraylist
         }
         //System.out.println(words);
-        System.out.println("select words completed");
+        //System.out.println("select words completed");
         return words;
 
     }
@@ -129,7 +127,7 @@ public class Database {
         Statement statement = conn.createStatement();   //create statement
         String sql = String.format("SELECT * from Words WHERE word like '%s'", word);
         ResultSet rs = statement.executeQuery(sql);     //execute the select query
-        System.out.println(sql);
+        //System.out.println(sql);
         while (rs.next()) {
             if (rs.getString(2).equals(word)) {         //compare the word to the word in the Database
                 found.setWord(word);
@@ -137,7 +135,6 @@ public class Database {
                 found.setNum(rs.getInt(4));
                 found.setConf(rs.getInt(5));
                 found.setNorm(rs.getInt(6));
-                System.out.println("Good! for words");
                 return found;
             }
         }
@@ -156,7 +153,7 @@ public class Database {
 
         Statement statement = conn.createStatement();   //create statement
         String sql = String.format("SELECT * from Phrases WHERE phrase like '%s' AND count like '%d'", phrase, N);
-        System.out.println(sql);
+        //System.out.println(sql);
         ResultSet rs = statement.executeQuery(sql);     //execute the select query
         while (rs.next()) {
             if (rs.getString(2).equals(phrase)) {
@@ -167,8 +164,6 @@ public class Database {
                 found.setNum(rs.getInt(5));
                 found.setConf(rs.getInt(6));
                 found.setNorm(rs.getInt(7));
-
-                System.out.println("Good for phrases!!!");
                 return found;
             }
         }
@@ -180,7 +175,7 @@ public class Database {
         System.out.println("Username: " + username + " Password: " + password);
         Statement statement = conn.createStatement();   //create statement
         String sql = String.format("SELECT * from Logins WHERE Username like '%s'", username);
-        System.out.println(sql);
+        //System.out.println(sql);
         ResultSet rs = statement.executeQuery(sql);     //execute the select query
         while (rs.next()) {
             if (BCrypt.checkpw(password, rs.getString(3))) {
@@ -198,7 +193,7 @@ public class Database {
             ArrayList<Integer> grams = new ArrayList<>();
             Statement statement = conn.createStatement();   //create statement
             String sql = String.format("SELECT DISTINCT count from Phrases");
-            System.out.println(sql);
+            //System.out.println(sql);
             ResultSet rs = statement.executeQuery(sql);     //execute the select query
             while (rs.next()) {
                 grams.add(rs.getInt(1));
@@ -208,5 +203,102 @@ public class Database {
             System.out.println(e);
         }
         return null;
+    }
+
+    public void insertEmail(String emailText) throws Exception{
+        Statement statement = conn.createStatement();   //create statement
+        String sql = String.format("INSERT into UntrainedEmails (EmailText, Author, Loaded) VALUES ('%s', 'Null', '%d')", emailText, 0);
+        //System.out.println(sql);
+        statement.executeUpdate(sql);     //execute the select query
+    }
+
+    public Email getEmail(String emailText) throws Exception{
+        Email found = new Email();
+        Statement statement = conn.createStatement();   //create statement
+        String sql = String.format("SELECT * from UntrainedEmails WHERE EmailText like '%s'", emailText);
+        ResultSet rs = statement.executeQuery(sql);     //execute the select query
+        //System.out.println(sql);
+        while (rs.next()) {
+            if (rs.getString(2).equals(emailText)) {         //compare the word to the word in the Database
+                found.setEmailText(rs.getString(2));
+                found.setId(rs.getInt(1));
+                found.setLoaded(1);
+                found.setConfidential(false);
+                return found;
+            }
+        }
+        return null;
+    }
+
+    public Email getNextEmail() throws Exception{
+        Email found = new Email();
+        Statement statement = conn.createStatement();   //create statement
+        String sql = String.format("SELECT * from UntrainedEmails WHERE Loaded = 0 LIMIT 1");
+        ResultSet rs = statement.executeQuery(sql);     //execute the select query
+        //System.out.println(sql);
+        while (rs.next()) {
+            found.setEmailText(rs.getString(2));
+            found.setId(rs.getInt(1));
+            found.setConfidential(false);
+            found.setLoaded(1);
+            Statement statement2 = conn.createStatement();   //create statement
+            String sql2 = String.format("Update UntrainedEmails SET Loaded = 1 WHERE id = '%d'");
+            statement2.executeUpdate(sql2);     //execute the select query
+            return found;
+        }
+        return null;
+    }
+
+    public boolean removeEmailById(int id) throws Exception{
+        Statement statement = conn.createStatement();   //create statement
+        String sql = String.format("DELETE FROM UntrainedEmails WHERE id = '%d'", id);
+        statement.executeUpdate(sql);     //execute the select query
+        //System.out.println(sql);
+        return true;
+    }
+
+    public boolean removeEmailByText(String emailText) throws Exception{
+        Statement statement = conn.createStatement();   //create statement
+        String sql = String.format("DELETE FROM UntrainedEmails WHERE EmailText = '%s'", emailText);
+        statement.executeUpdate(sql);     //execute the select query
+        //System.out.println(sql);
+        return true;
+    }
+
+
+    public void incrementWordConf(String hashedWord) throws Exception{
+        Word word = getWord(hashedWord);
+        int conf = word.getConf() + 1;
+        Statement statement = conn.createStatement();   //create statement
+        String sql = String.format("UPDATE Words SET Conf = '%d' Where word = '%s'", conf, hashedWord);
+        //System.out.println(sql);
+        statement.executeUpdate(sql);     //execute the select query
+    }
+
+    public void incrementWordNorm(String hashedWord) throws Exception{
+        Word word = getWord(hashedWord);
+        int norm = word.getNorm() + 1;
+        Statement statement = conn.createStatement();   //create statement
+        String sql = String.format("UPDATE Words SET Norm = '%d' Where word = '%s'", norm, hashedWord);
+        //System.out.println(sql);
+        statement.executeUpdate(sql);     //execute the select query
+    }
+
+    public void incrementPhraseConf(String hashedPhrase, int N) throws Exception{
+        Phrase phrase = getPhrase(hashedPhrase, N);
+        int conf = phrase.getConf() + 1;
+        Statement statement = conn.createStatement();   //create statement
+        String sql = String.format("UPDATE Phrases SET Conf = '%d' Where phrase = '%s'", conf, hashedPhrase);
+        //System.out.println(sql);
+        statement.executeUpdate(sql);     //execute the select query
+    }
+
+    public void incrementPhraseNorm(String hashedPhrase, int N) throws Exception{
+        Phrase phrase = getPhrase(hashedPhrase, N);
+        int norm = phrase.getNorm() + 1;
+        Statement statement = conn.createStatement();   //create statement
+        String sql = String.format("UPDATE Phrases SET Norm = '%d' Where phrase = '%s'", norm, hashedPhrase);
+        //System.out.println(sql);
+        statement.executeUpdate(sql);     //execute the select query
     }
 }

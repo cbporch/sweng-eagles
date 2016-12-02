@@ -20,12 +20,7 @@ import java.util.ArrayList;
 public class DatabaseInput {
     private static JLabel successLabel;
     final private static JButton submitButton = new JButton("Submit");
-    private static Boolean phraseProbFieldFocus = false;
-    private static Boolean phraseTextFieldFocus = false;
-    private static Boolean wordProbFieldFocus = false;
-    private static Boolean wordTextFieldFocus = false;
-    private static JButton uploadWordsFileBtn = new JButton("Import Words");
-    private static JButton uploadPhrasesFileBtn = new JButton("Import Phrases");
+    private static JButton uploadFileBtn = new JButton("Import CSV File");
     private static String phraseHintText = "Enter phrase here..";
     private static String probHintText = "Enter probability..";
     private static String wordsHintText = "Enter word here..";
@@ -91,7 +86,6 @@ public class DatabaseInput {
             public void focusGained(FocusEvent e) {
                 if(wordsTextField.getText().equals(wordsHintText)){
                     wordsTextField.setText("");
-                    wordTextFieldFocus = true;
                     wordsTextField.setForeground(Color.BLACK);
                 }
             }
@@ -112,7 +106,6 @@ public class DatabaseInput {
             public void focusGained(FocusEvent e) {
                 if(probField.getText().equals(probHintText)){
                     probField.setText("");
-                    wordProbFieldFocus = true;
                     probField.setForeground(Color.BLACK);
                 }
             }
@@ -159,7 +152,6 @@ public class DatabaseInput {
             public void focusGained(FocusEvent e) {
                 if(phraseTextField.getText().equals(phraseHintText)){
                     phraseTextField.setText("");
-                    phraseTextFieldFocus = true;
                     phraseTextField.setForeground(Color.BLACK);
                 }
             }
@@ -180,7 +172,6 @@ public class DatabaseInput {
             public void focusGained(FocusEvent e) {
                 if(phraseProbField.getText().equals(probHintText)){
                     phraseProbField.setText("");
-                    phraseProbFieldFocus = true;
                     phraseProbField.setForeground(Color.BLACK);
                 }
             }
@@ -216,56 +207,19 @@ public class DatabaseInput {
             }
         });
 
-
-        uploadWordsFileBtn.addActionListener(new ActionListener() {
+        uploadFileBtn.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                //Handle open button action.
-                System.out.println("In action listener");
                 //Create a file chooser
                 final JFileChooser fc = new JFileChooser();
-                    if (e.getSource() == DatabaseInput.uploadWordsFileBtn) {
-                        System.out.println("In first if");
-                        int returnVal = fc.showOpenDialog(uploadWordsFileBtn);
-
-                        if (returnVal == JFileChooser.APPROVE_OPTION) {
-                            System.out.println("In second if");
-                            File file = fc.getSelectedFile();
-                            //This is where a real application would open the file.
-                            System.out.println("Opening: " + file.getName() + ".%n");
-                            ArrayList<Word> words = CSVFileReader.interpretCSVFile(file+"");
-                            for(Word word: words){
-                                System.out.println(word.getWord());
-                            }
-                        } else {
-                            System.out.println("Open command cancelled by user.%n");
-                        }
-
-                    }
-                }
-                //successLabel.setText("Feature not available yet.");
-        });
-
-        uploadPhrasesFileBtn.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                //Handle open button action.
-                System.out.println("In action listener");
-                //Create a file chooser
-                final JFileChooser fc = new JFileChooser();
-                if (e.getSource() == DatabaseInput.uploadPhrasesFileBtn) {
-                    System.out.println("In first if");
-                    int returnVal = fc.showOpenDialog(uploadPhrasesFileBtn);
+                if (e.getSource() == DatabaseInput.uploadFileBtn) {
+                    int returnVal = fc.showOpenDialog(uploadFileBtn);
 
                     if (returnVal == JFileChooser.APPROVE_OPTION) {
-                        System.out.println("In second if");
                         File file = fc.getSelectedFile();
-                        //This is where a real application would open the file.
                         System.out.println("Opening: " + file.getName() + ".%n");
-                        ArrayList<Phrase> phrases = CSVFileReader.interpretCSVPhraseFile(file+"");
-                        for(Phrase phrase: phrases){
-                            System.out.println(phrase.getPhrase());
-                        }
+                        CSVFileReader csvfr = new CSVFileReader();
+                        csvfr.interpretCSVFile(file + "");
                     } else {
                         System.out.println("Open command cancelled by user.%n");
                     }
@@ -277,11 +231,8 @@ public class DatabaseInput {
 
         successLabel = new JLabel("");
         submitPanel.add(submitButton);
-        submitPanel.add(uploadWordsFileBtn);
-        submitPanel.add(uploadPhrasesFileBtn);
+        submitPanel.add(uploadFileBtn);
         submitPanel.add(successLabel);
-
-
         pane.add(submitPanel, BorderLayout.SOUTH);
     }
 
@@ -325,7 +276,7 @@ public class DatabaseInput {
      * Launches the GUI.
      * @param args - not necessary
      */
-    public static void main(String[] args) {
+    public static void main() {
         //Create and set up the window.
         JFrame frame = new JFrame("Database Input");
         frame.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
@@ -366,7 +317,7 @@ public class DatabaseInput {
     }
 
     public void acceptInput() {
-        System.out.println("Trying...");
+        //System.out.println("Trying...");
         ArrayList<Word> words = new ArrayList<>();
         ArrayList<Phrase> phrases = new ArrayList<>();
 
@@ -411,9 +362,9 @@ public class DatabaseInput {
         }
         try {
             processWordsSHA(words);
-            System.out.println("Words Processing Complete");
+            //System.out.println("Words Processing Complete");
             processPhrasesSHA(phrases);
-            System.out.println("Phrase Processing Complete");
+            //System.out.println("Phrase Processing Complete");
         } catch (Exception e) {
             if (e instanceof SQLException) {
                 if (((SQLException) e).getErrorCode() == 1062) {

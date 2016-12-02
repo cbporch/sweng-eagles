@@ -4,6 +4,7 @@ import scanner.LoginGUI;
 import scanner.Word;
 import scanner.dbEntry.CSVFileReader;
 import scanner.dbEntry.Database;
+import scanner.dbEntry.DatabaseInput;
 
 import java.awt.*;
 import java.awt.event.*;
@@ -40,24 +41,27 @@ public class EmailTextGUI {
         textAreaPanel.setBackground(Color.LIGHT_GRAY);
         final JTextArea textArea = new JTextArea();
         textArea.setBackground(Color.WHITE);
-        textArea.setMinimumSize(new Dimension(400,350));
-        textArea.setMaximumSize(new Dimension(400,350));
-        textArea.setPreferredSize(new Dimension(400,350));
+        textArea.setMinimumSize(new Dimension(500,450));
+        textArea.setMaximumSize(new Dimension(500,450));
+        textArea.setPreferredSize(new Dimension(500,450));
         textArea.setLineWrap(true);
         Border border = BorderFactory.createLineBorder(Color.BLACK);
         textArea.setBorder(border);
         textArea.requestFocusInWindow();
-
-        textArea.setMinimumSize(new Dimension(500, 200));
+        //textArea.setMinimumSize(new Dimension(500, 200));
         textArea.setFont(new Font("Serif", Font.PLAIN, 16));
         textAreaPanel.add(textArea);
+        //JScrollPane scrollPane = new JScrollPane(textAreaPanel);
         pane.add(textAreaPanel, BorderLayout.CENTER);
+        //pane.add(scrollPane, BorderLayout.CENTER);
 
         JPanel scoringPanel = new JPanel();
         JButton evaluateButton = new JButton("Evaluate Email");
+        JButton saveEmailButton = new JButton("Save Email");
         final JLabel scoreLabel = new JLabel("");
         JButton importTermsBtn = new JButton("Import Terms");
         scoringPanel.add(evaluateButton);
+        scoringPanel.add(saveEmailButton);
         scoringPanel.add(uploadFileBtn);
         scoringPanel.add(importTermsBtn);
         scoringPanel.add(scoreLabel);
@@ -89,6 +93,20 @@ public class EmailTextGUI {
             }
         });
 
+        saveEmailButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                try {
+                    //send email to database
+                    System.out.println("Saving Email...");
+                    db.insertEmail(textArea.getText());
+                } catch (Exception ex) {
+                    System.out.println(ex);
+                }
+            }
+        });
+
+
         uploadFileBtn.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -104,11 +122,13 @@ public class EmailTextGUI {
                         System.out.println("In second if");
                         File file = fc.getSelectedFile();
                         //This is where a real application would open the file.
-                        System.out.println("Opening: " + file.getName() + ".%n");
-                        ArrayList<Word> words = CSVFileReader.interpretCSVFile(file+"");
-                        for(Word word: words){
-                            System.out.println(word.getWord());
-                        }
+                        System.out.println("Opening: " + file.getAbsolutePath());
+                        CSVFileReader csvfr = new CSVFileReader();
+                        csvfr.interpretCSVFile(file.getAbsolutePath());
+                        //ArrayList<Word> words = CSVFileReader.interpretCSVFile(file+"");
+//                        for(Word word: words){
+//                            System.out.println(word.getWord());
+//                        }
                     } else {
                         System.out.println("Open command cancelled by user.%n");
                     }
@@ -120,8 +140,8 @@ public class EmailTextGUI {
         importTermsBtn.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                LoginGUI loginGUI = new LoginGUI();
-                loginGUI.main(null);
+                DatabaseInput DBI = new DatabaseInput();
+                DBI.main();
             }
         });
     }
@@ -134,7 +154,7 @@ public class EmailTextGUI {
         JFrame frame = new JFrame("EmailGUI");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         //frame.setLocationRelativeTo(null);
-        frame.setPreferredSize(new Dimension(500,500));
+        frame.setPreferredSize(new Dimension(600,600));
         frame.setTitle("Email Text Input");
         frame.setResizable(true);
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();

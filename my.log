@@ -21,3 +21,47 @@ Nov 16, 2016 5:33:08 PM scanner.LoginGUI$3 windowClosing
 INFO: Frame closing...Attempting to close loggers.
 Nov 16, 2016 5:33:38 PM scanner.LoginGUI$1 actionPerformed
 WARNING: Login FAILED for username : admin
+Nov 16, 2016 6:38:28 PM scanner.LoginGUI$1 actionPerformed
+WARNING: Login FAILED for username : admin
+Nov 17, 2016 5:34:31 PM scanner.LoginGUI$3 windowClosing
+INFO: Frame closing...Attempting to close loggers.
+Nov 18, 2016 3:41:07 PM scanner.LoginGUI$1 actionPerformed
+INFO: Login successful for username: admin
+Nov 18, 2016 3:41:33 PM scanner.LoginGUI$1 actionPerformed
+WARNING: Login FAILED for username : adminafhsa
+Nov 18, 2016 3:46:14 PM scanner.LoginGUI$3 windowClosing
+INFO: Frame closing...Attempting to close loggers.
+Nov 18, 2016 4:01:19 PM scanner.LoginGUI$1 actionPerformed
+INFO: Login successful for username: admin
+Nov 18, 2016 4:02:28 PM scanner.LoginGUI$1 actionPerformed
+WARNING: Login FAILED for username : admin
+Nov 18, 2016 4:15:44 PM scanner.LoginGUI$3 windowClosing
+INFO: Frame closing...Attempting to close loggers.
+Nov 18, 2016 5:17:28 PM scanner.LoginGUI$1 actionPerformed
+INFO: Login successful for username: admin
+Nov 28, 2016 9:09:25 PM scanner.LoginGUI$1 actionPerformed
+INFO: Login successful for username: admin
+Nov 28, 2016 9:16:54 PM scanner.LoginGUI$3 windowClosing
+INFO: Frame closing...Attempting to close loggers.
+Nov 28, 2016 9:18:32 PM scanner.LoginGUI$1 actionPerformed
+INFO: Login successful for username: admin
+Nov 28, 2016 9:30:21 PM scanner.LoginGUI$1 actionPerformed
+INFO: Login successful for username: admin
+Nov 30, 2016 12:38:08 PM scanner.LoginGUI$1 actionPerformed
+INFO: Login successful for username: admin
+Nov 30, 2016 12:39:58 PM scanner.LoginGUI$1 actionPerformed
+INFO: Login successful for username: admin
+Dec 01, 2016 6:56:36 PM scanner.LoginGUI$3 windowClosing
+INFO: Frame closing...Attempting to close loggers.
+Dec 02, 2016 10:16:37 AM scanner.LoginGUI$1 actionPerformed
+INFO: Login successful for username: admin
+Dec 02, 2016 10:16:59 AM scanner.LoginGUI$1 actionPerformed
+INFO: Login successful for username: admin
+Dec 02, 2016 10:21:10 AM scanner.LoginGUI$1 actionPerformed
+INFO: Login successful for username: admin
+Dec 02, 2016 10:22:44 AM scanner.LoginGUI$1 actionPerformed
+INFO: Login successful for username: admin
+Dec 02, 2016 10:24:06 AM scanner.LoginGUI$1 actionPerformed
+INFO: Login successful for username: admin
+Dec 02, 2016 10:26:01 AM scanner.LoginGUI$1 actionPerformed
+INFO: Login successful for username: admin

@@ -33,12 +33,9 @@ not very useful and tend to err towards 1.0, until we adjust the values to give 
 Performance:
 
 ~~Currently performance needs improvement. A test set of lorem ipsum of 521 words take ~ 3 minutes to process.~~
-As of 11-18-16, a test of 500 words of English language filler text (an exerpt from Kafka's Metamorphosis) now takes just over 3 seconds.
+As of 12-2-16, a test of 300 words of English language filler text (an exerpt from Kafka's Metamorphosis) now takes around 5-7 seconds, depending on the system.
 
 Known Errors:
-~~Currently running from the command line results in errors being thrown relating to missing dependencies.~~
-
-~~When adding a word via the GUI, after the first word is added, when you go to add a second word, the submit button must be clicked twice.~~
-
 Leaving the login screen then re-entering causes auto-fill issues in the text boxes.
 
+Sometimes the login window popup will not properly display the username and password text boxes. They are there and can be tabbed into, but display incorrectly.
