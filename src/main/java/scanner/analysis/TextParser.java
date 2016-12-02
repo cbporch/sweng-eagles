@@ -73,7 +73,7 @@ public class TextParser {
         phraseThread phThread = new phraseThread();
 
         while(pThread.isAlive() || phThread.isAlive()){
-            if (!wordsToFind.isEmpty()) {
+            while (!wordsToFind.isEmpty()) {
                 Word w = findWord(wordsToFind.poll());
                 while(w == null && !wordsToFind.isEmpty()){
                     w = findWord(wordsToFind.poll());
@@ -83,7 +83,7 @@ public class TextParser {
                     p.add(new Doublet(w.getConf(), w.getNorm()));
                 }
                 try {
-                    Thread.sleep(2);
+                    Thread.sleep(1);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
@@ -233,6 +233,11 @@ public class TextParser {
                 }
                 if (p != null) {
                     pairs.add(new Doublet(p.getConf(), p.getNorm()));
+                }
+                try {
+                    Thread.sleep(1);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
                 }
             }
             System.out.println("thread done.");
