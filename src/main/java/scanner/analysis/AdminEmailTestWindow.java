@@ -235,13 +235,18 @@ public class AdminEmailTestWindow
                         unprocessedEmail = currentEmail;
                         currentEmail = historyBuffer[decrementTracker()];
                     }
-                    else
+                    else {
+                        unprocessedEmail = currentEmail;
                         currentEmail = historyBuffer[decrementTracker()];
+                    }
                 }
                 else if (btnForward.equals(arg0.getSource()))
                 {
-                    if (tracker < 2 & historyBuffer[tracker + 1] != null)
+                    if (tracker < 2 && historyBuffer[tracker + 1] != null)
                         currentEmail = historyBuffer[incrementTracker()];
+                    else if(unprocessedEmail != null) {
+                        currentEmail = unprocessedEmail;
+                    }
                 }
                 loadTextField(currentEmail);
             }
