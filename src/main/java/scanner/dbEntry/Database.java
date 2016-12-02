@@ -207,7 +207,7 @@ public class Database {
 
     public void insertEmail(String emailText) throws Exception{
         Statement statement = conn.createStatement();   //create statement
-        String sql = String.format("INSERT into UntrainedEmails (EmailText, Author) VALUES ('%s', 'Null')", emailText);
+        String sql = String.format("INSERT into UntrainedEmails (EmailText, Author, Loaded) VALUES ('%s', 'Null', '%d')", emailText, 0);
         //System.out.println(sql);
         statement.executeUpdate(sql);     //execute the select query
     }
