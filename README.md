@@ -38,5 +38,4 @@ As of 12-2-16, a test of 300 words of English language filler text (an exerpt fr
 Known Errors:
 Leaving the login screen then re-entering causes auto-fill issues in the text boxes.
 
-Sometimes the login window popup will not properly display the username and password text boxes. They are there and can be tabbed into, but they aren't drawn.
-
+Sometimes the login window popup will not properly display the username and password text boxes. They are there and can be tabbed into, but display incorrectly.
