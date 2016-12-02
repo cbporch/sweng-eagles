@@ -53,3 +53,7 @@ Nov 30, 2016 12:39:58 PM scanner.LoginGUI$1 actionPerformed
 INFO: Login successful for username: admin
 Dec 01, 2016 6:56:36 PM scanner.LoginGUI$3 windowClosing
 INFO: Frame closing...Attempting to close loggers.
+Dec 02, 2016 10:16:37 AM scanner.LoginGUI$1 actionPerformed
+INFO: Login successful for username: admin
+Dec 02, 2016 10:16:59 AM scanner.LoginGUI$1 actionPerformed
+INFO: Login successful for username: admin
