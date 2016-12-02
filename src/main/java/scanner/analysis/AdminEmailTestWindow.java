@@ -141,7 +141,7 @@ public class AdminEmailTestWindow
     static Database db = new Database();
     static int tracker = 0;
     static Email[] historyBuffer;
-    static Email currentEmail = new Email();
+    static Email currentEmail;
     static Email unprocessedEmail;
     static final JTextArea textArea = new JTextArea();
 
