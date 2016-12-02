@@ -142,6 +142,7 @@ public class AdminEmailTestWindow
     static int tracker = 0;
     static Email[] historyBuffer;
     static Email currentEmail = new Email();
+    static Email unprocessedEmail;
     static final JTextArea textArea = new JTextArea();
 
     /**
@@ -195,7 +196,26 @@ public class AdminEmailTestWindow
                 else if (btnCleanEmail.equals(arg0.getSource()))
                     currentEmail.setConfidential(false);
 
-                updateHistory(currentEmail);
+                switch (tracker)
+                {
+                    case 3:
+                    {
+                        updateHistory(currentEmail);
+                        break;
+                    }
+                    case 2:
+                    {
+                        currentEmail = unprocessedEmail;
+                        tracker = 3;
+                        break;
+                    }
+                    case 1:
+                    case 0:
+                    {
+                        currentEmail = historyBuffer[++tracker];
+                    }
+                }
+
                 loadNextEmail();
             }
         } ;
@@ -206,9 +226,20 @@ public class AdminEmailTestWindow
             public void actionPerformed(ActionEvent arg0)
             {
                 if (btnBack.equals(arg0.getSource()))
-                    currentEmail = historyBuffer[decrementTracker()];
+                {
+                    if (tracker == 3)
+                    {
+                        unprocessedEmail = currentEmail;
+                        currentEmail = historyBuffer[decrementTracker()];
+                    }
+                    else
+                        currentEmail = historyBuffer[decrementTracker()];
+                }
                 else if (btnForward.equals(arg0.getSource()))
-                    currentEmail = historyBuffer[incrementTracker()];
+                {
+                    if (tracker < 2 & historyBuffer[tracker + 1] != null)
+                        currentEmail = historyBuffer[incrementTracker()];
+                }
             }
         } ;
 
@@ -240,13 +271,13 @@ public class AdminEmailTestWindow
 
         frame.addWindowListener(new WindowAdapter()
         {
-            public void windowClosing(WindowEvent e)
+            public void windowClosing(WindowEvent we)
             {
                 System.out.println("Frame closing...");
                 try {
-                    //db.close();
-                } catch (Exception ex){
-                    System.out.println(ex);
+                    db.close();
+                } catch (Exception e){
+                    System.err.println(e);
                 }
             }
         });
@@ -267,35 +298,44 @@ public class AdminEmailTestWindow
         });
     }
 
-    static void updateHistory(Email e)
+    static void updateHistory(Email email)
     {
         if (historyBuffer[0] == null)
         {
-            historyBuffer[0] = e;
+            historyBuffer[0] = email;
             tracker = 1;
         }
         else if(historyBuffer[1] == null)
         {
-            historyBuffer[1] = e;
+            historyBuffer[1] = email;
             tracker = 2;
         }
         else if(historyBuffer[2] == null)
         {
-            historyBuffer[2] = e;
+            historyBuffer[2] = email;
             tracker = 3;
         }
         else
         {
-            Email email = historyBuffer[0];
+            Email emailToUpdate = historyBuffer[0];
 
             historyBuffer[0] = historyBuffer[1];
             historyBuffer[1] = historyBuffer[2];
-            historyBuffer[2] = e;
+            historyBuffer[2] = email;
 
-            if (email.isConfidential())
-                incrementConfidentialColumn(email.getEmailText());
+            if (emailToUpdate.isConfidential())
+                incrementConfidentialColumn(emailToUpdate.getEmailText());
             else
-                incrementNormalColumn(email.getEmailText());
+                incrementNormalColumn(emailToUpdate.getEmailText());
+
+            try
+            {
+                db.removeEmailById(emailToUpdate.getId());
+            }
+            catch (Exception e)
+            {
+                System.err.println(e);
+            }
         }
     }
 
