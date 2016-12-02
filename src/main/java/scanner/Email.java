@@ -10,6 +10,7 @@ public class Email {
     private int id;
     private String emailText;
     private boolean confidential;
+    private int loaded;
 
 
     public Email(String emailText) {
@@ -25,6 +26,13 @@ public class Email {
         this.setEmailText(emailText);
         this.setId(id);
         this.setConfidential(confidential);
+    }
+
+    public Email(String emailText, int id, boolean confidential, int loaded) {
+        this.setEmailText(emailText);
+        this.setId(id);
+        this.setConfidential(confidential);
+        this.setLoaded(loaded);
     }
 
     public Email() {
@@ -53,5 +61,13 @@ public class Email {
 
     public void setConfidential(boolean confidential) {
         this.confidential = confidential;
+    }
+
+    public int isLoaded() {
+        return loaded;
+    }
+
+    public void setLoaded(int loadedIn) {
+        this.loaded = loadedIn;
     }
 }

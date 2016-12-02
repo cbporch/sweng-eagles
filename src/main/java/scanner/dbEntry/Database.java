@@ -207,7 +207,7 @@ public class Database {
 
     public void insertEmail(String emailText) throws Exception{
         Statement statement = conn.createStatement();   //create statement
-        String sql = String.format("INSERT into UntrainedEmails (EmailText, Author) VALUES ('%s', 'Null')", emailText);
+        String sql = String.format("INSERT into UntrainedEmails (EmailText, Author, Loaded) VALUES ('%s', 'Null', '%d')", emailText, 0);
         //System.out.println(sql);
         statement.executeUpdate(sql);     //execute the select query
     }
@@ -222,6 +222,8 @@ public class Database {
             if (rs.getString(2).equals(emailText)) {         //compare the word to the word in the Database
                 found.setEmailText(rs.getString(2));
                 found.setId(rs.getInt(1));
+                found.setLoaded(1);
+                found.setConfidential(false);
                 return found;
             }
         }
@@ -231,13 +233,17 @@ public class Database {
     public Email getNextEmail() throws Exception{
         Email found = new Email();
         Statement statement = conn.createStatement();   //create statement
-        String sql = String.format("SELECT * from UntrainedEmails LIMIT 1");
+        String sql = String.format("SELECT * from UntrainedEmails WHERE Loaded = 0 LIMIT 1");
         ResultSet rs = statement.executeQuery(sql);     //execute the select query
         //System.out.println(sql);
         while (rs.next()) {
             found.setEmailText(rs.getString(2));
             found.setId(rs.getInt(1));
             found.setConfidential(false);
+            found.setLoaded(1);
+            Statement statement2 = conn.createStatement();   //create statement
+            String sql2 = String.format("Update UntrainedEmails SET Loaded = 1 WHERE id = '%d'");
+            statement2.executeUpdate(sql2);     //execute the select query
             return found;
         }
         return null;

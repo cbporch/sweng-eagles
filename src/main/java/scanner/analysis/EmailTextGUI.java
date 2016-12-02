@@ -40,18 +40,19 @@ public class EmailTextGUI {
         textAreaPanel.setBackground(Color.LIGHT_GRAY);
         final JTextArea textArea = new JTextArea();
         textArea.setBackground(Color.WHITE);
-        textArea.setMinimumSize(new Dimension(400,350));
-        textArea.setMaximumSize(new Dimension(400,350));
-        textArea.setPreferredSize(new Dimension(400,350));
+        textArea.setMinimumSize(new Dimension(500,450));
+        textArea.setMaximumSize(new Dimension(500,450));
+        textArea.setPreferredSize(new Dimension(500,450));
         textArea.setLineWrap(true);
         Border border = BorderFactory.createLineBorder(Color.BLACK);
         textArea.setBorder(border);
         textArea.requestFocusInWindow();
-
-        textArea.setMinimumSize(new Dimension(500, 200));
+        //textArea.setMinimumSize(new Dimension(500, 200));
         textArea.setFont(new Font("Serif", Font.PLAIN, 16));
         textAreaPanel.add(textArea);
+        //JScrollPane scrollPane = new JScrollPane(textAreaPanel);
         pane.add(textAreaPanel, BorderLayout.CENTER);
+        //pane.add(scrollPane, BorderLayout.CENTER);
 
         JPanel scoringPanel = new JPanel();
         JButton evaluateButton = new JButton("Evaluate Email");
@@ -152,7 +153,7 @@ public class EmailTextGUI {
         JFrame frame = new JFrame("EmailGUI");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         //frame.setLocationRelativeTo(null);
-        frame.setPreferredSize(new Dimension(500,500));
+        frame.setPreferredSize(new Dimension(600,600));
         frame.setTitle("Email Text Input");
         frame.setResizable(true);
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
