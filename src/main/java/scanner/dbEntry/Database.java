@@ -222,6 +222,8 @@ public class Database {
             if (rs.getString(2).equals(emailText)) {         //compare the word to the word in the Database
                 found.setEmailText(rs.getString(2));
                 found.setId(rs.getInt(1));
+                found.setLoaded(1);
+                found.setConfidential(false);
                 return found;
             }
         }
