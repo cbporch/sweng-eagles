@@ -27,7 +27,7 @@ public class TextParser {
     private PriorityBlockingQueue<String> wordsToFind;
     private PriorityBlockingQueue<NPhrase> phraseToFind;
     private PriorityBlockingQueue<Doublet> pairs;
-    boolean pThreadDone;
+
 
     public TextParser(String email) throws Exception {
 
@@ -48,7 +48,7 @@ public class TextParser {
         phraseToFind = new PriorityBlockingQueue<>(10, comparator0);
         ls = new LuceneStemmer();
         pairs = new PriorityBlockingQueue<>(10, comparator1);
-        p = new ArrayList<Doublet>();
+        p = new ArrayList<>();
         wordDB = new Database();
         phraseDB = new Database();
         uniqueWords = new HashSet<>();
@@ -70,22 +70,23 @@ public class TextParser {
         //parsingComplete = false;
 
         parseThread pThread = new parseThread();
-        wordThread wThread = new wordThread();
+        phraseThread phThread = new phraseThread();
 
-        while(pThread.isAlive() || wThread.isAlive()){
-            if(!phraseToFind.isEmpty()) {
-
-                    NPhrase np = phraseToFind.poll();
-                    Phrase p = findPhrase(np.phrase, np.num);
-                    while(p == null && !phraseToFind.isEmpty()){
-                        np = phraseToFind.poll();
-                        p = findPhrase(np.phrase, np.num);
-
-                    }
-                    if (p != null) {
-                          pairs.add(new Doublet(p.getConf(), p.getNorm()));
-                    }
-
+        while(pThread.isAlive() || phThread.isAlive()){
+            if (!wordsToFind.isEmpty()) {
+                Word w = findWord(wordsToFind.poll());
+                while(w == null && !wordsToFind.isEmpty()){
+                    w = findWord(wordsToFind.poll());
+                }
+                //System.out.println(w.getWord());
+                if (w != null) {
+                    p.add(new Doublet(w.getConf(), w.getNorm()));
+                }
+                try {
+                    Thread.sleep(2);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
             }
         }
 
@@ -113,9 +114,9 @@ public class TextParser {
         try {
             return wordDB.getWord(Hasher.hashSHA(word));
         } catch (Exception e) {
-           System.out.println(e);
+            System.out.println(e);
         }
-       return null;
+        return null;
     }
 
     /**
@@ -181,7 +182,6 @@ public class TextParser {
         }
 
         public void run(){
-            pThreadDone = false;
             System.out.println(1);
             ArrayList<Integer> grams = wordDB.getWordcounts();
             int lastIndex = text.size() - 1;
@@ -191,7 +191,6 @@ public class TextParser {
                     wordsToFind.add(text.get(index));
                     //System.out.println(text.get(index));
                 }
-
                 for(int N : grams){
                     if((index + N - 1) <= lastIndex){
                         NPhrase np = new NPhrase();
@@ -201,14 +200,8 @@ public class TextParser {
                         phraseToFind.add(np);
                     }
                 }
-                try {
-                    Thread.sleep(5);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
             }
             System.out.println("thread done.");
-            pThreadDone = true;
         }
     }
 
@@ -216,41 +209,36 @@ public class TextParser {
      * The goal of this thread is to handle the lookups for each string
      * and to add them to the pairs ArrayList
      */
-    private class wordThread extends Thread{
+    private class phraseThread extends Thread {
 
-        wordThread(){
-            super("wordThread");
+        phraseThread() {
+            super("phraseThread");
             start();
         }
 
-        public void run(){
-            while(!pThreadDone){
-                try {
-                    Thread.sleep(1);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-            }
-            System.out.println(2);
-            if (!wordsToFind.isEmpty()) {
-                Word w = findWord(wordsToFind.poll());
-                    while(w == null && !wordsToFind.isEmpty()){
-                        w = findWord(wordsToFind.poll());
-                    }
-                //System.out.println(w.getWord());
-                if (w != null) {
-                    p.add(new Doublet(w.getConf(), w.getNorm()));
-                }
+        public void run() {
+            if(phraseToFind.isEmpty()){
                 try {
                     Thread.sleep(5);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
             }
-
+            while(!phraseToFind.isEmpty()) {
+                NPhrase np = phraseToFind.poll();
+                Phrase p = findPhrase(np.phrase, np.num);
+                while (p == null && !phraseToFind.isEmpty()) {
+                    np = phraseToFind.poll();
+                    p = findPhrase(np.phrase, np.num);
+                }
+                if (p != null) {
+                    pairs.add(new Doublet(p.getConf(), p.getNorm()));
+                }
+            }
             System.out.println("thread done.");
         }
     }
+
     /*
      * Struct-like inner class to hold a phrase and its number of words
      * This exists in order to facilitate threading more easily
