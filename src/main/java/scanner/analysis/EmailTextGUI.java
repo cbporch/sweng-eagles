@@ -120,7 +120,9 @@ public class EmailTextGUI {
                         System.out.println("In second if");
                         File file = fc.getSelectedFile();
                         //This is where a real application would open the file.
-                        System.out.println("Opening: " + file.getName() + ".%n");
+                        System.out.println("Opening: " + file.getAbsolutePath());
+                        CSVFileReader csvfr = new CSVFileReader();
+                        csvfr.interpretCSVFile(file.getAbsolutePath());
                         //ArrayList<Word> words = CSVFileReader.interpretCSVFile(file+"");
 //                        for(Word word: words){
 //                            System.out.println(word.getWord());

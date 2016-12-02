@@ -76,10 +76,6 @@ public class Encryptor {
                 encryptedList.add(encrypt(word));
             }
         }
-        for (int i = 0; i < encryptedList.size(); i++)
-        {
-            System.out.println(encryptedList.get(i));
-        }
         return encryptedList;
     }
 
@@ -95,10 +91,6 @@ public class Encryptor {
             if(!word.equals("") && word != null) {
                 decryptedList.add(decrypt(word));
             }
-        }
-        for (int i = 0; i < decryptedList.size(); i++)
-        {
-            System.out.println(decryptedList.get(i));
         }
         return decryptedList;
     }
