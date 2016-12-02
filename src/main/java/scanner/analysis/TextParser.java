@@ -48,6 +48,7 @@ public class TextParser {
         phraseToFind = new PriorityBlockingQueue<>(10, comparator0);
         ls = new LuceneStemmer();
         pairs = new PriorityBlockingQueue<>(10, comparator1);
+        p = new ArrayList<Doublet>();
         db = new Database();
         uniqueWords = new HashSet<>();
         uniquePhrases = new HashSet<>();
@@ -89,14 +90,16 @@ public class TextParser {
 
         System.out.println("parse done");
         System.out.println("Pairs: " + pairs.size());
-        if(pairs.isEmpty()){
-            return 0;
-        }
 
         for(Doublet d: pairs){
-            p.add(d);
+            if(d !=null) {
+                p.add(d);
+            }
         }
 
+        if(p.isEmpty()){
+            return 0;
+        }
         return CalculateEmailScore.calculate(p);
     }
 
@@ -198,7 +201,7 @@ public class TextParser {
                     }
                 }
                 try {
-                    Thread.sleep(1);
+                    Thread.sleep(5);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
@@ -233,12 +236,12 @@ public class TextParser {
                     while(w == null && !wordsToFind.isEmpty()){
                         w = findWord(wordsToFind.poll());
                     }
-                System.out.println(w.getWord());
+                //System.out.println(w.getWord());
                 if (w != null) {
-                    pairs.add(new Doublet(w.getConf(), w.getNorm()));
+                    p.add(new Doublet(w.getConf(), w.getNorm()));
                 }
                 try {
-                    Thread.sleep(1);
+                    Thread.sleep(5);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
