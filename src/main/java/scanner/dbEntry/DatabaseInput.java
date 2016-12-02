@@ -276,7 +276,7 @@ public class DatabaseInput {
      * Launches the GUI.
      * @param args - not necessary
      */
-    public static void main(String[] args) {
+    public static void main() {
         //Create and set up the window.
         JFrame frame = new JFrame("Database Input");
         frame.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);

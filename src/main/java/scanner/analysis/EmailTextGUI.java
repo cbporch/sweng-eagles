@@ -4,6 +4,7 @@ import scanner.LoginGUI;
 import scanner.Word;
 import scanner.dbEntry.CSVFileReader;
 import scanner.dbEntry.Database;
+import scanner.dbEntry.DatabaseInput;
 
 import java.awt.*;
 import java.awt.event.*;
@@ -139,8 +140,8 @@ public class EmailTextGUI {
         importTermsBtn.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                LoginGUI loginGUI = new LoginGUI();
-                loginGUI.main(null);
+                DatabaseInput DBI = new DatabaseInput();
+                DBI.main();
             }
         });
     }
