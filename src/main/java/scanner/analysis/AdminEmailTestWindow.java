@@ -196,7 +196,9 @@ public class AdminEmailTestWindow
                 else if (btnCleanEmail.equals(arg0.getSource()))
                     currentEmail.setConfidential(false);
 
-                switch (tracker)
+                updateHistory(currentEmail);
+
+                /**switch (tracker)
                 {
                     case 3:
                     {
@@ -205,16 +207,17 @@ public class AdminEmailTestWindow
                     }
                     case 2:
                     {
-                        currentEmail = unprocessedEmail;
-                        tracker = 3;
-                        break;
+                        historyBuffer[tracker -1] = currentEmail;
+                        //currentEmail = unprocessedEmail;
+                        //tracker = 3;
+                        //break;
                     }
-                    case 1:
+                    case 1: historyBuffer[tracker - 1] = currentEmail;
                     case 0:
                     {
-                        currentEmail = historyBuffer[++tracker];
+                        historyBuffer[tracker] = currentEmail;
                     }
-                }
+                }*/
 
                 loadNextEmail();
             }
@@ -240,6 +243,7 @@ public class AdminEmailTestWindow
                     if (tracker < 2 & historyBuffer[tracker + 1] != null)
                         currentEmail = historyBuffer[incrementTracker()];
                 }
+                loadTextField(currentEmail);
             }
         } ;
 
