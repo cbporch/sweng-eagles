@@ -23,7 +23,6 @@ public class TextParser {
     private ArrayList<Doublet> p;
     private HashSet<String> uniqueWords, uniquePhrases;
     private Database wordDB, phraseDB;
-    //private boolean parsingComplete;
     private PriorityBlockingQueue<String> wordsToFind;
     private PriorityBlockingQueue<NPhrase> phraseToFind;
     private PriorityBlockingQueue<Doublet> pairs;
@@ -67,8 +66,6 @@ public class TextParser {
      * @return - A score of how likely the text is to be confidential.
      */
     public double parse(){
-        //parsingComplete = false;
-
         parseThread pThread = new parseThread();
         phraseThread phThread = new phraseThread();
 
@@ -166,7 +163,7 @@ public class TextParser {
         for(int i = 0; i < N; i++){
             phrase += text.get(i + index);
         }
-        //uniquePhrases.add(phrase);
+        uniquePhrases.add(phrase);
         return phrase;
     }
 
