@@ -1,125 +1,5 @@
 package scanner.analysis;
 
-/*import java.awt.Dimension;
-import java.awt.GridLayout;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
-import java.util.ArrayList;
-
-import javax.swing.*;
-
-public class AdminEmailTestWindow extends JFrame
-{
- *//**
- *
- *//*
-	private static final long serialVersionUID = -6568337478597164028L;
-
-	JPanel emailPanel = new JPanel();
-	JTextArea emailSpace;
-	JScrollPane scroll;
-
-	JPanel buttonPanel = new JPanel();
-	JButton btnConfidential = new JButton("Confidential");
-	JButton btnClean = new JButton("Clean Email");
-
-	ArrayList<Email> emailList;
-	Email[] historyBuffer = new Email[3];
-
-	public AdminEmailTestWindow(String title, ArrayList<Email> emailList)
-	{
-		this.emailList = emailList;
-
-		setTitle(title);
-		setLayout(new GridLayout(2,1));
-
-		emailSpace  = new JTextArea(20, 50);
-		scroll = new JScrollPane(emailSpace);
-
-		emailSpace.setEditable(false);
-		emailSpace.setWrapStyleWord(true);
-		emailSpace.setLineWrap(true);
-
-		scroll.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
-		scroll.setPreferredSize(new Dimension(475, 375));
-		emailPanel.setPreferredSize(new Dimension(500, 400));
-
-		emailPanel.add(scroll);
-
-		add(emailPanel);
-
-		buttonPanel.setLayout(new GridLayout(1,2));
-		buttonPanel.setPreferredSize(new Dimension(20, 20));
-
-		buttonPanel.add(btnClean, null);
-		buttonPanel.add(btnConfidential, null);
-
-		add(buttonPanel);
-
-		this.loadTextField(this.emailList.get(0));
-		emailList.remove(0);
-
-		MouseListener buttonPress = new MouseListener()
-		{
-			@Override
-			public void mouseReleased(MouseEvent arg0)
-			{
-				if (this.equals(btnClean))
-				{
-					incrementNormalColumn(emailList.get(0).getBody());
-				}
-				else if (this.equals(btnConfidential))
-				{
-					incrementConfidentialColumn(emailList.get(0).getBody());
-				}
-			}
-
-
-  * Unused Methods
-
-			@Override
-			public void mouseClicked(MouseEvent e) { }
-
-			@Override
-			public void mouseEntered(MouseEvent e) { }
-
-			@Override
-			public void mouseExited(MouseEvent e) { }
-
-			@Override
-			public void mousePressed(MouseEvent e) { }
-		} ;
-
-		btnConfidential.addMouseListener(buttonPress);
-		btnClean.addMouseListener(buttonPress);
-	}
-
-	protected void incrementConfidentialColumn(String body)
-	{
-
-	}
-
-	protected void incrementNormalColumn(String body)
-	{
-
-	}
-
-	public void loadTextField(Email email)
-	{
-		emailSpace.setText(email.getBody());
-	}
-}
-  */
-
-//package scanner.analysis;
-
-//import scanner.LoginGUI;
-//import scanner.Word;
-//import scanner.dbEntry.CSVFileReader;
-//import scanner.dbEntry.Database;
-
 import scanner.Email;
 import scanner.dbEntry.Database;
 
@@ -196,30 +76,37 @@ public class AdminEmailTestWindow
                 else if (btnCleanEmail.equals(arg0.getSource()))
                     currentEmail.setConfidential(false);
 
-                updateHistory(currentEmail);
-
-                /**switch (tracker)
+                if (historyBuffer[tracker + 1] != null)
                 {
-                    case 3:
+                    switch (tracker)
                     {
-                        updateHistory(currentEmail);
-                        break;
+                        case 3:
+                        {
+                            updateHistory(currentEmail);
+                            break;
+                        }
+                        case 2:
+                        {
+                            currentEmail = unprocessedEmail;
+                            tracker = 3;
+                            break;
+                        }
+                        case 1:
+                        case 0:
+                        {
+                            currentEmail = historyBuffer[++tracker];
+                        }
                     }
-                    case 2:
-                    {
-                        historyBuffer[tracker -1] = currentEmail;
-                        //currentEmail = unprocessedEmail;
-                        //tracker = 3;
-                        //break;
-                    }
-                    case 1: historyBuffer[tracker - 1] = currentEmail;
-                    case 0:
-                    {
-                        historyBuffer[tracker] = currentEmail;
-                    }
-                }*/
 
-                loadNextEmail();
+                    if (tracker == 3)
+                        loadNextEmail();
+                }
+                else
+                {
+                    loadNextEmail();
+                }
+
+                incrementTracker();
             }
         } ;
 
@@ -235,20 +122,21 @@ public class AdminEmailTestWindow
                         unprocessedEmail = currentEmail;
                         currentEmail = historyBuffer[decrementTracker()];
                     }
-                    else {
-                        unprocessedEmail = currentEmail;
+                    else
                         currentEmail = historyBuffer[decrementTracker()];
-                    }
+
+                    loadTextField(currentEmail);
                 }
                 else if (btnForward.equals(arg0.getSource()))
                 {
-                    if (tracker < 2 && historyBuffer[tracker + 1] != null)
-                        currentEmail = historyBuffer[incrementTracker()];
-                    else if(unprocessedEmail != null) {
-                        currentEmail = unprocessedEmail;
+                    if (tracker < 2)
+                    {
+                        if (historyBuffer[tracker + 1] != null)
+                            currentEmail = historyBuffer[incrementTracker()];
                     }
+
+                    loadTextField(currentEmail);
                 }
-                loadTextField(currentEmail);
             }
         } ;
 
