@@ -49,6 +49,10 @@ public class Pandoc {
             upload(session, localPath);
             String output = toText(session, workingDir+localFilename, workingDir+remoteName);
 
+            openExecChannel(session, "cd "+workingDir);
+            openExecChannel(session, "rm "+localFilename);
+            openExecChannel(session, "rm "+remoteName);
+
             session.disconnect();
 
             return output;
