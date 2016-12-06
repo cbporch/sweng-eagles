@@ -14,10 +14,6 @@ public class Pandoc {
     public static void main(String[] args){
 
         try{
-            java.util.Properties config = new java.util.Properties();
-            config.put("StrictHostKeyChecking", "no");
-
-
             JSch jsch=new JSch();
 
             JFileChooser chooser = new JFileChooser();
@@ -38,7 +34,14 @@ public class Pandoc {
             String host = "ec2-54-145-184-115.compute-1.amazonaws.com";
 
             Session session=jsch.getSession(user, host, 22);
+
+            /* Insecure solution */
+            java.util.Properties config = new java.util.Properties();
+            config.put("StrictHostKeyChecking", "no");
             session.setConfig(config);
+            /* End Insecure solution */
+
+
             session.connect();
 
             Channel channel=session.openChannel("shell");
