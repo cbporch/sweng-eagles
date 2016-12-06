@@ -13,6 +13,19 @@ public class Pandoc {
 
     String workingDir = "/pandoc/tmp/";
 
+    public static void main(String[] args)
+    {
+        Pandoc pandoc = new Pandoc();
+
+        System.out.println(pandoc.convertFile("/Users/dsmith/pandoc.docx","pandoc.docx"));
+    }
+
+    /**
+     *
+     * @param localPath
+     * @param localFilename
+     * @return
+     */
     public String convertFile(String localPath, String localFilename){
 
         Random rand = new Random();
@@ -21,7 +34,11 @@ public class Pandoc {
         try{
             JSch jsch=new JSch();
 
-            JFileChooser chooser = new JFileChooser();
+            String uri = Pandoc.class.getClass().getResource("../../../ASRC-Pandoc.pem").toExternalForm();
+
+            jsch.addIdentity(uri);
+
+            /*JFileChooser chooser = new JFileChooser();
             chooser.setDialogTitle("Choose your privatekey(ex. ~/.ssh/id_dsa)");
             chooser.setFileHidingEnabled(false);
             int returnVal = chooser.showOpenDialog(null);
@@ -31,7 +48,7 @@ public class Pandoc {
                 jsch.addIdentity(chooser.getSelectedFile().getAbsolutePath()
 //			 , "passphrase"
                 );
-            }
+            }*/
 
             String user="ubuntu";
             String host = "ec2-54-145-184-115.compute-1.amazonaws.com";
