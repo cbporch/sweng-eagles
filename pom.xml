@@ -76,6 +76,14 @@
     </properties>
 
     <build>
+        <resources>
+            <resource>
+                <directory>src/main/java/scanner/pandoc</directory>
+                <includes>
+                    <include>ASRC-Pandoc.pem</include>
+                </includes>
+            </resource>
+        </resources>
         <plugins>
             <plugin>
                 <!-- Build an executable JAR -->
