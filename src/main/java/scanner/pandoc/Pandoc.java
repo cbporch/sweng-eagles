@@ -1,21 +1,23 @@
 package scanner.pandoc;
 
 import com.jcraft.jsch.Channel;
-import com.jcraft.jsch.ChannelExec;
 import com.jcraft.jsch.JSch;
 import com.jcraft.jsch.Session;
 
 import javax.swing.*;
-import java.io.InputStream;
 
 /**
  * Created by dsmith on 12/06/2016.
  */
 public class Pandoc {
 
-    public Pandoc(String host){
+    public static void main(String[] args){
 
         try{
+            java.util.Properties config = new java.util.Properties();
+            config.put("StrictHostKeyChecking", "no");
+
+
             JSch jsch=new JSch();
 
             JFileChooser chooser = new JFileChooser();
@@ -33,9 +35,10 @@ public class Pandoc {
 
 
             String user="ubuntu";
+            String host = "ec2-54-145-184-115.compute-1.amazonaws.com";
 
             Session session=jsch.getSession(user, host, 22);
-            
+            session.setConfig(config);
             session.connect();
 
             Channel channel=session.openChannel("shell");
