@@ -9,31 +9,46 @@ import java.util.Random;
  */
 public class Pandoc {
 
+    //Specifies what directory files get transferd to on the server
     String workingDir = "/pandoc/tmp/";
 
-    public static void main(String[] args)
-    {
-        Pandoc pandoc = new Pandoc();
+    public Pandoc()
+    {}
 
-        System.out.println(pandoc.convertFile("/Users/dsmith/pandoc.docx","pandoc.docx"));
+    /**
+     * Constructor to use custom working directory
+     * @param path
+     */
+    public Pandoc(String path)
+    {
+        workingDir = path;
     }
 
     /**
+     * Runs a file through pandoc to convert it to a text file
+     *
+     * See Pandoc documentation for supported conversions
+     *
+     * Does not support pdf to txt
+     * Does not support doc to txt
+     * Does support docx to txt
      *
      * @param localPath
      * @param localFilename
-     * @return
+     * @return String of the text file
      */
     public String convertFile(String localPath, String localFilename){
 
+        // Generate a random number for the file name for this instance
         Random rand = new Random();
         String remoteName = Integer.toString(rand.nextInt(3000))+".txt";
 
         try{
+            // Initiate a JSch instance
             JSch jsch=new JSch();
 
+            // Get the url for the private key for the server
             String uri = Pandoc.class.getClass().getResource("/ASRC-Pandoc.pem").getPath().replace("%20", " ");
-
             jsch.addIdentity(uri);
 
             String user="ubuntu";
@@ -49,10 +64,13 @@ public class Pandoc {
 
             session.connect();
 
+            // Uploads file to pandoc server to be converted to a txt file
             upload(session, localPath);
+
+            // Runs conversion commands on the file to get a txt file result
             String output = toText(session, workingDir+localFilename, workingDir+remoteName);
 
-            openExecChannel(session, "cd "+workingDir);
+            // Deletes files after processing
             delete(session,localFilename);
             delete(session,remoteName);
 
@@ -64,10 +82,19 @@ public class Pandoc {
             System.out.println(e);
         }
 
+        // Return null if there is a problem
         return null;
     }
 
-    public Channel openExecChannel(Session session,String command) throws IOException {
+    /**
+     * Executes commands via an ssh tunnel
+     *
+     * @param session
+     * @param command
+     * @return
+     * @throws IOException
+     */
+    private Channel openExecChannel(Session session,String command) throws IOException {
         try {
             ChannelExec channel=(ChannelExec)session.openChannel("exec");
             channel.setCommand(command);
@@ -79,7 +106,13 @@ public class Pandoc {
         }
     }
 
-    public void upload(Session session, String path) {
+    /**
+     * Uploads a file to the server
+     *
+     * @param session
+     * @param path
+     */
+    private void upload(Session session, String path) {
         try {
 
             ChannelSftp channelSftp = (ChannelSftp)session.openChannel("sftp");
@@ -96,7 +129,15 @@ public class Pandoc {
         }
     }
 
-    public String read(Session session, String path) throws IOException
+    /**
+     * Reads a file from the server
+     *
+     * @param session
+     * @param path
+     * @return
+     * @throws IOException
+     */
+    private String read(Session session, String path) throws IOException
     {
         try {
             ChannelSftp sftp = (ChannelSftp) session.openChannel("sftp");
@@ -122,7 +163,14 @@ public class Pandoc {
         return null;
     }
 
-    public String delete(Session session, String fileName) throws IOException
+    /**
+     * Deletes a file from the server
+     * @param session
+     * @param fileName
+     * @return
+     * @throws IOException
+     */
+    private void delete(Session session, String fileName) throws IOException
     {
         try {
             ChannelSftp sftp = (ChannelSftp) session.openChannel("sftp");
@@ -133,11 +181,18 @@ public class Pandoc {
         catch (Exception ex) {
             ex.printStackTrace();
         }
-
-        return null;
     }
 
-    public String toText(Session session, String path, String outputPath) throws IOException
+    /**
+     * Runs pandoc command
+     *
+     * @param session
+     * @param path
+     * @param outputPath
+     * @return
+     * @throws IOException
+     */
+    private String toText(Session session, String path, String outputPath) throws IOException
     {
         openExecChannel(session, "cd "+workingDir);
         openExecChannel(session, "pandoc -s -o "+outputPath+" "+path);
@@ -145,7 +200,6 @@ public class Pandoc {
         String file =  read(session, outputPath);
 
         return file;
-
     }
 
 }
