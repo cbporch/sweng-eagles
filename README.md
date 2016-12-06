@@ -1,5 +1,11 @@
 # sweng-eagles
 
+**Updated Server Requirements**
+With the introduction of Pandoc, the deployment of this software requires a server running Pandoc and is accessible over SSH using a public key.
+
+Currently the program talks to a server running in the Amazon Web Services Cloudand has the private key for that server pre-loaded into the code.
+
+
 All dependencies should be pulled by Maven when you first run anything.
 
 *Code requires Java 1.8*
