@@ -1,8 +1,6 @@
 package scanner.pandoc;
 
 import com.jcraft.jsch.*;
-
-import javax.swing.*;
 import java.io.*;
 import java.util.Random;
 
@@ -34,21 +32,9 @@ public class Pandoc {
         try{
             JSch jsch=new JSch();
 
-            String uri = Pandoc.class.getClass().getResource("../../../ASRC-Pandoc.pem").toExternalForm();
+            String uri = Pandoc.class.getClass().getResource("/ASRC-Pandoc.pem").getPath().replace("%20", " ");
 
             jsch.addIdentity(uri);
-
-            /*JFileChooser chooser = new JFileChooser();
-            chooser.setDialogTitle("Choose your privatekey(ex. ~/.ssh/id_dsa)");
-            chooser.setFileHidingEnabled(false);
-            int returnVal = chooser.showOpenDialog(null);
-            if(returnVal == JFileChooser.APPROVE_OPTION) {
-                System.out.println("You chose "+
-                        chooser.getSelectedFile().getAbsolutePath()+".");
-                jsch.addIdentity(chooser.getSelectedFile().getAbsolutePath()
-//			 , "passphrase"
-                );
-            }*/
 
             String user="ubuntu";
             String host = "ec2-54-145-184-115.compute-1.amazonaws.com";
@@ -67,8 +53,8 @@ public class Pandoc {
             String output = toText(session, workingDir+localFilename, workingDir+remoteName);
 
             openExecChannel(session, "cd "+workingDir);
-            openExecChannel(session, "rm "+localFilename);
-            openExecChannel(session, "rm "+remoteName);
+            delete(session,localFilename);
+            delete(session,remoteName);
 
             session.disconnect();
 
@@ -128,6 +114,21 @@ public class Pandoc {
                 return message;
 
             }
+        }
+        catch (Exception ex) {
+            ex.printStackTrace();
+        }
+
+        return null;
+    }
+
+    public String delete(Session session, String fileName) throws IOException
+    {
+        try {
+            ChannelSftp sftp = (ChannelSftp) session.openChannel("sftp");
+            sftp.connect();
+            sftp.cd(workingDir);
+            sftp.rm(fileName);
         }
         catch (Exception ex) {
             ex.printStackTrace();
