@@ -59,6 +59,17 @@
             <version>2.7</version>
         </dependency>
 
+        <dependency>
+            <groupId>com.jcraft</groupId>
+            <artifactId>jsch</artifactId>
+            <version>0.1.54</version>
+        </dependency>
+        <dependency>
+            <groupId>commons-io</groupId>
+            <artifactId>commons-io</artifactId>
+            <version>2.5</version>
+        </dependency>
+
     </dependencies>
 
    <!-- <properties>
@@ -66,6 +77,14 @@
     </properties> -->
 
     <build>
+        <resources>
+            <resource>
+                <directory>src/main/java/scanner/pandoc</directory>
+                <includes>
+                    <include>ASRC-Pandoc.pem</include>
+                </includes>
+            </resource>
+        </resources>
         <plugins>
             <plugin>
                 <!-- Build an executable JAR -->
