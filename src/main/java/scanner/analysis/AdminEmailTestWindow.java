@@ -57,6 +57,9 @@ public class AdminEmailTestWindow
         textAreaPanel.add(textArea);
         pane.add(textAreaPanel, BorderLayout.CENTER);
 
+        btnBack.setEnabled(false);
+        btnForward.setEnabled(false);
+
         JPanel scoringPanel = new JPanel();
         final JButton btnCleanEmail = new JButton("Clean Email");
         final JButton btnConfidential = new JButton("Confidential Email");
@@ -80,6 +83,12 @@ public class AdminEmailTestWindow
                 updateHistory(currentEmail);
 
                 loadNextEmail();
+
+                if (historyBuffer[tracker - 1] == null) {
+                    // do nothing
+                }else {
+                    btnBack.setEnabled(true);
+                }
             }
         } ;
 
@@ -107,11 +116,34 @@ public class AdminEmailTestWindow
     public static void goBack() {
         decrementTracker();
         loadTextField(historyBuffer[tracker]);
+        if(tracker == 0 || historyBuffer[tracker - 1] == null){
+            btnBack.setEnabled(false);
+        }else{
+            btnBack.setEnabled(true);
+        }
+
+        //if next email exists, enable forward button
+        if(tracker == MAX_ARRAYSIZE -1 || historyBuffer[tracker + 1] == null) {
+
+        }else{
+            btnForward.setEnabled(true);
+        }
     }
 
     public static void goForward() {
         incrementTracker();
         loadTextField(historyBuffer[tracker]);
+        // tracker is at end or next email doesn't exist
+        if (tracker == MAX_ARRAYSIZE - 1 || historyBuffer[tracker + 1] == null){
+            btnForward.setEnabled(false);
+        }else{
+            btnForward.setEnabled(true);
+        }
+
+        // if previous email exists, enable back button
+        if(historyBuffer[tracker - 1] != null){
+            btnBack.setEnabled(true);
+        }
     }
 
     /**
@@ -266,7 +298,10 @@ public class AdminEmailTestWindow
         {
             System.err.println(e);
         }
+
+
     }
+
     static void loadTextField(Email email)
     {
         textArea.setText(email.getEmailText());
