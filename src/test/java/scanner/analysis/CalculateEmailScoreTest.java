@@ -6,8 +6,6 @@ import scanner.Doublet;
 
 import java.util.ArrayList;
 
-import static org.junit.Assert.*;
-
 /**
  * Created by Chris on 10/24/2016.
  *

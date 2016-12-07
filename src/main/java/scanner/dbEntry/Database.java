@@ -84,7 +84,7 @@ public class Database {
     public ArrayList<String> getWords() throws Exception {
         ArrayList<String> words = new ArrayList<>();
         Statement statement = conn.createStatement();   //create statement
-        String sql = String.format("select word from Words");   //only selecting the column word
+        String sql = "select word from Words";   //only selecting the column word
         //System.out.println(sql);
         ResultSet rs = statement.executeQuery(sql);     //execute the select query
         while (rs.next()) {
@@ -105,7 +105,7 @@ public class Database {
     public ArrayList<String> getPhrases() throws Exception {
         ArrayList<String> phrases = new ArrayList<>();
         Statement statement = conn.createStatement();   //create statement
-        String sql = String.format("select phrase from Phrases");   //select on phrase column
+        String sql = "select phrase from Phrases";   //select on phrase column
         ResultSet rs = statement.executeQuery(sql);     //execute the select query
         while (rs.next()) {
             phrases.add(rs.getString(1));               //add the phrase to the arraylist
@@ -192,7 +192,7 @@ public class Database {
         try {
             ArrayList<Integer> grams = new ArrayList<>();
             Statement statement = conn.createStatement();   //create statement
-            String sql = String.format("SELECT DISTINCT count from Phrases");
+            String sql = "SELECT DISTINCT count from Phrases";
             //System.out.println(sql);
             ResultSet rs = statement.executeQuery(sql);     //execute the select query
             while (rs.next()) {
@@ -233,7 +233,7 @@ public class Database {
     public Email getNextEmail() throws Exception{
         Email found = new Email();
         Statement statement = conn.createStatement();   //create statement
-        String sql = "SELECT * from UntrainedEmails WHERE Loaded = 0 LIMIT 1";
+        String sql = "SELECT * from UntrainedEmails LIMIT 1";
         ResultSet rs = statement.executeQuery(sql);     //execute the select query
         //System.out.println(sql);
         while (rs.next()) {
@@ -242,7 +242,7 @@ public class Database {
             found.setConfidential(false);
             found.setLoaded(1);
             Statement statement2 = conn.createStatement();   //create statement
-            String sql2 = String.format("Update UntrainedEmails SET Loaded = 1 WHERE id = '%d'", found.getId());
+            String sql2 = String.format("Update UntrainedEmails SET Loaded = 0 WHERE id = '%d'", found.getId());
             statement2.executeUpdate(sql2);     //execute the select query
             return found;
         }
