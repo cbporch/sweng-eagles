@@ -249,6 +249,13 @@ public class Database {
         return null;
     }
 
+    public boolean refreshDatabase() throws Exception{
+        Statement statement = conn.createStatement();   //create statement
+        String sql = "Update UntrainedEmails SET Loaded = 0";
+        statement.executeUpdate(sql);     //execute the update query
+        return true;
+    }
+
     public boolean removeEmailById(int id) throws Exception{
         Statement statement = conn.createStatement();   //create statement
         String sql = String.format("DELETE FROM UntrainedEmails WHERE id = '%d'", id);
