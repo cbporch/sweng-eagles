@@ -6,13 +6,14 @@
 
     <groupId>com.swengeagles.app</groupId>
     <artifactId>sweng-eagles</artifactId>
-    <version>1.0</version>
+    <version>3.0</version>
     <packaging>jar</packaging>
 
     <name>Email Scanner</name>
 
     <dependencies>
-        <!-- https://mvnrepository.com/artifact/org.apache.lucene/lucene-core -->
+        <!-- https://mvnrepository.c
+        om/artifact/org.apache.lucene/lucene-core -->
         <dependency>
             <groupId>org.apache.lucene</groupId>
             <artifactId>lucene-core</artifactId>
@@ -60,9 +61,9 @@
 
     </dependencies>
 
-    <properties>
+   <!-- <properties>
         <maven.compiler.source>1.7</maven.compiler.source>
-    </properties>
+    </properties> -->
 
     <build>
         <plugins>
@@ -101,7 +102,7 @@
                 </executions>
             </plugin>
 
-            <plugin>
+            <!--<plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-javadoc-plugin</artifactId>
                 <executions>
@@ -121,7 +122,18 @@
                         </manifest>
                     </archive>
                 </configuration>
+            </plugin> -->
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <configuration>
+                    <source>1.7</source>
+                    <target>1.7</target>
+                </configuration>
             </plugin>
+
+
         </plugins>
     </build>
 </project>
