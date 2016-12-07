@@ -233,7 +233,7 @@ public class Database {
     public Email getNextEmail() throws Exception{
         Email found = new Email();
         Statement statement = conn.createStatement();   //create statement
-        String sql = "SELECT * from UntrainedEmails WHERE Loaded = 0 LIMIT 1";
+        String sql = "SELECT * from UntrainedEmails WHERE Loaded = 1 LIMIT 1";
         ResultSet rs = statement.executeQuery(sql);     //execute the select query
         //System.out.println(sql);
         while (rs.next()) {
@@ -242,7 +242,7 @@ public class Database {
             found.setConfidential(false);
             found.setLoaded(1);
             Statement statement2 = conn.createStatement();   //create statement
-            String sql2 = String.format("Update UntrainedEmails SET Loaded = 1 WHERE id = '%d'", found.getId());
+            String sql2 = String.format("Update UntrainedEmails SET Loaded = 0 WHERE id = '%d'", found.getId());
             statement2.executeUpdate(sql2);     //execute the select query
             return found;
         }
