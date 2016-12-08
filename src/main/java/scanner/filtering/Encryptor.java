@@ -31,19 +31,6 @@ import java.security.spec.*;
  */
 public class Encryptor {
 
-    //THESE TWO LINES ARE FOR THE AES STUFF AND WILL MOST LIKELY BE DELETED.
-    private static String AESkey = "THIS IS THE KEY "; //Unsure what to make the key and initial vector.
-    private static String AESiv = "1234567812345678";  //                  ^^^
-    //END OF AES STUFF
-
-
-
-
-
-
-
-                    //********** ALL RSA STUFF ***************\\
-
     /**
      * So for the generation of the public and private keys, I did this in the terminal.
      * $ openssl genrsa -out keypair.pem 2048
@@ -88,89 +75,5 @@ public class Encryptor {
         cipher.init(Cipher.DECRYPT_MODE, key);
         return cipher.doFinal(ciphertext);
     }
-                                //********** ALL RSA STUFF ***************\\
 
-
-
-
-
-
-
-    //UNDER THIS COMMENT IS ALL AES STUFF AND PROBABLY WONT BE USED...ITS THE AES STUFF
-
-    /**
-     * This method will take in a word and encrpyt it.
-     * @param word the word to be encrypted.
-     * @return the encrypted version of the word.
-     */
-    public static String AESencrypt(String word) {
-        try {
-            IvParameterSpec initVec = new IvParameterSpec(AESiv.getBytes("UTF-8"));
-            SecretKeySpec skeySpec = new SecretKeySpec(AESkey.getBytes("UTF-8"), "AES");
-
-            Cipher cipher = Cipher.getInstance("AES/CBC/PKCS5PADDING");
-            cipher.init(Cipher.ENCRYPT_MODE, skeySpec, initVec);
-
-            byte[] encryptedWord = cipher.doFinal(word.getBytes());
-
-            return DatatypeConverter.printBase64Binary(encryptedWord);
-        } catch (Exception ex) {
-            //ex.printStackTrace();
-        }
-        return null;
-    }
-
-    /**
-     * This method will take in an enrypted word and decrpyt it.
-     * @param encryptedWord the encrypted word that needs to be decrypted.
-     * @return the original version of the word.
-     */
-    public static String AESdecrypt(String encryptedWord) {
-        try {
-            IvParameterSpec initVec = new IvParameterSpec(AESiv.getBytes("UTF-8"));
-            SecretKeySpec skeySpec = new SecretKeySpec(AESkey.getBytes("UTF-8"), "AES");
-
-            Cipher cipher = Cipher.getInstance("AES/CBC/PKCS5PADDING");
-            cipher.init(Cipher.DECRYPT_MODE, skeySpec, initVec);
-
-            byte[] originalWord = cipher.doFinal(DatatypeConverter.parseBase64Binary(encryptedWord));
-
-            return new String(originalWord);
-        } catch (Exception ex) {
-            //ex.printStackTrace();
-        }
-        return null;
-    }
-
-    /**
-     *
-     * @param list list of words that need to be encrypted.
-     * @return the encrypted list of words.
-     */
-    public static ArrayList<String> AESencryptList(ArrayList<String> list)
-    {
-        ArrayList<String> encryptedList = new ArrayList<>();
-        for(String word: list){
-            if(!word.equals("") && word != null) {
-                encryptedList.add(AESencrypt(word));
-            }
-        }
-        return encryptedList;
-    }
-
-    /**
-     *
-     * @param list list of encrypted terms that will be decrypted.
-     * @return list of words in their decrypted form.
-     */
-    public static ArrayList<String> AESdecryptList(ArrayList<String> list)
-    {
-        ArrayList<String> decryptedList = new ArrayList<>();
-        for(String word: list){
-            if(!word.equals("") && word != null) {
-                decryptedList.add(AESdecrypt(word));
-            }
-        }
-        return decryptedList;
-    }
 }
