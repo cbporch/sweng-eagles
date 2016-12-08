@@ -31,6 +31,9 @@ import java.security.spec.*;
  */
 public class Encryptor {
 
+    PublicKey pub;
+    PrivateKey priv;
+
     /**
      * So for the generation of the public and private keys, I did this in the terminal.
      * $ openssl genrsa -out keypair.pem 2048
@@ -48,31 +51,31 @@ public class Encryptor {
         return Files.readAllBytes(path);
     }
 
-    public PublicKey readPublicKey(String filename) throws IOException, NoSuchAlgorithmException, InvalidKeySpecException
+    public void readPublicKey(String filename) throws IOException, NoSuchAlgorithmException, InvalidKeySpecException
     {
         X509EncodedKeySpec publicSpec = new X509EncodedKeySpec(readFileBytes(filename));
         KeyFactory keyFactory = KeyFactory.getInstance("RSA");
-        return keyFactory.generatePublic(publicSpec);
+        pub = keyFactory.generatePublic(publicSpec);
     }
 
-    public PrivateKey readPrivateKey(String filename) throws IOException, NoSuchAlgorithmException, InvalidKeySpecException
+    public void readPrivateKey(String filename) throws IOException, NoSuchAlgorithmException, InvalidKeySpecException
     {
         PKCS8EncodedKeySpec keySpec = new PKCS8EncodedKeySpec(readFileBytes(filename));
         KeyFactory keyFactory = KeyFactory.getInstance("RSA");
-        return keyFactory.generatePrivate(keySpec);
+        priv = keyFactory.generatePrivate(keySpec);
     }
 
-    public byte[] encrypt(PublicKey key, byte[] plaintext) throws NoSuchAlgorithmException, NoSuchPaddingException, InvalidKeyException, IllegalBlockSizeException, BadPaddingException
+    public byte[] encrypt(byte[] plaintext) throws NoSuchAlgorithmException, NoSuchPaddingException, InvalidKeyException, IllegalBlockSizeException, BadPaddingException
     {
         Cipher cipher = Cipher.getInstance("RSA/ECB/OAEPWithSHA-512AndMGF1Padding");
-        cipher.init(Cipher.ENCRYPT_MODE, key);
+        cipher.init(Cipher.ENCRYPT_MODE, pub);
         return cipher.doFinal(plaintext);
     }
 
-    public byte[] decrypt(PrivateKey key, byte[] ciphertext) throws NoSuchAlgorithmException, NoSuchPaddingException, InvalidKeyException, IllegalBlockSizeException, BadPaddingException
+    public byte[] decrypt(byte[] ciphertext) throws NoSuchAlgorithmException, NoSuchPaddingException, InvalidKeyException, IllegalBlockSizeException, BadPaddingException
     {
         Cipher cipher = Cipher.getInstance("RSA/ECB/OAEPWithSHA-512AndMGF1Padding");
-        cipher.init(Cipher.DECRYPT_MODE, key);
+        cipher.init(Cipher.DECRYPT_MODE, priv);
         return cipher.doFinal(ciphertext);
     }
 
