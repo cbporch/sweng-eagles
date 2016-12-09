@@ -136,8 +136,7 @@ import javax.swing.border.Border;
 /**
  * Create a simple GUI to input an email to be scanned. A score for the email will be shown on screen.
  */
-public class AdminEmailTestWindow
-{
+public class AdminEmailTestWindow {
     static Database db = new Database();
     static int tracker = 0;
     private final static int MAX_ARRAYSIZE = 4;
@@ -150,6 +149,7 @@ public class AdminEmailTestWindow
 
     /**
      * Add the components to the GUI.
+     *
      * @param pane - the pane for the GUI
      */
     public static void addComponentsToPane(Container pane) {
@@ -164,9 +164,9 @@ public class AdminEmailTestWindow
         textAreaPanel.setBackground(Color.LIGHT_GRAY);
         textArea.setBackground(Color.WHITE);
         textArea.setEditable(false);
-        textArea.setMinimumSize(new Dimension(400,350));
-        textArea.setMaximumSize(new Dimension(400,350));
-        textArea.setPreferredSize(new Dimension(400,350));
+        textArea.setMinimumSize(new Dimension(400, 350));
+        textArea.setMaximumSize(new Dimension(400, 350));
+        textArea.setPreferredSize(new Dimension(400, 350));
         textArea.setLineWrap(true);
         Border border = BorderFactory.createLineBorder(Color.BLACK);
         textArea.setBorder(border);
@@ -185,13 +185,14 @@ public class AdminEmailTestWindow
         scoringPanel.add(btnBack);
         scoringPanel.add(btnForward);
 
+        btnBack.setEnabled(false);
+        btnForward.setEnabled(false);
+
         pane.add(scoringPanel, BorderLayout.SOUTH);
 
-        ActionListener confidentiality = new ActionListener()
-        {
+        ActionListener confidentiality = new ActionListener() {
             @Override
-            public void actionPerformed(ActionEvent arg0)
-            {
+            public void actionPerformed(ActionEvent arg0) {
                 if (btnConfidential.equals(arg0.getSource()))
                     currentEmail.setConfidential(true);
                 else if (btnCleanEmail.equals(arg0.getSource()))
@@ -201,22 +202,19 @@ public class AdminEmailTestWindow
 
                 loadNextEmail();
             }
-        } ;
+        };
 
-       ActionListener travel = new ActionListener()
-        {
+        ActionListener travel = new ActionListener() {
             @Override
-            public void actionPerformed(ActionEvent arg0)
-            {
-                if (btnBack.equals(arg0.getSource()))
-                {
+            public void actionPerformed(ActionEvent arg0) {
+                if (btnBack.equals(arg0.getSource())) {
                     goBack();
                 }
-                if(btnForward.equals(arg0.getSource())){
+                if (btnForward.equals(arg0.getSource())) {
                     goForward();
                 }
             }
-        } ;
+        };
 
         btnConfidential.addActionListener(confidentiality);
         btnCleanEmail.addActionListener(confidentiality);
@@ -242,7 +240,7 @@ public class AdminEmailTestWindow
         JFrame frame = new JFrame("Algorithm Training");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         //frame.setLocationRelativeTo(null);
-        frame.setPreferredSize(new Dimension(500,500));
+        frame.setPreferredSize(new Dimension(500, 500));
         frame.setTitle("Algorithm Training");
         frame.setResizable(true);
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
@@ -254,59 +252,44 @@ public class AdminEmailTestWindow
         frame.pack();
         frame.setVisible(true);
 
-        frame.addWindowListener(new WindowAdapter()
-        {
-            public void windowClosing(WindowEvent we)
-            {
+        frame.addWindowListener(new WindowAdapter() {
+            public void windowClosing(WindowEvent we) {
                 System.out.println("Frame closing...");
                 try {
                     db.refreshDatabase();
                     db.close();
-                } catch (Exception e){
+                } catch (Exception e) {
                     System.err.println(e);
                 }
             }
         });
     }
 
-    public static void main(String[] args)
-    {
+    public static void main(String[] args) {
         //Schedule a job for the event-dispatching thread:
         //creating and showing this application's GUI.
-        javax.swing.SwingUtilities.invokeLater(new Runnable()
-        {
-            public void run()
-            {
+        javax.swing.SwingUtilities.invokeLater(new Runnable() {
+            public void run() {
                 createAndShowGUI();
                 loadNextEmail();
             }
         });
     }
 
-    static void updateHistory(Email email)
-    {
-        if (historyBuffer[0] == null)
-        {
+    static void updateHistory(Email email) {
+        if (historyBuffer[0] == null) {
             historyBuffer[0] = email;
             tracker = 1;
-        }
-        else if(historyBuffer[1] == null)
-        {
+        } else if (historyBuffer[1] == null) {
             historyBuffer[1] = email;
             tracker = 2;
-        }
-        else if(historyBuffer[2] == null)
-        {
+        } else if (historyBuffer[2] == null) {
             historyBuffer[2] = email;
             tracker = 3;
-        }
-        else if(historyBuffer[3] == null)
-        {
+        } else if (historyBuffer[3] == null) {
             historyBuffer[3] = email;
             tracker = 4;
-        }
-        else
-        {
+        } else {
             Email emailToUpdate = historyBuffer[0];
 
             historyBuffer[0] = historyBuffer[1];
@@ -319,20 +302,16 @@ public class AdminEmailTestWindow
             else
                 incrementNormalColumn(emailToUpdate.getEmailText());
 
-            try
-            {
+            try {
                 System.out.println("Would delete email");
                 //db.removeEmailById(emailToUpdate.getId());
-            }
-            catch (Exception e)
-            {
+            } catch (Exception e) {
                 System.err.println(e);
             }
         }
     }
 
-    protected static void incrementConfidentialColumn(String body)
-    {
+    protected static void incrementConfidentialColumn(String body) {
         try {
             Database db = new Database();
             TextParser tepa = new TextParser(body);
@@ -341,11 +320,11 @@ public class AdminEmailTestWindow
             HashSet<String> w = tepa.getUniqueWords();
             HashSet<String> p = tepa.getUniquePhrases();
 
-            for(String word : w){
-               db.incrementWordConf(word);
+            for (String word : w) {
+                db.incrementWordConf(word);
             }
 
-            for(String phrase : p){
+            for (String phrase : p) {
                 db.incrementPhraseConf(phrase, phrase.split("\\s+").length);
             }
         } catch (Exception e) {
@@ -353,8 +332,7 @@ public class AdminEmailTestWindow
         }
     }
 
-    protected static void incrementNormalColumn(String body)
-    {
+    protected static void incrementNormalColumn(String body) {
         try {
             Database db = new Database();
             TextParser tepa = new TextParser(body);
@@ -363,11 +341,11 @@ public class AdminEmailTestWindow
             HashSet<String> w = tepa.getUniqueWords();
             HashSet<String> p = tepa.getUniquePhrases();
 
-            for(String word : w){
+            for (String word : w) {
                 db.incrementWordNorm(word);
             }
 
-            for(String phrase : p){
+            for (String phrase : p) {
                 db.incrementPhraseNorm(phrase, phrase.split("\\s+").length);
             }
         } catch (Exception e) {
@@ -375,44 +353,42 @@ public class AdminEmailTestWindow
         }
     }
 
-    static void loadNextEmail()
-    {
-        try
-        {
+    static void loadNextEmail() {
+        try {
             currentEmail = db.getNextEmail();
             loadTextField(currentEmail);
-        }
-        catch (Exception e)
-        {
+        } catch (Exception e) {
             System.err.println(e);
         }
     }
-    static void loadTextField(Email email)
-    {
+
+    static void loadTextField(Email email) {
         textArea.setText(email.getEmailText());
     }
 
-    static int decrementTracker()
-    {
-        if(tracker == 1){
-            btnBack.setVisible(false);
-            return --tracker;
-        }
-        else if (tracker > 1) {
-            btnForward.setVisible(true);
-            return --tracker;
-        }
-        else {
-            tracker = 0;
-            //btnBack.setVisible(false);
-        }
-        btnForward.setVisible(true);
-        return tracker;
+    static int decrementTracker() {
+        if (tracker > 0) {
+            if (historyBuffer[tracker - 1] != null) {
+                btnBack.setEnabled(false);
+                tracker = tracker - 1;
+                return tracker;
+            } else {
+                btnBack.setEnabled(false);
+                return tracker;
+            }
+        } else return tracker;
     }
 
-    static int incrementTracker()
-    {
-        if(tracker < MAX_ARRAYSIZE - 2){
+    static int incrementTracker() {
+        if (tracker < 3) {
+            if (historyBuffer[tracker + 1] != null) {
+                btnBack.setEnabled(true);
+                tracker = tracker + 1;
+                return tracker;
+            } else return tracker;
+        } else return tracker;
+
+    /*if(tracker < MAX_ARRAYSIZE - 2){
             btnBack.setVisible(true);
             return ++tracker;
         }
@@ -426,5 +402,7 @@ public class AdminEmailTestWindow
         }
         btnBack.setVisible(true);
         return tracker;
+        }*/
+
     }
 }
