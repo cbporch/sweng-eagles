@@ -209,11 +209,7 @@ public class Database {
 
     public void insertEmail(String emailText) throws Exception{
 
-        Encryptor encrypt = new Encryptor();
-        String uri = Encryptor.class.getClass().getResource("/public.der").getPath().replace("%20", " ");
-        encrypt.readPublicKey(uri);
-
-        emailText = encrypt.encrypt(emailText.getBytes());
+        emailText = encrpytEmailText(emailText);
 
         Statement statement = conn.createStatement();   //create statement
         String sql = String.format("INSERT into UntrainedEmails (EmailText, Author, Loaded) VALUES ('%s', 'Null', '%d')", emailText, 0);
@@ -222,6 +218,9 @@ public class Database {
     }
 
     public Email getEmail(String emailText) throws Exception{
+
+        emailText = encrpytEmailText(emailText);
+
         Email found = new Email();
         Statement statement = conn.createStatement();   //create statement
         String sql = String.format("SELECT * from UntrainedEmails WHERE EmailText like '%s'", emailText);
@@ -317,4 +316,14 @@ public class Database {
         //System.out.println(sql);
         statement.executeUpdate(sql);     //execute the select query
     }
+
+    private String encrpytEmailText(String emailText)
+    {
+        Encryptor encrypt = new Encryptor();
+        String uri = Encryptor.class.getClass().getResource("/public.der").getPath().replace("%20", " ");
+        encrypt.readPublicKey(uri);
+
+        return encrypt.encrypt(emailText.getBytes());
+    }
+
 }
