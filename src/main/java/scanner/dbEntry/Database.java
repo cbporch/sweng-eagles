@@ -4,6 +4,8 @@ import org.mindrot.jbcrypt.BCrypt;
 import scanner.Email;
 import scanner.Phrase;
 import scanner.Word;
+import scanner.filtering.Encryptor;
+
 import java.sql.*;
 import java.util.ArrayList;
 
@@ -206,6 +208,13 @@ public class Database {
     }
 
     public void insertEmail(String emailText) throws Exception{
+
+        Encryptor encrypt = new Encryptor();
+        String uri = Encryptor.class.getClass().getResource("/public.der").getPath().replace("%20", " ");
+        encrypt.readPublicKey(uri);
+
+        emailText = encrypt.encrypt(emailText.getBytes());
+
         Statement statement = conn.createStatement();   //create statement
         String sql = String.format("INSERT into UntrainedEmails (EmailText, Author, Loaded) VALUES ('%s', 'Null', '%d')", emailText, 0);
         //System.out.println(sql);
