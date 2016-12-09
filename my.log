@@ -65,3 +65,25 @@ Dec 02, 2016 10:24:06 AM scanner.LoginGUI$1 actionPerformed
 INFO: Login successful for username: admin
 Dec 02, 2016 10:26:01 AM scanner.LoginGUI$1 actionPerformed
 INFO: Login successful for username: admin
+Dec 09, 2016 5:08:34 PM scanner.LoginGUI$3 windowClosing
+INFO: Frame closing...Attempting to close loggers.
+Dec 09, 2016 5:15:23 PM scanner.LoginGUI$3 windowClosing
+INFO: Frame closing...Attempting to close loggers.
+Dec 09, 2016 5:16:29 PM scanner.LoginGUI$3 windowClosing
+INFO: Frame closing...Attempting to close loggers.
+Dec 09, 2016 5:16:44 PM scanner.LoginGUI$3 windowClosing
+INFO: Frame closing...Attempting to close loggers.
+Dec 09, 2016 5:17:22 PM scanner.LoginGUI$3 windowClosing
+INFO: Frame closing...Attempting to close loggers.
+Dec 09, 2016 5:17:46 PM scanner.LoginGUI$3 windowClosing
+INFO: Frame closing...Attempting to close loggers.
+Dec 09, 2016 5:18:03 PM scanner.LoginGUI$3 windowClosing
+INFO: Frame closing...Attempting to close loggers.
+Dec 09, 2016 5:20:34 PM scanner.LoginGUI$3 windowClosing
+INFO: Frame closing...Attempting to close loggers.
+Dec 09, 2016 5:28:10 PM scanner.LoginGUI$3 windowClosing
+INFO: Frame closing...Attempting to close loggers.
+Dec 09, 2016 5:29:04 PM scanner.LoginGUI$3 windowClosing
+INFO: Frame closing...Attempting to close loggers.
+Dec 09, 2016 5:30:45 PM scanner.LoginGUI$3 windowClosing
+INFO: Frame closing...Attempting to close loggers.
