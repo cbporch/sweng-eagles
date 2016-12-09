@@ -4,8 +4,13 @@ import org.mindrot.jbcrypt.BCrypt;
 import scanner.Email;
 import scanner.Phrase;
 import scanner.Word;
+import scanner.filtering.Encryptor;
+import sun.misc.BASE64Decoder;
+import sun.misc.BASE64Encoder;
+
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.Base64;
 
 /**
  * Created by cdeck_000 on 10/18/2016.
@@ -206,6 +211,9 @@ public class Database {
     }
 
     public void insertEmail(String emailText) throws Exception{
+
+        emailText = encrpytEmailText(emailText);
+
         Statement statement = conn.createStatement();   //create statement
         String sql = String.format("INSERT into UntrainedEmails (EmailText, Author, Loaded) VALUES ('%s', 'Null', '%d')", emailText, 0);
         //System.out.println(sql);
@@ -213,6 +221,9 @@ public class Database {
     }
 
     public Email getEmail(String emailText) throws Exception{
+
+        emailText = encrpytEmailText(emailText);
+
         Email found = new Email();
         Statement statement = conn.createStatement();   //create statement
         String sql = String.format("SELECT * from UntrainedEmails WHERE EmailText like '%s'", emailText);
@@ -237,7 +248,7 @@ public class Database {
         ResultSet rs = statement.executeQuery(sql);     //execute the select query
         //System.out.println(sql);
         while (rs.next()) {
-            found.setEmailText(rs.getString(2));
+            found.setEmailText(decryptEmailText(rs.getString(2)));
             found.setId(rs.getInt(1));
             found.setConfidential(false);
             found.setLoaded(1);
@@ -265,6 +276,7 @@ public class Database {
     }
 
     public boolean removeEmailByText(String emailText) throws Exception{
+        emailText = decryptEmailText(emailText);
         Statement statement = conn.createStatement();   //create statement
         String sql = String.format("DELETE FROM UntrainedEmails WHERE EmailText = '%s'", emailText);
         statement.executeUpdate(sql);     //execute the select query
@@ -308,4 +320,27 @@ public class Database {
         //System.out.println(sql);
         statement.executeUpdate(sql);     //execute the select query
     }
+
+    private String encrpytEmailText(String emailText) throws Exception
+    {
+        Encryptor encrypt = new Encryptor();
+        String uri = Encryptor.class.getClass().getResource("/public.der").getPath().replace("%20", " ");
+        encrypt.readPublicKey(uri);
+        BASE64Encoder b64 = new BASE64Encoder();
+        return b64.encode(encrypt.encrypt(emailText.getBytes()));
+
+    }
+
+    private String decryptEmailText(String privatePath, String emailText) throws Exception
+    {
+        Encryptor decrypt = new Encryptor();
+
+        decrypt.readPrivateKey(privatePath);
+
+        BASE64Decoder b64 = new BASE64Decoder();
+
+        return new String(decrypt.decrypt(b64.decodeBuffer(emailText)));
+
+    }
+
 }
