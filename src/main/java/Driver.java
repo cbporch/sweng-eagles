@@ -21,16 +21,6 @@ public class Driver {
 
     public static void main(String[] args){
         LoginGUI loginGUI = new LoginGUI();
-        TikaWrapper t = new TikaWrapper();
-        try {
-            t.parseToTXT(t.stream);
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (TikaException e) {
-            e.printStackTrace();
-        } catch (SAXException e) {
-            e.printStackTrace();
-        }
         loginGUI.main(null);
     }
 
