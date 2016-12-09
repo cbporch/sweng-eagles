@@ -1,4 +1,4 @@
-package scanner.filtering;
+package scanner.analysis;
 
 import org.apache.tika.exception.TikaException;
 import org.apache.tika.metadata.Metadata;
