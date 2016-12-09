@@ -3,21 +3,14 @@ package scanner.filtering;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.ArrayList;
-
 import javax.crypto.BadPaddingException;
 import javax.crypto.Cipher;
 import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.NoSuchPaddingException;
-import javax.crypto.spec.IvParameterSpec;
-import javax.crypto.spec.SecretKeySpec;
-import javax.xml.bind.DatatypeConverter;
-
 import java.io.IOException;
 import java.security.NoSuchAlgorithmException;
 import java.security.PrivateKey;
 import java.security.PublicKey;
-
 import java.security.*;
 import java.security.spec.*;
 
@@ -31,8 +24,8 @@ import java.security.spec.*;
  */
 public class Encryptor {
 
-    PublicKey pub;
-    PrivateKey priv;
+    private PublicKey pub;
+    private PrivateKey priv;
 
     /**
      * So for the generation of the public and private keys, I did this in the terminal.
