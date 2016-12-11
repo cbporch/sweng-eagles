@@ -28,6 +28,8 @@ public class AdminEmailTestWindow {
     final static JButton btnForward = new JButton("Forward");
     final static JButton btnCleanEmail = new JButton("Clean Email");
     final static JButton btnConfidential = new JButton("Confidential Email");
+    final static JButton btnDone = new JButton("Done");
+    final static JFrame frame = new JFrame("Algorithm Training");
 
     /**
      * Add the components to the GUI.
@@ -60,10 +62,11 @@ public class AdminEmailTestWindow {
         pane.add(textAreaPanel, BorderLayout.CENTER);
 
         JPanel scoringPanel = new JPanel();
+        scoringPanel.add(btnBack);
         scoringPanel.add(btnCleanEmail);
         scoringPanel.add(btnConfidential);
-        scoringPanel.add(btnBack);
         scoringPanel.add(btnForward);
+        scoringPanel.add(btnDone);
 
         btnBack.setEnabled(false);
         btnForward.setEnabled(false);
@@ -98,10 +101,21 @@ public class AdminEmailTestWindow {
             }
         };
 
+        ActionListener finished = new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent arg0) {
+                if (btnDone.equals(arg0.getSource())) {
+                    frame.dispatchEvent(new WindowEvent(frame, WindowEvent.WINDOW_CLOSING));
+                }
+            }
+        };
+
+
         btnConfidential.addActionListener(confidentiality);
         btnCleanEmail.addActionListener(confidentiality);
         btnBack.addActionListener(travel);
         btnForward.addActionListener(travel);
+        btnDone.addActionListener(finished);
     }
 
     /**
@@ -109,7 +123,6 @@ public class AdminEmailTestWindow {
      */
     private static void createAndShowGUI() {
         //Create and set up the window.
-        JFrame frame = new JFrame("Algorithm Training");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         //frame.setLocationRelativeTo(null);
         frame.setPreferredSize(new Dimension(500, 500));
@@ -128,6 +141,7 @@ public class AdminEmailTestWindow {
             public void windowClosing(WindowEvent we) {
                 System.out.println("Frame closing...");
                 try {
+                    clearHistoryBuffer();
                     db.refreshDatabase();
                     db.close();
                 } catch (Exception e) {
@@ -146,6 +160,28 @@ public class AdminEmailTestWindow {
                 loadNextEmail();
             }
         });
+    }
+
+    static void clearHistoryBuffer() {
+        if(historyBuffer != null) {
+            for (Email email : historyBuffer) {
+                if(email != null) {
+                    if (email.isConfidential()) {
+                        System.out.println("Would increment confidential column");
+                        //incrementConfidentialColumn(email.getEmailText());
+                    } else {
+                        System.out.println("Would increment confidential column");
+                        //incrementNormalColumn(email.getEmailText());
+                    }
+                    try {
+                        System.out.println("Would delete email");
+                        //db.removeEmailById(email.getId());
+                    } catch (Exception e) {
+                        System.err.println(e);
+                    }
+                }
+            }
+        }
     }
 
     static void updateHistory(Email email) {
@@ -181,11 +217,11 @@ public class AdminEmailTestWindow {
             goForward();
 
             if (emailToUpdate.isConfidential()) {
-                System.out.print("Would increment confidential column");
+                System.out.println("Would increment confidential column");
                 //incrementConfidentialColumn(emailToUpdate.getEmailText());
             }
             else {
-                System.out.print("Would increment confidential column");
+                System.out.println("Would increment confidential column");
                 //incrementNormalColumn(emailToUpdate.getEmailText());
             }
             try {
