@@ -30,6 +30,8 @@ public class AdminEmailTestWindow {
     final static JButton btnConfidential = new JButton("Confidential Email");
     final static JButton btnDone = new JButton("Done");
     final static JFrame frame = new JFrame("Algorithm Training");
+    final static Email end = new Email("There are no more emails. Go back to look at other emails or click done.", 0, false, 1);
+
 
     /**
      * Add the components to the GUI.
@@ -93,7 +95,7 @@ public class AdminEmailTestWindow {
                 if (btnBack.equals(arg0.getSource())) {
                     goBack();
                     btnCleanEmail.setEnabled(true);
-                    btnConfidential.setEnabled(false);
+                    btnConfidential.setEnabled(true);
                 }
                 if (btnForward.equals(arg0.getSource())) {
                     goForward();
@@ -142,7 +144,7 @@ public class AdminEmailTestWindow {
                 System.out.println("Frame closing...");
                 try {
                     clearHistoryBuffer();
-                    db.refreshDatabase();
+                    //db.refreshDatabase();
                     db.close();
                 } catch (Exception e) {
                     System.err.println(e);
@@ -186,11 +188,15 @@ public class AdminEmailTestWindow {
 
     static void updateHistory(Email email) {
         if(email == null){
-            email.setEmailText("There are no more emails!");
+           //shiftDown(end);
             btnForward.setEnabled(false);
             btnConfidential.setEnabled(false);
             btnCleanEmail.setEnabled(false);
-        }
+            fillBuffer(end);
+        } else fillBuffer(email);
+    }
+
+    private static void fillBuffer(Email email){
         if (historyBuffer[0] == null) {
             historyBuffer[0] = email;
             loadTextField(historyBuffer[tracker]);
@@ -205,31 +211,46 @@ public class AdminEmailTestWindow {
             historyBuffer[3] = email;
             goForward();
         } else {
-            //shift down
-            Email emailToUpdate = historyBuffer[0];
+            shiftDown(email);
+        }
+    }
 
-            historyBuffer[0] = historyBuffer[1];
-            historyBuffer[1] = historyBuffer[2];
-            historyBuffer[2] = historyBuffer[3];
-            historyBuffer[3] = email;
+    private static void shiftDown(Email email){
+        Email emailToUpdate = historyBuffer[0];
 
-            //move tracker and load new email
-            goForward();
+        historyBuffer[0] = historyBuffer[1];
+        historyBuffer[1] = historyBuffer[2];
+        historyBuffer[2] = historyBuffer[3];
+        historyBuffer[3] = email;
 
-            if (emailToUpdate.isConfidential()) {
+        //move tracker and load new email
+        goForward();
+
+        if (emailToUpdate.isConfidential()) {
+            if(emailToUpdate.getId() == 0){
+                return;
+            } else {
                 System.out.println("Would increment confidential column");
                 //incrementConfidentialColumn(emailToUpdate.getEmailText());
             }
-            else {
-                System.out.println("Would increment confidential column");
+        }
+        else {
+            if(emailToUpdate.getId() == 0){
+                return;
+            } else {
+                System.out.println("Would increment normal column");
                 //incrementNormalColumn(emailToUpdate.getEmailText());
             }
-            try {
+        }
+        try {
+            if(emailToUpdate.getId() == 0){
+                return;
+            } else {
                 System.out.println("Would delete email");
                 //db.removeEmailById(emailToUpdate.getId());
-            } catch (Exception e) {
-                System.err.println(e);
             }
+        } catch (Exception e) {
+            System.err.println(e);
         }
     }
 
@@ -315,6 +336,10 @@ public class AdminEmailTestWindow {
                 btnBack.setEnabled(false);
             } else btnBack.setEnabled(true);
         }
+        if(historyBuffer[tracker].getId() == 0){
+            btnConfidential.setEnabled(false);
+            btnCleanEmail.setEnabled(false);
+        }
         return tracker;
     }
 
@@ -324,11 +349,14 @@ public class AdminEmailTestWindow {
             tracker++;
             if(tracker == 3 || historyBuffer[tracker + 1] == null){
                 btnForward.setEnabled(false);
-                return tracker;
             } else {
                 btnForward.setEnabled(true);
-                return tracker;
             }
+            if(historyBuffer[tracker].getId() == 0){
+                btnConfidential.setEnabled(false);
+                btnCleanEmail.setEnabled(false);
+            }
+            return tracker;
         } else
             return tracker;
         }
