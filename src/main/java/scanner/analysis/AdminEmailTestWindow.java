@@ -144,7 +144,7 @@ public class AdminEmailTestWindow {
                 System.out.println("Frame closing...");
                 try {
                     clearHistoryBuffer();
-                    //db.refreshDatabase();
+                    db.refreshDatabase();
                     db.close();
                 } catch (Exception e) {
                     System.err.println(e);
