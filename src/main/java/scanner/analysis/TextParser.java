@@ -20,27 +20,36 @@ import java.util.concurrent.PriorityBlockingQueue;
 public class TextParser {
     private ArrayList<String> text;
     private LuceneStemmer ls;
-    private ArrayList<Doublet> pairs;
+    private ArrayList<Doublet> p;
     private HashSet<String> uniqueWords, uniquePhrases;
-    private Database db;
-    private boolean parsingComplete;
+    private Database wordDB, phraseDB;
     private PriorityBlockingQueue<String> wordsToFind;
     private PriorityBlockingQueue<NPhrase> phraseToFind;
+    private PriorityBlockingQueue<Doublet> pairs;
+
 
     public TextParser(String email) throws Exception {
 
-        Comparator<NPhrase> comparator = new Comparator<NPhrase>() {
+        Comparator<NPhrase> comparator0 = new Comparator<NPhrase>() {
             @Override
             public int compare(NPhrase n1, NPhrase n2) {
                 return n1.phrase.compareTo(n2.phrase);
             }
         };
+        Comparator<Doublet> comparator1 = new Comparator<Doublet>() {
+            @Override
+            public int compare(Doublet d1, Doublet d2) {
+                return Integer.compare(d1.getNumConf(), d2.getNumConf());
+            }
+        };
 
         wordsToFind = new PriorityBlockingQueue<>(10);
-        phraseToFind = new PriorityBlockingQueue<>(10, comparator);
+        phraseToFind = new PriorityBlockingQueue<>(10, comparator0);
         ls = new LuceneStemmer();
-        pairs = new ArrayList<>();
-        db = new Database();
+        pairs = new PriorityBlockingQueue<>(10, comparator1);
+        p = new ArrayList<>();
+        wordDB = new Database();
+        phraseDB = new Database();
         uniqueWords = new HashSet<>();
         uniquePhrases = new HashSet<>();
         try {
@@ -57,34 +66,40 @@ public class TextParser {
      * @return - A score of how likely the text is to be confidential.
      */
     public double parse(){
-        parsingComplete = false;
+        parseThread pThread = new parseThread();
+        phraseThread phThread = new phraseThread();
 
-        wordThread wThread = new wordThread();
-
-        while(wThread.isAlive()){
-            if(!wordsToFind.isEmpty() || !phraseToFind.isEmpty()) {
-                if (!wordsToFind.isEmpty()) {
-                    Word w = findWord(wordsToFind.remove());
-                    if (w != null) {
-                        pairs.add(new Doublet(w.getConf(), w.getNorm()));
-                    }
+        while(pThread.isAlive() || phThread.isAlive()){
+            while (!wordsToFind.isEmpty()) {
+                Word w = findWord(wordsToFind.poll());
+                while(w == null && !wordsToFind.isEmpty()){
+                    w = findWord(wordsToFind.poll());
                 }
-                if (!phraseToFind.isEmpty()) {
-                    NPhrase np = phraseToFind.remove();
-                    Phrase p = findPhrase(np.phrase, np.num);
-                    if (p != null) {
-                        pairs.add(new Doublet(p.getConf(), p.getNorm()));
-                    }
+                //System.out.println(w.getWord());
+                if (w != null) {
+                    p.add(new Doublet(w.getConf(), w.getNorm()));
+                }
+                try {
+                    Thread.sleep(1);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
                 }
             }
         }
 
-        parsingComplete = true;
-        while(wThread.isAlive()){
-            if(wordsToFind.isEmpty() && phraseToFind.isEmpty() && parsingComplete)
-                wThread.interrupt();
+        System.out.println("parse done");
+        System.out.println("Pairs: " + pairs.size());
+
+        for(Doublet d: pairs){
+            if(d !=null) {
+                p.add(d);
+            }
         }
-        return CalculateEmailScore.calculate(pairs);
+
+        if(p.isEmpty()){
+            return 0;
+        }
+        return CalculateEmailScore.calculate(p);
     }
 
     /**
@@ -94,11 +109,11 @@ public class TextParser {
      */
     private Word findWord(String word){
         try {
-            return db.getWord(Hasher.hashSHA(word));
+            return wordDB.getWord(Hasher.hashSHA(word));
         } catch (Exception e) {
-           System.out.println(e);
+            System.out.println(e);
         }
-       return null;
+        return null;
     }
 
     /**
@@ -108,7 +123,7 @@ public class TextParser {
      */
     private Phrase findPhrase(String phrase, int N){
         try {
-            return db.getPhrase(Hasher.hashSHA(phrase), N);
+            return phraseDB.getPhrase(Hasher.hashSHA(phrase), N);
         } catch (Exception ex) {
             System.out.println(ex);
         }
@@ -148,7 +163,7 @@ public class TextParser {
         for(int i = 0; i < N; i++){
             phrase += text.get(i + index);
         }
-        //uniquePhrases.add(phrase);
+        uniquePhrases.add(phrase);
         return phrase;
     }
 
@@ -156,28 +171,65 @@ public class TextParser {
      * The goal of this thread is to handle the lookups for each string
      * and to add them to the pairs ArrayList
      */
-    private class wordThread extends Thread{
+    private class parseThread extends Thread{
 
-        wordThread(){
-            super("wordThread");
+        parseThread(){
+            super("parseThread");
             start();
         }
 
         public void run(){
-            ArrayList<Integer> grams = db.getWordcounts();
+            System.out.println(1);
+            ArrayList<Integer> grams = wordDB.getWordcounts();
             int lastIndex = text.size() - 1;
             for(int index = 0; index <= lastIndex; index++){
                 if(uniqueWords.add(text.get(index))){
+                    //wordsToFind is thread safe
                     wordsToFind.add(text.get(index));
+                    //System.out.println(text.get(index));
                 }
-
                 for(int N : grams){
                     if((index + N - 1) <= lastIndex){
                         NPhrase np = new NPhrase();
                         np.num = N;
                         np.phrase = NGram(index, N);
+                        //System.out.println(np.phrase);
                         phraseToFind.add(np);
                     }
+                }
+            }
+            System.out.println("thread done.");
+        }
+    }
+
+    /*
+     * The goal of this thread is to handle the lookups for each string
+     * and to add them to the pairs ArrayList
+     */
+    private class phraseThread extends Thread {
+
+        phraseThread() {
+            super("phraseThread");
+            start();
+        }
+
+        public void run() {
+            if(phraseToFind.isEmpty()){
+                try {
+                    Thread.sleep(5);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+            while(!phraseToFind.isEmpty()) {
+                NPhrase np = phraseToFind.poll();
+                Phrase p = findPhrase(np.phrase, np.num);
+                while (p == null && !phraseToFind.isEmpty()) {
+                    np = phraseToFind.poll();
+                    p = findPhrase(np.phrase, np.num);
+                }
+                if (p != null) {
+                    pairs.add(new Doublet(p.getConf(), p.getNorm()));
                 }
                 try {
                     Thread.sleep(1);
@@ -185,7 +237,7 @@ public class TextParser {
                     e.printStackTrace();
                 }
             }
-            System.out.println("Done.");
+            System.out.println("thread done.");
         }
     }
 

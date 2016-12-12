@@ -63,6 +63,9 @@ public class AdminEmailTestWindow {
         textAreaPanel.add(textArea);
         pane.add(textAreaPanel, BorderLayout.CENTER);
 
+        btnBack.setEnabled(false);
+        btnForward.setEnabled(false);
+
         JPanel scoringPanel = new JPanel();
         scoringPanel.add(btnBack);
         scoringPanel.add(btnCleanEmail);
@@ -85,7 +88,9 @@ public class AdminEmailTestWindow {
                     historyBuffer[tracker].setConfidential(false);
                 }
                 loadNextEmail();
+
                 //updateHistory(currentEmail);
+
             }
         };
 
@@ -118,6 +123,7 @@ public class AdminEmailTestWindow {
         btnBack.addActionListener(travel);
         btnForward.addActionListener(travel);
         btnDone.addActionListener(finished);
+
     }
 
     /**
@@ -312,9 +318,12 @@ public class AdminEmailTestWindow {
         catch (Exception e) {
             System.out.println(e);
         }
-    }
 
+
+    }
+  
     static void loadTextField(Email email) {
+
         textArea.setText(email.getEmailText());
     }
 

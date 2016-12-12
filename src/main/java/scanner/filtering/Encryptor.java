@@ -1,11 +1,19 @@
 package scanner.filtering;
 
-import java.util.ArrayList;
-
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import javax.crypto.BadPaddingException;
 import javax.crypto.Cipher;
-import javax.crypto.spec.IvParameterSpec;
-import javax.crypto.spec.SecretKeySpec;
-import javax.xml.bind.DatatypeConverter;
+import javax.crypto.IllegalBlockSizeException;
+import javax.crypto.NoSuchPaddingException;
+import java.io.IOException;
+import java.security.NoSuchAlgorithmException;
+import java.security.PrivateKey;
+import java.security.PublicKey;
+import java.security.*;
+import java.security.spec.*;
+
 
 /**
  * Encrypts a word, or phrase, or a given list of either. Also has methods to decrypt any of those types of input too.
@@ -16,82 +24,52 @@ import javax.xml.bind.DatatypeConverter;
  */
 public class Encryptor {
 
-    private static String key = "THIS IS THE KEY "; //Unsure what to make the key and initial vector.
-    private static String iv = "1234567812345678";  //                  ^^^
+    private PublicKey pub;
+    private PrivateKey priv;
 
     /**
-     * This method will take in a word and encrpyt it.
-     * @param word the word to be encrypted.
-     * @return the encrypted version of the word.
+     * So for the generation of the public and private keys, I did this in the terminal.
+     * $ openssl genrsa -out keypair.pem 2048
+     * $ openssl rsa -in keypair.pem -outform DER -pubout -out public.der
+     * $ openssl pkcs8 -topk8 -nocrypt -in keypair.pem -outform DER -out private.der
+     * $ locate private.der
+     * $ sudo launchctl load -w /System/Library/LaunchDaemons/com.apple.locate.plist
+     * $ locate public.der
+     * $ sudo launchctl load -w /System/Library/LaunchDaemons/com.apple.locate.plist
      */
-    public static String encrypt(String word) {
-        try {
-            IvParameterSpec initVec = new IvParameterSpec(iv.getBytes("UTF-8"));
-            SecretKeySpec skeySpec = new SecretKeySpec(key.getBytes("UTF-8"), "AES");
 
-            Cipher cipher = Cipher.getInstance("AES/CBC/PKCS5PADDING");
-            cipher.init(Cipher.ENCRYPT_MODE, skeySpec, initVec);
-
-            byte[] encryptedWord = cipher.doFinal(word.getBytes());
-
-            return DatatypeConverter.printBase64Binary(encryptedWord);
-        } catch (Exception ex) {
-            //ex.printStackTrace();
-        }
-        return null;
-    }
-
-    /**
-     * This method will take in an enrypted word and decrpyt it.
-     * @param encryptedWord the encrypted word that needs to be decrypted.
-     * @return the original version of the word.
-     */
-    public static String decrypt(String encryptedWord) {
-        try {
-            IvParameterSpec initVec = new IvParameterSpec(iv.getBytes("UTF-8"));
-            SecretKeySpec skeySpec = new SecretKeySpec(key.getBytes("UTF-8"), "AES");
-
-            Cipher cipher = Cipher.getInstance("AES/CBC/PKCS5PADDING");
-            cipher.init(Cipher.DECRYPT_MODE, skeySpec, initVec);
-
-            byte[] originalWord = cipher.doFinal(DatatypeConverter.parseBase64Binary(encryptedWord));
-
-            return new String(originalWord);
-        } catch (Exception ex) {
-            //ex.printStackTrace();
-        }
-        return null;
-    }
-
-    /**
-     *
-     * @param list list of words that need to be encrypted.
-     * @return the encrypted list of words.
-     */
-    public static ArrayList<String> encryptList(ArrayList<String> list)
+    public byte[] readFileBytes(String filename) throws IOException
     {
-        ArrayList<String> encryptedList = new ArrayList<>();
-        for(String word: list){
-            if(!word.equals("") && word != null) {
-                encryptedList.add(encrypt(word));
-            }
-        }
-        return encryptedList;
+        Path path = Paths.get(filename);
+        return Files.readAllBytes(path);
     }
 
-    /**
-     *
-     * @param list list of encrypted terms that will be decrypted.
-     * @return list of words in their decrypted form.
-     */
-    public static ArrayList<String> decryptList(ArrayList<String> list)
+    public void readPublicKey(String filename) throws IOException, NoSuchAlgorithmException, InvalidKeySpecException
     {
-        ArrayList<String> decryptedList = new ArrayList<>();
-        for(String word: list){
-            if(!word.equals("") && word != null) {
-                decryptedList.add(decrypt(word));
-            }
-        }
-        return decryptedList;
+        X509EncodedKeySpec publicSpec = new X509EncodedKeySpec(readFileBytes(filename));
+        KeyFactory keyFactory = KeyFactory.getInstance("RSA");
+        pub = keyFactory.generatePublic(publicSpec);
     }
+
+    public void readPrivateKey(String filename) throws IOException, NoSuchAlgorithmException, InvalidKeySpecException
+    {
+        PKCS8EncodedKeySpec keySpec = new PKCS8EncodedKeySpec(readFileBytes(filename));
+        KeyFactory keyFactory = KeyFactory.getInstance("RSA");
+        priv = keyFactory.generatePrivate(keySpec);
+    }
+
+    public byte[] encrypt(byte[] plaintext) throws NoSuchAlgorithmException, NoSuchPaddingException, InvalidKeyException, IllegalBlockSizeException, BadPaddingException
+    {
+        Cipher cipher = Cipher.getInstance("RSA/ECB/OAEPWithSHA-512AndMGF1Padding");
+        cipher.init(Cipher.ENCRYPT_MODE, pub);
+        return cipher.doFinal(plaintext);
+    }
+
+    public byte[] decrypt(byte[] ciphertext) throws NoSuchAlgorithmException, NoSuchPaddingException, InvalidKeyException, IllegalBlockSizeException, BadPaddingException
+    {
+        Cipher cipher = Cipher.getInstance("RSA/ECB/OAEPWithSHA-512AndMGF1Padding");
+        cipher.init(Cipher.DECRYPT_MODE, priv);
+        return cipher.doFinal(ciphertext);
+    }
+
 }

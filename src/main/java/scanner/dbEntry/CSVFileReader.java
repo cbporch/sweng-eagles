@@ -106,8 +106,8 @@ public class CSVFileReader {
         for (int i = 0; i < listOfWords.size(); i++)
         {
             try {
-                System.out.println(listOfWords.get(i).getWord() + " " + listOfWords.get(i).getRarity() + " " + listOfWords.get(i).getNum());
-                //db.insertWords(listOfWords.get(i).getWord(), listOfWords.get(i).getRarity(), listOfWords.get(i).getNum());
+                //System.out.println(listOfWords.get(i).getWord() + " " + listOfWords.get(i).getRarity() + " " + listOfWords.get(i).getNum());
+                db.insertWords(listOfWords.get(i).getWord(), listOfWords.get(i).getRarity(), listOfWords.get(i).getNum());
             } catch (Exception e) {
                 //e.printStackTrace();
             }
@@ -115,8 +115,8 @@ public class CSVFileReader {
         for (int i = 0; i < listOfPhrases.size(); i++)
         {
             try {
-                System.out.println(listOfPhrases.get(i).getPhrase() + " " + listOfPhrases.get(i).getRarity() + " " + listOfPhrases.get(i).getWordcount() + " " + listOfPhrases.get(i).getNum());
-                //db.insertPhrases(listOfPhrases.get(i).getPhrase(), listOfPhrases.get(i).getRarity(), listOfPhrases.get(i).getWordcount(), listOfPhrases.get(i).getNum());
+                //System.out.println(listOfPhrases.get(i).getPhrase() + " " + listOfPhrases.get(i).getRarity() + " " + listOfPhrases.get(i).getWordcount() + " " + listOfPhrases.get(i).getNum());
+                db.insertPhrases(listOfPhrases.get(i).getPhrase(), listOfPhrases.get(i).getRarity(), listOfPhrases.get(i).getWordcount(), listOfPhrases.get(i).getNum());
             } catch (Exception e) {
                 //e.printStackTrace();
             }
