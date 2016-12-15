@@ -262,7 +262,6 @@ public class AdminEmailTestWindow {
 
     protected static void incrementConfidentialColumn(String body) {
         try {
-            Database db = new Database();
             TextParser tepa = new TextParser(body);
             tepa.parse();
 
@@ -277,13 +276,12 @@ public class AdminEmailTestWindow {
                 db.incrementPhraseConf(phrase, phrase.split("\\s+").length);
             }
         } catch (Exception e) {
-
+            System.out.println(e);
         }
     }
 
     protected static void incrementNormalColumn(String body) {
         try {
-            Database db = new Database();
             TextParser tepa = new TextParser(body);
             tepa.parse();
 
@@ -298,7 +296,7 @@ public class AdminEmailTestWindow {
                 db.incrementPhraseNorm(phrase, phrase.split("\\s+").length);
             }
         } catch (Exception e) {
-
+            System.out.println(e);
         }
     }
 
