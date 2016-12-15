@@ -10,7 +10,6 @@ import sun.misc.BASE64Encoder;
 
 import java.sql.*;
 import java.util.ArrayList;
-import java.util.Base64;
 
 /**
  * Created by cdeck_000 on 10/18/2016.
@@ -21,6 +20,7 @@ public class Database {
     private final static int CONF = 100;   //conf is the number of confidential emails a word has appeared in
     private final static int NORM = 0;   //norm is the number of normal emails a word has appeared in
     private Connection conn;
+    private Encryptor encryptor = new Encryptor();
 
     public Database() {
         String url = "jdbc:mysql://asrcemail.cfz28h3zsskv.us-east-1.rds.amazonaws.com/asrcemail";
@@ -244,16 +244,16 @@ public class Database {
     public Email getNextEmail() throws Exception{
         Email found = new Email();
         Statement statement = conn.createStatement();   //create statement
-        String sql = "SELECT * from UntrainedEmails LIMIT 1";
+        String sql = "SELECT * from UntrainedEmails WHERE Loaded = 0 LIMIT 1";
         ResultSet rs = statement.executeQuery(sql);     //execute the select query
         //System.out.println(sql);
         while (rs.next()) {
-            found.setEmailText(decryptEmailText(rs.getString(2)));
+            found.setEmailText(decryptEmailText(encryptor.getPrivatePath(), rs.getString(2)));
             found.setId(rs.getInt(1));
             found.setConfidential(false);
             found.setLoaded(1);
             Statement statement2 = conn.createStatement();   //create statement
-            String sql2 = String.format("Update UntrainedEmails SET Loaded = 0 WHERE id = '%d'", found.getId());
+            String sql2 = String.format("Update UntrainedEmails SET Loaded = 1 WHERE id = '%d'", found.getId());
             statement2.executeUpdate(sql2);     //execute the select query
             return found;
         }
@@ -276,7 +276,7 @@ public class Database {
     }
 
     public boolean removeEmailByText(String emailText) throws Exception{
-        emailText = decryptEmailText(emailText);
+        emailText = decryptEmailText(encryptor.getPrivatePath(), emailText);
         Statement statement = conn.createStatement();   //create statement
         String sql = String.format("DELETE FROM UntrainedEmails WHERE EmailText = '%s'", emailText);
         statement.executeUpdate(sql);     //execute the select query
@@ -324,10 +324,11 @@ public class Database {
     private String encrpytEmailText(String emailText) throws Exception
     {
         Encryptor encrypt = new Encryptor();
-        String uri = Encryptor.class.getClass().getResource("/public.der").getPath().replace("%20", " ");
-        encrypt.readPublicKey(uri);
-        BASE64Encoder b64 = new BASE64Encoder();
-        return b64.encode(encrypt.encrypt(emailText.getBytes()));
+        //String uri = Encryptor.class.getClass().getResource("/public.der").getPath().replace("%20", " ");
+        //encrypt.readPublicKey(uri);
+
+        //BASE64Encoder b64 = new BASE64Encoder();
+        return encrypt.AESencrypt(emailText);
 
     }
 
@@ -339,7 +340,7 @@ public class Database {
 
         BASE64Decoder b64 = new BASE64Decoder();
 
-        return new String(decrypt.decrypt(b64.decodeBuffer(emailText)));
+        return decrypt.AESdecrypt(emailText);
 
     }
 

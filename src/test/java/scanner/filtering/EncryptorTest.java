@@ -34,9 +34,9 @@ public class EncryptorTest {
             e.readPublicKey(publicKeyLocation);
             e.readPrivateKey(privateKeyLocation);
             byte[] message = "Hello World".getBytes("UTF8");
-            byte[] secret = e.encrypt(message);
-            byte[] recovered_message = e.decrypt(secret);
-            System.out.println(new String(recovered_message, "UTF8"));
+            //byte[] secret = e.encrypt(message);
+           // byte[] recovered_message = e.decrypt(secret);
+           // System.out.println(new String(recovered_message, "UTF8"));
         }
         catch (Exception ee)
         {
