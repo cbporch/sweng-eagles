@@ -1,10 +1,5 @@
 # sweng-eagles
 
-**Updated Server Requirements**
-With the introduction of Pandoc, the deployment of this software requires a server running Pandoc and is accessible over SSH using a public key.
-
-Currently the program talks to a server running in the Amazon Web Services Cloudand has the private key for that server pre-loaded into the code.
-
 
 All dependencies should be pulled by Maven when you first run anything.
 
@@ -35,6 +30,10 @@ and press *Evaluate Email*. A score will be generated and displayed in the botto
 not very useful and tend to err towards 1.0, until we adjust the values to give better scores.~~ Current scores are the greater of either a generated score using Bayes Law or the largest probability for a confidential term in the text. There is an
 *Upload File* button in this GUI as well, ~~and again file selection has not been implemented yet.~~ which has now been implemented.
 ~~Phrases are also not being checked for at this point.~~ There is now a new button at the bottom to enter words/phrases to the database. You will be presented with a login screen, current username is **'admin'** and the password is **'asrcSw3ng'**.
+
+Algorithm Training:
+
+Currently the training emails are encrypted using a shared AES encryption key.
 
 Performance:
 
