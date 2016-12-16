@@ -120,7 +120,7 @@ public class Encryptor {
     }*/
 
 
-    //********** ALL RSA STUFF ***************\\
+    //*****************************************\\
 
 
 
@@ -128,14 +128,14 @@ public class Encryptor {
 
     //********KEY RETRIEVING METHODS*********\\
 
-    private static String getAESKey()
+    public static String getAESKey()
     {
         //Using RSA, we will get the actual key for this.
         return "5PWmaEPPxFRqG26v";
     }
 
 
-    private static String getAESIV()
+    public static String getAESIV()
     {
         //Using RSA, we will get the actual key for this.
         return "z8o2q4oymf791VTQ";
@@ -210,10 +210,6 @@ public class Encryptor {
                 encryptedList.add(AESencrypt(word));
             }
         }
-        for (int i = 0; i < encryptedList.size(); i++)
-        {
-            System.out.println(encryptedList.get(i));
-        }
         return encryptedList;
     }
 
@@ -229,10 +225,6 @@ public class Encryptor {
             if(!word.equals("") && word != null) {
                 decryptedList.add(AESdecrypt(word));
             }
-        }
-        for (int i = 0; i < decryptedList.size(); i++)
-        {
-            System.out.println(decryptedList.get(i));
         }
         return decryptedList;
     }
