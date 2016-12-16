@@ -12,6 +12,20 @@
     <name>Email Scanner</name>
 
     <dependencies>
+        <!-- https://mvnrepository.com/artifact/org.apache.tika/tika-core -->
+        <dependency>
+            <groupId>org.apache.tika</groupId>
+            <artifactId>tika-core</artifactId>
+            <version>1.14</version>
+        </dependency>
+
+        <!-- https://mvnrepository.com/artifact/org.apache.tika/tika-parsers -->
+        <dependency>
+            <groupId>org.apache.tika</groupId>
+            <artifactId>tika-parsers</artifactId>
+            <version>1.14</version>
+        </dependency>
+
         <!-- https://mvnrepository.c
         om/artifact/org.apache.lucene/lucene-core -->
         <dependency>
@@ -151,8 +165,6 @@
                     <target>1.7</target>
                 </configuration>
             </plugin>
-
-
         </plugins>
     </build>
 </project>

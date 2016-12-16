@@ -1,15 +1,14 @@
 package scanner.analysis;
 
-import scanner.LoginGUI;
-import scanner.Word;
-import scanner.dbEntry.CSVFileReader;
+import org.apache.tika.exception.TikaException;
+import org.xml.sax.SAXException;
 import scanner.dbEntry.Database;
 import scanner.dbEntry.DatabaseInput;
 
 import java.awt.*;
 import java.awt.event.*;
 import java.io.File;
-import java.util.ArrayList;
+import java.io.IOException;
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import javax.swing.border.Border;
@@ -24,7 +23,8 @@ import javax.swing.border.Border;
 public class EmailTextGUI {
     protected static Database db;
 
-    private static JButton uploadFileBtn = new JButton("Upload File");
+    private static JButton evaluateFileBtn = new JButton("Scan File");
+    static JLabel scoreLabel = new JLabel("");
     /**
      * Add the components to the GUI.
      * @param pane - the pane for the GUI
@@ -56,13 +56,12 @@ public class EmailTextGUI {
         //pane.add(scrollPane, BorderLayout.CENTER);
 
         JPanel scoringPanel = new JPanel();
-        JButton evaluateButton = new JButton("Evaluate Email");
+        final JButton evaluateButton = new JButton("Evaluate Email");
         JButton saveEmailButton = new JButton("Save Email");
-        final JLabel scoreLabel = new JLabel("");
         JButton importTermsBtn = new JButton("Import Terms");
         scoringPanel.add(evaluateButton);
         scoringPanel.add(saveEmailButton);
-        scoringPanel.add(uploadFileBtn);
+        scoringPanel.add(evaluateFileBtn);
         scoringPanel.add(importTermsBtn);
         scoringPanel.add(scoreLabel);
 
@@ -71,25 +70,9 @@ public class EmailTextGUI {
         evaluateButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                try {
-                    String email = textArea.getText();
-                    TextParser textParser = new TextParser(email);
-                    long f = System.currentTimeMillis();
-
-                    double score = textParser.parse();
-                    System.out.println(score);
-                    if (score >= 0.75)
-                        scoreLabel.setText("red");
-                    else if (score < 0.01)
-                        scoreLabel.setText("green");
-                    else
-                        scoreLabel.setText("yellow");
-
-                    System.out.print((System.currentTimeMillis() - f));
-
-                } catch (Exception ex) {
-                    System.out.println(ex);
-                }
+                String email = textArea.getText();
+                scoreLabel.setText("Working..");
+                evaluate(email);
             }
         });
 
@@ -99,7 +82,9 @@ public class EmailTextGUI {
                 try {
                     //send email to database
                     System.out.println("Saving Email...");
+                    scoreLabel.setText("Saving Email....");
                     db.insertEmail(textArea.getText());
+                    scoreLabel.setText("Email Saved.");
                 } catch (Exception ex) {
                     System.out.println(ex);
                 }
@@ -107,28 +92,37 @@ public class EmailTextGUI {
         });
 
 
-        uploadFileBtn.addActionListener(new ActionListener() {
+        evaluateFileBtn.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 //Handle open button action.
                 //Create a file chooser
                 final JFileChooser fc = new JFileChooser();
                 System.out.println("In action listener");
-                if (e.getSource() == EmailTextGUI.uploadFileBtn) {
+                if (e.getSource() == EmailTextGUI.evaluateFileBtn) {
                     System.out.println("In first if");
-                    int returnVal = fc.showOpenDialog(uploadFileBtn);
+                    int returnVal = fc.showOpenDialog(evaluateFileBtn);
 
                     if (returnVal == JFileChooser.APPROVE_OPTION) {
+
+                        scoreLabel.setText("Working..");
                         System.out.println("In second if");
                         File file = fc.getSelectedFile();
                         //This is where a real application would open the file.
                         System.out.println("Opening: " + file.getAbsolutePath());
-                        CSVFileReader csvfr = new CSVFileReader();
-                        csvfr.interpretCSVFile(file.getAbsolutePath());
-                        //ArrayList<Word> words = CSVFileReader.interpretCSVFile(file+"");
-//                        for(Word word: words){
-//                            System.out.println(word.getWord());
-//                        }
+                        TikaWrapper tika = new TikaWrapper();
+                        String body = "";
+                        try {
+                            body = tika.parseToTXT(file.getAbsolutePath());
+                            evaluate(body);
+                        } catch (IOException e1) {
+                            System.err.print(e1);
+                        } catch (TikaException e1) {
+                            System.err.print(e1);
+                        } catch (SAXException e1) {
+                            System.err.print(e1);
+                        }
+
                     } else {
                         System.out.println("Open command cancelled by user.%n");
                     }
@@ -195,5 +189,27 @@ public class EmailTextGUI {
                 db = new Database();
             }
         });
+    }
+
+    private static void evaluate(String text){
+        scoreLabel.setText("Working..");
+        TextParser textParser = null;
+        try {
+            textParser = new TextParser(text);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        long f = System.currentTimeMillis();
+
+        double score = textParser.parse();
+        System.out.println(score);
+        if (score >= 0.75)
+            scoreLabel.setText("red");
+        else if (score < 0.01)
+            scoreLabel.setText("green");
+        else
+            scoreLabel.setText("yellow");
+
+        System.out.print((System.currentTimeMillis() - f));
     }
 }
