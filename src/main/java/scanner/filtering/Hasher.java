@@ -52,6 +52,8 @@ public class Hasher {
      */
     public static String hashSHA(String word) {
 
+        word = word.toLowerCase();
+
         MessageDigest md = null;
         try {
             md = MessageDigest.getInstance("SHA-512");
